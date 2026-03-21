@@ -457,6 +457,113 @@
   .bg-history { background: #fff3e0; border-color: #ffb74d; }
   .bg-english { background: #e8eaf6; border-color: #9fa8da; }
 
+  /* ─── LESSON SCREEN ─── */
+  .lesson-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 14px; flex-wrap: wrap; gap: 10px;
+  }
+  .lesson-topic-label {
+    font-size: 13px; font-weight: 700; color: var(--accent);
+    background: #e8f5e9; padding: 5px 14px; border-radius: 12px;
+    border: 2px solid var(--green-light);
+  }
+  .lesson-step-text { font-size: 13px; color: var(--text2); font-weight: 700; }
+  .lesson-progress-bar {
+    height: 8px; background: #e8f5e9; border-radius: 4px;
+    margin-bottom: 16px; overflow: hidden; border: 1px solid #c8e6c9;
+  }
+  .lesson-progress-fill {
+    height: 100%; border-radius: 4px; background: var(--accent2);
+    transition: width 0.4s ease;
+  }
+  .lesson-card {
+    background: #fff; border-radius: var(--radius); padding: 24px;
+    margin-bottom: 14px; border: 2px solid #e8f5e9;
+    box-shadow: var(--shadow); animation: fadeIn 0.4s;
+  }
+  .lesson-card .lesson-icon { font-size: 36px; text-align: center; margin-bottom: 10px; }
+  .lesson-card h2 {
+    font-size: 18px; font-weight: 900; margin-bottom: 12px;
+    color: var(--accent); text-align: center;
+  }
+  .lesson-card .lesson-content { font-size: 14px; line-height: 1.8; }
+  .lesson-card .lesson-content p { margin-bottom: 10px; }
+  .lesson-formula {
+    background: #f1f8e9; border-radius: 12px; padding: 14px 18px;
+    margin: 12px 0; text-align: center; font-size: 17px; font-weight: 800;
+    border-left: 4px solid var(--accent2); color: var(--nook);
+  }
+  .lesson-example {
+    background: rgba(129,199,132,0.08); border-radius: 12px; padding: 14px;
+    margin: 12px 0; border-left: 4px solid var(--accent2);
+  }
+  .lesson-example .ex-label {
+    font-size: 12px; font-weight: 800; color: var(--accent);
+    text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px;
+  }
+  .lesson-example .ex-content { font-size: 13px; line-height: 1.7; }
+  .lesson-example .ex-content .step { color: var(--text2); font-size: 12px; }
+  .lesson-tip {
+    background: rgba(255,213,79,0.12); border-radius: 12px; padding: 12px 14px;
+    margin: 12px 0; border-left: 4px solid var(--yellow); font-size: 13px;
+  }
+  .lesson-tip .tip-label { font-weight: 800; color: var(--nook); margin-bottom: 4px; }
+  .lesson-exercise {
+    background: rgba(129,212,250,0.1); border-radius: 12px; padding: 16px;
+    margin: 14px 0; border: 2px dashed rgba(129,212,250,0.3); text-align: center;
+  }
+  .lesson-exercise .ex-question { font-size: 16px; font-weight: 800; margin-bottom: 10px; color: var(--nook); }
+  .lesson-exercise .mini-answers { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+  .lesson-exercise .mini-btn {
+    padding: 10px 18px; border-radius: 10px; border: 2px solid #e0e0e0;
+    background: #fff; color: var(--nook); font-size: 14px; font-weight: 700;
+    cursor: pointer; transition: all 0.2s; font-family: 'Nunito', sans-serif;
+  }
+  .lesson-exercise .mini-btn:hover:not(.disabled) { border-color: var(--accent2); transform: scale(1.05); }
+  .lesson-exercise .mini-btn.mini-correct { border-color: var(--accent); background: #e8f5e9; }
+  .lesson-exercise .mini-btn.mini-wrong { border-color: var(--red); background: #ffebee; }
+  .lesson-exercise .mini-btn.disabled { pointer-events: none; }
+  .lesson-exercise .mini-feedback { margin-top: 8px; font-size: 13px; font-weight: 700; min-height: 18px; }
+  .lesson-input-row { display: flex; gap: 8px; justify-content: center; align-items: center; }
+  .lesson-input {
+    background: #fff; border: 2px solid var(--mint); border-radius: 10px;
+    padding: 10px 14px; font-size: 16px; color: var(--nook); text-align: center;
+    width: 120px; font-family: 'Nunito', sans-serif; font-weight: 700; outline: none;
+  }
+  .lesson-input:focus { border-color: var(--accent); }
+  .lesson-ok-btn {
+    padding: 10px 18px; border-radius: 10px; border: none;
+    background: var(--accent2); color: #fff; font-size: 14px;
+    font-weight: 800; cursor: pointer; font-family: 'Nunito', sans-serif;
+  }
+  .lesson-nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 8px; }
+  .lesson-nav .btn { flex: 1; text-align: center; }
+
+  /* ─── COURS MENU ─── */
+  .cours-topic-header {
+    font-size: 16px; font-weight: 900; color: var(--nook); padding: 10px 14px;
+    background: rgba(255,255,255,0.7); border-radius: 10px;
+    border-bottom: 2px solid rgba(168,230,207,0.4); margin-bottom: 8px; margin-top: 8px;
+    backdrop-filter: blur(4px);
+  }
+  .cours-topic-header .emoji { font-size: 20px; margin-right: 6px; }
+  .cours-level-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px; }
+  .cours-level-card {
+    background: #fff; border: 2px solid #e8f5e9; border-radius: 14px;
+    padding: 14px 10px; text-align: center; cursor: pointer; transition: all 0.2s;
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    box-shadow: var(--shadow);
+  }
+  .cours-level-card:hover:not(.locked) { transform: translateY(-2px); border-color: var(--accent2); }
+  .cours-level-card.locked { opacity: 0.35; pointer-events: none; }
+  .cours-level-card.done { border-color: var(--yellow); background: #fffde7; }
+  .diff-badge { font-size: 12px; font-weight: 800; padding: 4px 10px; border-radius: 10px; }
+  .diff-facile { background: #e8f5e9; color: var(--accent); }
+  .diff-moyen { background: #e3f2fd; color: #1565c0; }
+  .diff-difficile { background: #fff3e0; color: #e65100; }
+  .cours-steps { font-size: 11px; color: var(--text2); font-weight: 600; }
+  .lock-msg { font-size: 10px; color: var(--text2); }
+
   /* ─── RESPONSIVE ─── */
   @media (max-width: 600px) {
     .answers-grid { grid-template-columns: 1fr; gap: 8px; }
@@ -472,6 +579,9 @@
     .subject-tabs { gap: 4px; }
     .subject-tab { padding: 6px 12px; font-size: 12px; }
     .topic-card { padding: 12px; }
+    .cours-level-row { grid-template-columns: 1fr; }
+    .lesson-card { padding: 16px 12px; }
+    .lesson-card h2 { font-size: 16px; }
   }
 </style>
 </head>
@@ -581,6 +691,33 @@
     </div>
   </div>
 
+  <!-- ═══ COURS MENU ═══ -->
+  <div class="screen" id="screenCours">
+    <div class="welcome-banner">
+      <h1>📖 Académie <span class="ac">Nook</span> 🌿</h1>
+      <p>Apprends les leçons avant de te tester !</p>
+    </div>
+    <div class="section-title">📚 Choisis un cours</div>
+    <div class="subject-tabs" id="coursSubjectTabs"></div>
+    <div class="topics-grid" id="coursGrid" style="display:flex;flex-direction:column;gap:0;"></div>
+    <div class="spacer-bottom"></div>
+  </div>
+
+  <!-- ═══ LESSON ═══ -->
+  <div class="screen" id="screenLesson">
+    <button class="back-btn" onclick="showScreen('screenCours')">← Retour aux cours</button>
+    <div class="lesson-header">
+      <span class="lesson-topic-label" id="lessonTopicLabel"></span>
+      <span class="lesson-step-text" id="lessonStepText"></span>
+    </div>
+    <div class="lesson-progress-bar"><div class="lesson-progress-fill" id="lessonProgressFill"></div></div>
+    <div id="lessonContent"></div>
+    <div class="lesson-nav">
+      <button class="btn btn-secondary" id="lessonPrevBtn" onclick="lessonPrev()">← Précédent</button>
+      <button class="btn btn-primary" id="lessonNextBtn" onclick="lessonNext()">Suivant →</button>
+    </div>
+  </div>
+
   <!-- ═══ STATS ═══ -->
   <div class="screen" id="screenStats">
     <button class="back-btn" onclick="showScreen('screenHome')">← Retour</button>
@@ -605,8 +742,11 @@
 
 <!-- BOTTOM NAV -->
 <div class="bottom-nav">
+  <button class="nav-btn" onclick="showScreen('screenCours')" id="navCours">
+    <span class="nav-icon">📖</span><span class="nav-label">Cours</span>
+  </button>
   <button class="nav-btn active" onclick="showScreen('screenHome')" id="navHome">
-    <span class="nav-icon">🏝️</span><span class="nav-label">Île</span>
+    <span class="nav-icon">🏝️</span><span class="nav-label">Quiz</span>
   </button>
   <button class="nav-btn" onclick="showScreen('screenStats')" id="navStats">
     <span class="nav-icon">📊</span><span class="nav-label">Stats</span>
@@ -709,7 +849,8 @@ const STATE_DEFAULTS = {
   topicsPlayed: 0, topicsBest: {}, topicScores: {},
   achievements: [],
   lastDaily: null, dailyStreak: 0, lastPlayDate: null,
-  topicsPlayedSet: []
+  topicsPlayedSet: [],
+  lessonsCompleted: {}
 };
 
 function loadState() {
@@ -1475,8 +1616,9 @@ function showScreen(id) {
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   if (id === 'screenHome') document.getElementById('navHome').classList.add('active');
   else if (id === 'screenStats') document.getElementById('navStats').classList.add('active');
+  else if (id === 'screenCours') document.getElementById('navCours').classList.add('active');
   const nav = document.querySelector('.bottom-nav');
-  nav.style.display = (id === 'screenQuiz') ? 'none' : 'flex';
+  nav.style.display = (id === 'screenQuiz' || id === 'screenLesson') ? 'none' : 'flex';
   updateUI();
 }
 
@@ -1526,6 +1668,9 @@ function updateUI() {
     grid.appendChild(card);
   });
 
+  // Cours grid
+  updateCoursUI();
+
   // Daily
   const today = new Date().toDateString();
   document.getElementById('dailyStatus').textContent = state.lastDaily === today ? '✅ Défi terminé !' : '';
@@ -1554,6 +1699,861 @@ function renderAchievements(containerId, max) {
     div.innerHTML = `<div class="ach-icon">${a.icon}</div><div class="ach-name">${a.name}</div><div class="ach-desc">${a.desc}</div>`;
     c.appendChild(div);
   });
+}
+
+// ══════════════════════════════════════
+// COURS UI
+// ══════════════════════════════════════
+let coursSubject = 'math';
+
+function updateCoursUI() {
+  // Subject tabs for cours
+  const tabsEl = document.getElementById('coursSubjectTabs');
+  if (!tabsEl) return;
+  tabsEl.innerHTML = '';
+  SUBJECTS.forEach(s => {
+    const btn = document.createElement('button');
+    btn.className = 'subject-tab' + (coursSubject === s.id ? ' ' + s.tabClass : '');
+    btn.textContent = s.name;
+    btn.onclick = () => { coursSubject = s.id; updateCoursUI(); };
+    tabsEl.appendChild(btn);
+  });
+
+  const coursGrid = document.getElementById('coursGrid');
+  if (!coursGrid) return;
+  coursGrid.innerHTML = '';
+
+  TOPICS.filter(t => t.subject === coursSubject).forEach(t => {
+    const topicLessons = LESSONS[t.id];
+    if (!topicLessons) return;
+
+    const header = document.createElement('div');
+    header.className = 'cours-topic-header';
+    header.innerHTML = `<span class="emoji">${t.emoji}</span> ${t.name}`;
+    coursGrid.appendChild(header);
+
+    const row = document.createElement('div');
+    row.className = 'cours-level-row';
+
+    const LEVELS = [
+      { key:'facile', label:'Facile', cls:'facile', icon:'🟢' },
+      { key:'moyen', label:'Moyen', cls:'moyen', icon:'🔵' },
+      { key:'difficile', label:'Difficile', cls:'difficile', icon:'🟡' }
+    ];
+
+    LEVELS.forEach(lv => {
+      const steps = topicLessons[lv.key];
+      if (!steps) {
+        // No content for this level — show locked placeholder
+        const card = document.createElement('div');
+        card.className = 'cours-level-card locked';
+        card.innerHTML = `<span class="diff-badge diff-${lv.cls}">${lv.icon} ${lv.label}</span><span class="lock-msg">🔒 Bientôt</span>`;
+        row.appendChild(card);
+        return;
+      }
+      const doneKey = t.id + '_' + lv.key;
+      const isDone = state.lessonsCompleted && state.lessonsCompleted[doneKey];
+      const card = document.createElement('div');
+      card.className = 'cours-level-card' + (isDone ? ' done' : '');
+      card.onclick = () => startLesson(t.id, lv.key);
+      card.innerHTML = `<span class="diff-badge diff-${lv.cls}">${lv.icon} ${lv.label}</span>
+        <span class="cours-steps">${isDone ? '✅ Terminé' : '📖 ' + steps.length + ' étapes'}</span>`;
+      row.appendChild(card);
+    });
+
+    coursGrid.appendChild(row);
+  });
+}
+
+// ══════════════════════════════════════
+// LESSONS DATA
+// ══════════════════════════════════════
+const LESSONS = {
+
+// ─── MATHS ───
+decimaux: {
+  facile: [
+    { title:'Les nombres décimaux', icon:'🔢',
+      content:`<p>Un <strong>nombre décimal</strong> a une partie entière et une partie décimale, séparées par une virgule.</p>
+      <div class="lesson-formula">12,45 → 12 = partie entière | 45 = partie décimale</div>
+      <div class="lesson-example"><div class="ex-label">🌸 Exemple Animal Crossing</div>
+      <div class="ex-content">Tu achètes un meuble à <strong>1 250,75</strong> clochettes 🔔<br>
+      <span class="step">1 250 = partie entière (les clochettes complètes)</span><br>
+      <span class="step">75 = partie décimale (les centièmes de clochette)</span></div></div>
+      <div class="lesson-tip"><div class="tip-label">📌 Les rangs décimaux</div>
+      Après la virgule : <strong>dixièmes</strong> (1er rang), <strong>centièmes</strong> (2e rang), <strong>millièmes</strong> (3e rang)<br>
+      Dans 3,<strong>4</strong><strong>5</strong><strong>6</strong> → 4 dixièmes, 5 centièmes, 6 millièmes</div>`,
+      exercise:{question:'Dans 7,38, combien y a-t-il de dixièmes ?',choices:['3','8','7','38'],correct:0}
+    },
+    { title:'Comparer des décimaux', icon:'⚖️',
+      content:`<p>Pour comparer deux décimaux, on compare d'abord la <strong>partie entière</strong>, puis les chiffres après la virgule un par un.</p>
+      <div class="lesson-formula">1. Comparer les parties entières<br>2. Si égales, comparer les dixièmes<br>3. Si égaux, comparer les centièmes...</div>
+      <div class="lesson-example"><div class="ex-label">🌸 Exemples</div>
+      <div class="ex-content">3,7 et 3,52 → même partie entière (3), mais 7 dixièmes > 5 dixièmes<br>
+      <span class="step">Donc <strong>3,7 > 3,52</strong></span><br><br>
+      <span class="step">⚠️ Piège : 3,7 = 3,70 → on peut ajouter des zéros à droite !</span></div></div>
+      <div class="lesson-tip"><div class="tip-label">💡 Astuce</div>
+      Pour comparer, mets le même nombre de chiffres après la virgule en ajoutant des zéros : 3,7 → 3,70 et 3,52 → 3,52. Maintenant compare : 70 > 52 !</div>`,
+      exercise:{question:'Quel nombre est le plus grand : 4,8 ou 4,12 ?',choices:['4,8','4,12'],correct:0}
+    },
+    { title:'Arrondir un décimal', icon:'🎯',
+      content:`<p><strong>Arrondir</strong>, c'est simplifier un nombre en gardant moins de chiffres après la virgule.</p>
+      <div class="lesson-formula">Si le chiffre suivant est ≥ 5 → on arrondit au-dessus<br>Si le chiffre suivant est < 5 → on garde</div>
+      <div class="lesson-example"><div class="ex-label">🌸 Exemples</div>
+      <div class="ex-content">Arrondir 3,<strong>7</strong> à l'unité : le chiffre des dixièmes est 7 ≥ 5 → <strong>4</strong><br>
+      Arrondir 6,<strong>3</strong> à l'unité : le chiffre des dixièmes est 3 < 5 → <strong>6</strong><br>
+      Arrondir 2,4<strong>5</strong> au dixième : centièmes = 5 ≥ 5 → <strong>2,5</strong></div></div>
+      <div class="lesson-tip"><div class="tip-label">📌 Retiens</div>À partir de 5, on monte. En dessous de 5, on reste.</div>`,
+      exercise:{question:'Arrondis 8,47 à l\'unité :',choices:['8','9','8,5','8,4'],correct:0}
+    },
+    { title:'Multiplier par 10, 100, 1000', icon:'✖️',
+      content:`<p>Multiplier par 10, 100 ou 1000 déplace la virgule vers la <strong>droite</strong>.</p>
+      <div class="lesson-formula">× 10 → virgule 1 rang à droite<br>× 100 → virgule 2 rangs à droite<br>× 1000 → virgule 3 rangs à droite</div>
+      <div class="lesson-example"><div class="ex-label">🌸 Exemples</div>
+      <div class="ex-content">3,45 × 10 = <strong>34,5</strong><br>
+      3,45 × 100 = <strong>345</strong><br>
+      3,45 × 1000 = <strong>3 450</strong></div></div>
+      <div class="lesson-tip"><div class="tip-label">💡 Et diviser ?</div>
+      Diviser par 10, 100, 1000 fait l'inverse : virgule vers la <strong>gauche</strong> !<br>
+      345 ÷ 100 = 3,45</div>`,
+      exercise:{question:'Calcule : 2,7 × 100 =',choices:['270','27','2700','0,027'],correct:0}
+    }
+  ]
+},
+
+operations: {
+  facile: [
+    { title:'Les tables de multiplication', icon:'✖️',
+      content:`<p>Les tables de multiplication sont <strong>indispensables</strong>. Il faut les connaître par cœur jusqu'à 12 !</p>
+      <div class="lesson-example"><div class="ex-label">🌸 Les tables les plus utiles</div>
+      <div class="ex-content">
+      <strong>Table de 7 :</strong> 7, 14, 21, 28, 35, 42, 49, 56, 63, 70, 77, 84<br>
+      <strong>Table de 8 :</strong> 8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96<br>
+      <strong>Table de 9 :</strong> 9, 18, 27, 36, 45, 54, 63, 72, 81, 90, 99, 108</div></div>
+      <div class="lesson-tip"><div class="tip-label">💡 Astuce pour la table de 9</div>
+      Les dizaines augmentent de 1, les unités diminuent de 1 :<br>
+      <strong>09, 18, 27, 36, 45, 54, 63, 72, 81, 90</strong><br>
+      Et la somme des chiffres fait toujours 9 !</div>`,
+      exercise:{question:'Combien font 7 × 8 ?',choices:['56','54','48','64'],correct:0}
+    },
+    { title:'La division euclidienne', icon:'➗',
+      content:`<p>La <strong>division euclidienne</strong> donne un <strong>quotient</strong> et un <strong>reste</strong>.</p>
+      <div class="lesson-formula">dividende = diviseur × quotient + reste<br>Le reste est toujours plus petit que le diviseur !</div>
+      <div class="lesson-example"><div class="ex-label">🌸 Exemple</div>
+      <div class="ex-content">23 ÷ 5 = ?<br>
+      <span class="step">5 × 4 = 20 (le plus proche sans dépasser 23)</span><br>
+      <span class="step">Reste : 23 − 20 = 3</span><br>
+      <span class="step">23 = 5 × <strong>4</strong> + <strong>3</strong> → quotient = 4, reste = 3</span></div></div>
+      <div class="lesson-tip"><div class="tip-label">📌 Vocabulaire</div>
+      • <strong>Dividende</strong> : le nombre qu'on divise (23)<br>
+      • <strong>Diviseur</strong> : le nombre par lequel on divise (5)<br>
+      • <strong>Quotient</strong> : le résultat (4)<br>
+      • <strong>Reste</strong> : ce qui reste (3)</div>`,
+      exercise:{question:'Dans 29 ÷ 6, quel est le reste ?',choices:['5','3','4','2'],correct:0}
+    },
+    { title:'Priorités des opérations', icon:'📋',
+      content:`<p>Quand il y a plusieurs opérations, on ne calcule pas de gauche à droite ! Il faut respecter les <strong>priorités</strong>.</p>
+      <div class="lesson-formula">1. Parenthèses en premier<br>2. × et ÷ ensuite<br>3. + et − en dernier</div>
+      <div class="lesson-example"><div class="ex-label">🌸 Exemple</div>
+      <div class="ex-content">3 + 4 × 2 = ?<br>
+      <span class="step">❌ (3 + 4) × 2 = 14 → FAUX si pas de parenthèses</span><br>
+      <span class="step">✅ 3 + (4 × 2) = 3 + 8 = <strong>11</strong></span><br><br>
+      (3 + 4) × 2 = 7 × 2 = <strong>14</strong> → les parenthèses changent tout !</div></div>
+      <div class="lesson-tip"><div class="tip-label">💡 Moyen mnémotechnique</div>
+      <strong>P</strong>arenthèses → <strong>M</strong>ultiplication/<strong>D</strong>ivision → <strong>A</strong>ddition/<strong>S</strong>oustraction</div>`,
+      exercise:{question:'Calcule : 5 + 3 × 2 =',choices:['11','16','13','10'],correct:0}
+    }
+  ]
+},
+
+fractions6: {
+  facile: [
+    { title:'Qu\'est-ce qu\'une fraction ?', icon:'🍕',
+      content:`<p>Une <strong>fraction</strong> représente une partie d'un tout. C'est un nombre écrit avec un <strong>numérateur</strong> (en haut) et un <strong>dénominateur</strong> (en bas).</p>
+      <div class="lesson-formula">numérateur / dénominateur = combien de parts / taille des parts</div>
+      <div class="lesson-example"><div class="ex-label">🌸 Exemple Animal Crossing</div>
+      <div class="ex-content">Tu as cueilli <strong>3 fruits sur 8</strong> de l'arbre 🍎<br>
+      <span class="step">Tu as ramassé <strong>3/8</strong> des fruits</span><br>
+      <span class="step">3 = numérateur (fruits cueillis)</span><br>
+      <span class="step">8 = dénominateur (fruits au total)</span></div></div>
+      <div class="lesson-tip"><div class="tip-label">📌 Retiens</div>
+      Le dénominateur ne peut <strong>JAMAIS</strong> être 0 !<br>
+      Plus le dénominateur est grand, plus les parts sont petites : 1/100 < 1/10 < 1/2</div>`,
+      exercise:{question:'Dans 5/7, quel est le dénominateur ?',choices:['7','5','2','12'],correct:0}
+    },
+    { title:'Fractions et droite graduée', icon:'📏',
+      content:`<p>On peut placer les fractions sur une <strong>droite graduée</strong>.</p>
+      <div class="lesson-example"><div class="ex-label">🌸 Comment placer 3/4 ?</div>
+      <div class="ex-content">
+      <span class="step">1. On divise le segment [0 ; 1] en <strong>4 parts égales</strong> (= dénominateur)</span><br>
+      <span class="step">2. On avance de <strong>3 parts</strong> (= numérateur)</span><br>
+      <span class="step">3/4 est entre 0 et 1, plus proche de 1</span></div></div>
+      <div class="lesson-tip"><div class="tip-label">📌 Fractions et 1</div>
+      • Si numérateur < dénominateur → fraction < 1 (ex: 3/4)<br>
+      • Si numérateur = dénominateur → fraction = 1 (ex: 5/5)<br>
+      • Si numérateur > dénominateur → fraction > 1 (ex: 7/4)</div>`,
+      exercise:{question:'3/3 est égal à...',choices:['1','3','0','1/3'],correct:0}
+    },
+    { title:'Additionner des fractions', icon:'➕',
+      content:`<p>Pour additionner des fractions de <strong>même dénominateur</strong>, on additionne les numérateurs et on garde le dénominateur.</p>
+      <div class="lesson-formula">a/n + b/n = (a+b)/n</div>
+      <div class="lesson-example"><div class="ex-label">🌸 Exemple</div>
+      <div class="ex-content">2/5 + 1/5 = (2+1)/5 = <strong>3/5</strong><br>
+      <span class="step">Comme des parts de gâteau : 2 parts + 1 part = 3 parts (sur 5)</span></div></div>
+      <div class="lesson-tip"><div class="tip-label">⚠️ Erreur classique</div>
+      On n'additionne <strong>JAMAIS</strong> les dénominateurs !<br>
+      2/5 + 1/5 = 3/5 ✅<br>
+      2/5 + 1/5 ≠ 3/10 ❌</div>`,
+      exercise:{question:'3/8 + 2/8 = ?',choices:['5/8','5/16','6/8','1/8'],correct:0}
+    }
+  ]
+},
+
+geometrie: {
+  facile: [
+    { title:'Périmètre d\'un rectangle', icon:'📐',
+      content:`<p>Le <strong>périmètre</strong> est la longueur du contour d'une figure. Pour un rectangle :</p>
+      <div class="lesson-formula">P = 2 × (L + l)<br>P = 2 × Longueur + 2 × largeur</div>
+      <div class="lesson-example"><div class="ex-label">🌸 Exemple</div>
+      <div class="ex-content">Un terrain de 8m par 5m :<br>
+      <span class="step">P = 2 × (8 + 5) = 2 × 13 = <strong>26 m</strong></span></div></div>
+      <div class="lesson-tip"><div class="tip-label">📌 Cas particulier : le carré</div>
+      Un carré a 4 côtés égaux → P = 4 × côté<br>
+      Carré de côté 6 cm → P = 4 × 6 = <strong>24 cm</strong></div>`,
+      exercise:{question:'Périmètre d\'un rectangle 10 cm × 3 cm ?',choices:['26 cm','30 cm','13 cm','60 cm'],correct:0}
+    },
+    { title:'Aire d\'un rectangle', icon:'📏',
+      content:`<p>L'<strong>aire</strong> mesure la surface à l'intérieur d'une figure. Pour un rectangle :</p>
+      <div class="lesson-formula">A = L × l<br>Aire = Longueur × largeur</div>
+      <div class="lesson-example"><div class="ex-label">🌸 Exemple</div>
+      <div class="ex-content">Pièce de 6m par 4m :<br>
+      <span class="step">A = 6 × 4 = <strong>24 m²</strong></span></div></div>
+      <div class="lesson-tip"><div class="tip-label">⚠️ Ne confonds pas !</div>
+      • <strong>Périmètre</strong> = longueur du tour (en m, cm...)<br>
+      • <strong>Aire</strong> = surface intérieure (en m², cm²...)<br>
+      L'unité change : cm pour le périmètre, cm² pour l'aire !</div>`,
+      exercise:{question:'Aire d\'un carré de côté 7 cm ?',choices:['49 cm²','28 cm²','14 cm²','21 cm²'],correct:0}
+    },
+    { title:'La symétrie axiale', icon:'🪞',
+      content:`<p>Deux figures sont <strong>symétriques par rapport à un axe</strong> si elles sont le reflet l'une de l'autre, comme dans un miroir.</p>
+      <div class="lesson-example"><div class="ex-label">🌸 Dans la vie courante</div>
+      <div class="ex-content">
+      • Un papillon 🦋 : ses ailes sont symétriques<br>
+      • La lettre <strong>A</strong> a un axe de symétrie vertical<br>
+      • Un visage humain est (presque) symétrique</div></div>
+      <div class="lesson-tip"><div class="tip-label">📌 Axes de symétrie des figures</div>
+      • Carré : <strong>4 axes</strong><br>
+      • Rectangle : <strong>2 axes</strong><br>
+      • Triangle équilatéral : <strong>3 axes</strong><br>
+      • Cercle : <strong>infini</strong> d'axes !</div>`,
+      exercise:{question:'Combien d\'axes de symétrie a un rectangle ?',choices:['2','4','1','3'],correct:0}
+    }
+  ]
+},
+
+proportionnalite6: {
+  facile: [
+    { title:'C\'est quoi la proportionnalité ?', icon:'⚖️',
+      content:`<p>Deux grandeurs sont <strong>proportionnelles</strong> quand on multiplie l'une par un nombre fixe pour obtenir l'autre.</p>
+      <div class="lesson-formula">Si on double la quantité → on double le prix<br>Si on triple la quantité → on triple le prix</div>
+      <div class="lesson-example"><div class="ex-label">🌸 Exemple</div>
+      <div class="ex-content">1 navet = 100 🔔<br>
+      <span class="step">2 navets = 200 🔔 (×2)</span><br>
+      <span class="step">5 navets = 500 🔔 (×5)</span><br>
+      <span class="step">Le prix est proportionnel au nombre de navets !</span></div></div>
+      <div class="lesson-tip"><div class="tip-label">📌 Comment vérifier ?</div>
+      Divise toujours le prix par la quantité. Si tu obtiens toujours le même nombre, c'est proportionnel !<br>
+      200÷2 = 100, 500÷5 = 100 ✅</div>`,
+      exercise:{question:'3 pommes = 6€, 6 pommes = 12€. Proportionnel ?',choices:['Oui','Non'],correct:0}
+    },
+    { title:'Les pourcentages', icon:'💯',
+      content:`<p>Un <strong>pourcentage</strong> est une fraction sur 100. "50%" signifie "50 sur 100" = la moitié.</p>
+      <div class="lesson-formula">x% de N = (x × N) / 100</div>
+      <div class="lesson-example"><div class="ex-label">🌸 Les pourcentages à connaître</div>
+      <div class="ex-content">
+      • <strong>50%</strong> = la moitié → diviser par 2<br>
+      • <strong>25%</strong> = le quart → diviser par 4<br>
+      • <strong>10%</strong> = un dixième → diviser par 10<br>
+      • <strong>75%</strong> = trois quarts → 3 × (÷4)</div></div>
+      <div class="lesson-tip"><div class="tip-label">💡 Astuce pour 10%</div>
+      10% d'un nombre = on enlève un zéro (ou on décale la virgule) !<br>
+      10% de 250 = <strong>25</strong><br>
+      20% = 2 × 10%, donc 20% de 250 = 2 × 25 = <strong>50</strong></div>`,
+      exercise:{question:'Combien font 25% de 80 ?',choices:['20','40','25','8'],correct:0}
+    }
+  ]
+},
+
+// ─── FRANÇAIS ───
+grammaire: {
+  facile: [
+    { title:'Les classes de mots', icon:'📝',
+      content:`<p>Chaque mot de la langue française appartient à une <strong>classe grammaticale</strong> (sa nature). C'est sa carte d'identité !</p>
+      <div class="lesson-formula">Les 9 classes de mots :<br>Nom, Déterminant, Adjectif, Pronom, Verbe,<br>Adverbe, Préposition, Conjonction, Interjection</div>
+      <div class="lesson-example"><div class="ex-label">🌸 Les 5 classes les plus importantes</div>
+      <div class="ex-content">
+      • <strong>Nom</strong> : désigne une personne, un animal, une chose (chat, maison, Tom Nook)<br>
+      • <strong>Déterminant</strong> : accompagne le nom (le, la, un, mon, ce)<br>
+      • <strong>Adjectif</strong> : qualifie le nom (grand, joli, vert)<br>
+      • <strong>Verbe</strong> : exprime une action ou un état (manger, être, courir)<br>
+      • <strong>Pronom</strong> : remplace un nom (je, tu, il, celui-ci)</div></div>
+      <div class="lesson-tip"><div class="tip-label">💡 Comment trouver la nature d'un mot ?</div>
+      Pose-toi la question : est-ce qu'il peut être précédé de "le/la/un/une" ? → c'est un <strong>nom</strong><br>
+      Est-ce qu'il se conjugue ? → c'est un <strong>verbe</strong><br>
+      Est-ce qu'il dit "comment est" le nom ? → c'est un <strong>adjectif</strong></div>`,
+      exercise:{question:'Quelle est la nature du mot "rapidement" ?',choices:['Adverbe','Adjectif','Nom','Verbe'],correct:0}
+    },
+    { title:'Le sujet et le verbe', icon:'🎯',
+      content:`<p>La <strong>fonction</strong> d'un mot, c'est son rôle dans la phrase. Le <strong>sujet</strong> fait l'action du <strong>verbe</strong>.</p>
+      <div class="lesson-formula">Pour trouver le sujet, demande :<br>"Qui est-ce qui + verbe ?"</div>
+      <div class="lesson-example"><div class="ex-label">🌸 Exemples</div>
+      <div class="ex-content">
+      <strong>Marie</strong> mange une pomme.<br>
+      <span class="step">Qui est-ce qui mange ? → Marie = sujet</span><br><br>
+      <strong>Les oiseaux</strong> chantent dans les arbres.<br>
+      <span class="step">Qui est-ce qui chante ? → Les oiseaux = sujet</span></div></div>
+      <div class="lesson-tip"><div class="tip-label">📌 Le verbe s'accorde avec le sujet</div>
+      Le chat <strong>dort</strong> (singulier)<br>
+      Les chats <strong>dorment</strong> (pluriel)<br>
+      C'est pour ça qu'il faut bien identifier le sujet !</div>`,
+      exercise:{question:'Dans "Les fleurs poussent", quel est le sujet ?',choices:['Les fleurs','poussent','Les','fleurs'],correct:0}
+    },
+    { title:'COD et COI', icon:'🔍',
+      content:`<p>Le <strong>COD</strong> (Complément d'Objet Direct) et le <strong>COI</strong> (Complément d'Objet Indirect) complètent le verbe.</p>
+      <div class="lesson-formula">COD → sujet + verbe + <strong>quoi ?</strong> ou <strong>qui ?</strong><br>COI → sujet + verbe + <strong>à qui ?</strong> ou <strong>de quoi ?</strong></div>
+      <div class="lesson-example"><div class="ex-label">🌸 Exemples</div>
+      <div class="ex-content">
+      Je mange <strong>une pomme</strong>. → Je mange quoi ? → <strong>COD</strong><br>
+      Je parle <strong>à Marie</strong>. → Je parle à qui ? → <strong>COI</strong><br>
+      Je pense <strong>à mes vacances</strong>. → Je pense à quoi ? → <strong>COI</strong></div></div>
+      <div class="lesson-tip"><div class="tip-label">💡 La différence</div>
+      Le COD est relié <strong>directement</strong> au verbe (pas de préposition)<br>
+      Le COI est relié par une <strong>préposition</strong> (à, de, pour...)</div>`,
+      exercise:{question:'Dans "Il regarde la télé", "la télé" est...',choices:['COD','COI','Sujet','Adverbe'],correct:0}
+    }
+  ]
+},
+
+conjugaison: {
+  facile: [
+    { title:'Le présent de l\'indicatif', icon:'⏰',
+      content:`<p>Le <strong>présent</strong> exprime une action qui se passe maintenant, ou une habitude.</p>
+      <div class="lesson-formula">1er groupe (-er) : -e, -es, -e, -ons, -ez, -ent<br>2e groupe (-ir → -issons) : -is, -is, -it, -issons, -issez, -issent<br>3e groupe : irréguliers !</div>
+      <div class="lesson-example"><div class="ex-label">🌸 Exemples</div>
+      <div class="ex-content">
+      <strong>Manger (1er gr.)</strong> : je mange, tu manges, il mange, nous mangeons, vous mangez, ils mangent<br><br>
+      <strong>Finir (2e gr.)</strong> : je finis, tu finis, il finit, nous finissons, vous finissez, ils finissent</div></div>
+      <div class="lesson-tip"><div class="tip-label">⚠️ Les pièges du 3e groupe</div>
+      Être : je <strong>suis</strong>, tu <strong>es</strong>, il <strong>est</strong>...<br>
+      Avoir : j'<strong>ai</strong>, tu <strong>as</strong>, il <strong>a</strong>...<br>
+      Aller : je <strong>vais</strong>, tu <strong>vas</strong>, il <strong>va</strong>...<br>
+      Faire : je <strong>fais</strong>, tu <strong>fais</strong>, il <strong>fait</strong>, nous <strong>faisons</strong></div>`,
+      exercise:{question:'Conjugue "finir" au présent avec "nous" :',choices:['finissons','finons','finissez','finirons'],correct:0}
+    },
+    { title:'L\'imparfait', icon:'📜',
+      content:`<p>L'<strong>imparfait</strong> décrit des actions passées qui duraient ou se répétaient.</p>
+      <div class="lesson-formula">Terminaisons (toujours les mêmes !) :<br>-ais, -ais, -ait, -ions, -iez, -aient</div>
+      <div class="lesson-example"><div class="ex-label">🌸 Comment former l'imparfait ?</div>
+      <div class="ex-content">
+      <span class="step">1. Prends le verbe au présent avec "nous"</span><br>
+      <span class="step">2. Enlève "-ons"</span><br>
+      <span class="step">3. Ajoute les terminaisons de l'imparfait</span><br><br>
+      Manger → nous mang<strong>eons</strong> → radical : mange-<br>
+      Je mange<strong>ais</strong>, tu mange<strong>ais</strong>, il mange<strong>ait</strong>...</div></div>
+      <div class="lesson-tip"><div class="tip-label">⚠️ Exception</div>
+      <strong>Être</strong> : j'étais (radical "ét-", pas "somm-")</div>`,
+      exercise:{question:'Conjugue "avoir" à l\'imparfait avec "tu" :',choices:['avais','avait','avions','aurai'],correct:0}
+    },
+    { title:'Le futur simple', icon:'🔮',
+      content:`<p>Le <strong>futur simple</strong> exprime une action qui va se produire plus tard.</p>
+      <div class="lesson-formula">Infinitif + terminaisons :<br>-ai, -as, -a, -ons, -ez, -ont</div>
+      <div class="lesson-example"><div class="ex-label">🌸 Exemples</div>
+      <div class="ex-content">
+      <strong>Manger</strong> → je manger<strong>ai</strong>, tu manger<strong>as</strong>, il manger<strong>a</strong><br>
+      <strong>Finir</strong> → je finir<strong>ai</strong>, tu finir<strong>as</strong>, il finir<strong>a</strong></div></div>
+      <div class="lesson-tip"><div class="tip-label">⚠️ Verbes irréguliers au futur</div>
+      Être → je <strong>ser</strong>ai<br>
+      Avoir → j'<strong>aur</strong>ai<br>
+      Aller → j'<strong>ir</strong>ai<br>
+      Faire → je <strong>fer</strong>ai<br>
+      Venir → je <strong>viendr</strong>ai</div>`,
+      exercise:{question:'Conjugue "aller" au futur avec "nous" :',choices:['irons','allons','allerons','irez'],correct:0}
+    }
+  ]
+},
+
+orthographe: {
+  facile: [
+    { title:'Les homophones a/à et est/et', icon:'✏️',
+      content:`<p>Les <strong>homophones</strong> se prononcent pareil mais s'écrivent différemment !</p>
+      <div class="lesson-formula"><strong>a</strong> = verbe avoir → remplace par "avait"<br><strong>à</strong> = préposition → ne peut pas être remplacé par "avait"</div>
+      <div class="lesson-example"><div class="ex-label">🌸 Exemples</div>
+      <div class="ex-content">
+      Il <strong>a</strong> un chat. → Il <em>avait</em> un chat ✅ → c'est "a" (avoir)<br>
+      Je vais <strong>à</strong> l'école. → Je vais <em>avait</em> l'école ❌ → c'est "à"</div></div>
+      <div class="lesson-formula"><strong>est</strong> = verbe être → remplace par "était"<br><strong>et</strong> = conjonction → remplace par "et aussi"</div>
+      <div class="lesson-example"><div class="ex-label">🌸 Exemples</div>
+      <div class="ex-content">
+      Il <strong>est</strong> grand. → Il <em>était</em> grand ✅ → c'est "est"<br>
+      Un chat <strong>et</strong> un chien. → Un chat <em>et aussi</em> un chien ✅ → c'est "et"</div></div>`,
+      exercise:{question:'Choisis : "Elle ... partie ... Paris"',choices:['est / à','et / a','est / a','et / à'],correct:0}
+    },
+    { title:'Les accords dans le groupe nominal', icon:'📝',
+      content:`<p>Dans un groupe nominal, le <strong>déterminant</strong> et l'<strong>adjectif</strong> s'accordent en genre et en nombre avec le <strong>nom</strong>.</p>
+      <div class="lesson-formula">Le nom donne le genre (masculin/féminin) et le nombre (singulier/pluriel)<br>→ tout le groupe suit !</div>
+      <div class="lesson-example"><div class="ex-label">🌸 Exemples</div>
+      <div class="ex-content">
+      <strong>une</strong> fleur <strong>rouge</strong> (fém. singulier)<br>
+      <strong>des</strong> fleur<strong>s</strong> rouge<strong>s</strong> (fém. pluriel)<br>
+      <strong>un</strong> <strong>grand</strong> arbre (masc. singulier)<br>
+      <strong>de</strong> <strong>grands</strong> arbre<strong>s</strong> (masc. pluriel)</div></div>
+      <div class="lesson-tip"><div class="tip-label">⚠️ Pièges du pluriel</div>
+      • Mots en -al → -aux : cheval → chevaux<br>
+      • 7 mots en -ou → -oux : bijou, caillou, chou, genou, hibou, joujou, pou<br>
+      • Mots en -eau → -eaux : bateau → bateaux</div>`,
+      exercise:{question:'Le pluriel de "journal" est...',choices:['journaux','journals','journales','journauxs'],correct:0}
+    }
+  ]
+},
+
+vocabulaire: {
+  facile: [
+    { title:'Synonymes et antonymes', icon:'🔄',
+      content:`<p>Les <strong>synonymes</strong> sont des mots de sens proche. Les <strong>antonymes</strong> sont des mots de sens contraire.</p>
+      <div class="lesson-formula">Synonymes = même sens<br>Antonymes = sens contraire</div>
+      <div class="lesson-example"><div class="ex-label">🌸 Exemples</div>
+      <div class="ex-content">
+      <strong>Synonymes :</strong> content = heureux = joyeux<br>
+      <strong>Synonymes :</strong> maison = demeure = habitation<br><br>
+      <strong>Antonymes :</strong> grand ≠ petit<br>
+      <strong>Antonymes :</strong> rapide ≠ lent<br>
+      <strong>Antonymes :</strong> monter ≠ descendre</div></div>
+      <div class="lesson-tip"><div class="tip-label">💡 À quoi ça sert ?</div>
+      Les synonymes permettent d'<strong>éviter les répétitions</strong> dans un texte !<br>
+      Au lieu de dire "le chat est beau, le chat est grand", on dit "le chat est beau, <strong>l'animal</strong> est grand"</div>`,
+      exercise:{question:'Quel est l\'antonyme de "joyeux" ?',choices:['triste','content','heureux','gai'],correct:0}
+    },
+    { title:'Préfixes et suffixes', icon:'🧩',
+      content:`<p>Un <strong>préfixe</strong> se place avant le radical pour changer le sens. Un <strong>suffixe</strong> se place après.</p>
+      <div class="lesson-formula">préfixe + radical + suffixe = mot dérivé</div>
+      <div class="lesson-example"><div class="ex-label">🌸 Préfixes courants</div>
+      <div class="ex-content">
+      • <strong>re-</strong> = encore : refaire, recommencer<br>
+      • <strong>in-/im-</strong> = contraire : impossible, invisible<br>
+      • <strong>dé-/dés-</strong> = contraire : défaire, désordre<br>
+      • <strong>pré-</strong> = avant : prévoir, préhistoire</div></div>
+      <div class="lesson-example"><div class="ex-label">🌸 Suffixes courants</div>
+      <div class="ex-content">
+      • <strong>-eur/-euse</strong> = celui qui fait : joueur, chanteuse<br>
+      • <strong>-tion/-sion</strong> = action : création, décision<br>
+      • <strong>-able/-ible</strong> = qu'on peut : mangeable, visible</div></div>`,
+      exercise:{question:'Dans "impossible", le préfixe est...',choices:['im-','imp-','-ible','poss-'],correct:0}
+    }
+  ]
+},
+
+// ─── HISTOIRE-GÉO ───
+prehistoire: {
+  facile: [
+    { title:'Les premiers hommes', icon:'🦴',
+      content:`<p>L'<strong>humanité</strong> est apparue en <strong>Afrique</strong> il y a environ <strong>7 millions d'années</strong>. Les premiers hommes étaient des <strong>nomades</strong> qui vivaient de chasse et de cueillette.</p>
+      <div class="lesson-example"><div class="ex-label">🌸 Les grandes étapes</div>
+      <div class="ex-content">
+      • <strong>~7 millions d'années</strong> : premiers hominidés en Afrique<br>
+      • <strong>~400 000 ans</strong> : maîtrise du feu<br>
+      • <strong>~100 000 ans</strong> : Homo sapiens (nous !)<br>
+      • <strong>~35 000 ans</strong> : premiers outils sophistiqués, art (Lascaux)</div></div>
+      <div class="lesson-tip"><div class="tip-label">📌 Vocabulaire</div>
+      <strong>Nomade</strong> : qui se déplace, ne vit pas au même endroit<br>
+      <strong>Sédentaire</strong> : qui reste au même endroit<br>
+      <strong>Paléolithique</strong> : âge de la pierre taillée (ancien)<br>
+      <strong>Néolithique</strong> : âge de la pierre polie (nouveau)</div>`,
+      exercise:{question:'Où sont apparus les premiers hommes ?',choices:['En Afrique','En Europe','En Asie','En Amérique'],correct:0}
+    },
+    { title:'La révolution néolithique', icon:'🌾',
+      content:`<p>Vers <strong>−10 000 ans</strong>, un changement énorme : les hommes deviennent <strong>agriculteurs et éleveurs</strong>. C'est la <strong>révolution néolithique</strong>.</p>
+      <div class="lesson-example"><div class="ex-label">🌸 Ce qui change</div>
+      <div class="ex-content">
+      • Les hommes <strong>cultivent</strong> des céréales (blé, orge)<br>
+      • Ils <strong>domestiquent</strong> des animaux (moutons, chèvres, bœufs)<br>
+      • Ils deviennent <strong>sédentaires</strong> → premiers villages<br>
+      • Invention de la <strong>poterie</strong> et du <strong>tissage</strong></div></div>
+      <div class="lesson-tip"><div class="tip-label">📌 Pourquoi c'est important ?</div>
+      C'est le plus grand changement de l'histoire humaine ! Avant, on suivait la nourriture. Après, on la produit soi-même. Ça permet de vivre en plus grands groupes → naissance des premières villes.</div>`,
+      exercise:{question:'La révolution néolithique c\'est...',choices:['le début de l\'agriculture','l\'invention du feu','la première guerre','l\'invention de l\'écriture'],correct:0}
+    }
+  ]
+},
+
+antiquite: {
+  facile: [
+    { title:'L\'Égypte antique', icon:'🏺',
+      content:`<p>La civilisation égyptienne est née le long du <strong>Nil</strong> vers <strong>3100 av. J.-C.</strong> Elle est célèbre pour ses pyramides et ses pharaons.</p>
+      <div class="lesson-example"><div class="ex-label">🌸 Ce qu'il faut retenir</div>
+      <div class="ex-content">
+      • Le <strong>Nil</strong> : fleuve vital, ses crues fertilisent les terres<br>
+      • Les <strong>pharaons</strong> : rois considérés comme des dieux<br>
+      • Les <strong>pyramides</strong> : tombeaux des pharaons (Gizeh, ~2500 av. J.-C.)<br>
+      • Les <strong>hiéroglyphes</strong> : écriture sacrée des Égyptiens<br>
+      • La <strong>momification</strong> : conservation des corps pour l'au-delà</div></div>
+      <div class="lesson-tip"><div class="tip-label">📌 Date clé</div>
+      L'écriture est inventée vers <strong>3300 av. J.-C.</strong> → c'est la fin de la Préhistoire et le début de l'<strong>Histoire</strong> !</div>`,
+      exercise:{question:'Les pyramides de Gizeh sont des...',choices:['tombeaux de pharaons','temples','palais','écoles'],correct:0}
+    },
+    { title:'La Grèce antique et la démocratie', icon:'🏛️',
+      content:`<p>La Grèce antique a inventé la <strong>démocratie</strong> à <strong>Athènes</strong> au Ve siècle avant J.-C.</p>
+      <div class="lesson-formula">Démocratie = "demos" (peuple) + "kratos" (pouvoir)<br>= le pouvoir du peuple</div>
+      <div class="lesson-example"><div class="ex-label">🌸 La démocratie à Athènes</div>
+      <div class="ex-content">
+      • Les <strong>citoyens</strong> votent les lois à l'Assemblée (Ecclésia)<br>
+      • Mais seuls les hommes libres, nés à Athènes, sont citoyens<br>
+      • Les femmes, les esclaves et les étrangers sont <strong>exclus</strong><br>
+      • C'est une démocratie <strong>directe</strong> (les citoyens votent eux-mêmes)</div></div>
+      <div class="lesson-tip"><div class="tip-label">📌 Héritage grec</div>
+      Les Grecs nous ont aussi donné : les Jeux olympiques, la philosophie (Socrate, Platon), le théâtre, et de grands monuments comme le <strong>Parthénon</strong>.</div>`,
+      exercise:{question:'La démocratie est née à...',choices:['Athènes','Rome','Sparte','Le Caire'],correct:0}
+    }
+  ]
+},
+
+geo_habiter: {
+  facile: [
+    { title:'Habiter une métropole', icon:'🏙️',
+      content:`<p>Une <strong>métropole</strong> est une très grande ville qui concentre population, activités économiques et pouvoir de décision.</p>
+      <div class="lesson-example"><div class="ex-label">🌸 Exemples de métropoles</div>
+      <div class="ex-content">
+      • <strong>Paris</strong> (~12 millions avec la banlieue)<br>
+      • <strong>Tokyo</strong> (~37 millions, la plus grande du monde !)<br>
+      • <strong>New York</strong>, <strong>Londres</strong>, <strong>Shanghai</strong>...</div></div>
+      <div class="lesson-tip"><div class="tip-label">📌 Vocabulaire</div>
+      <strong>Urbanisation</strong> : croissance des villes<br>
+      <strong>Banlieue</strong> : zone autour du centre-ville<br>
+      <strong>Exode rural</strong> : départ des campagnes vers les villes<br>
+      Aujourd'hui, plus de <strong>55%</strong> de l'humanité vit en ville !</div>`,
+      exercise:{question:'Quelle est la plus grande métropole du monde ?',choices:['Tokyo','Paris','New York','Londres'],correct:0}
+    },
+    { title:'Les continents et océans', icon:'🌍',
+      content:`<p>La Terre compte <strong>6 continents</strong> et <strong>5 océans</strong>.</p>
+      <div class="lesson-example"><div class="ex-label">🌸 Les 6 continents</div>
+      <div class="ex-content">
+      🌍 <strong>Afrique</strong> — 🌏 <strong>Asie</strong> (le plus grand et peuplé) — 🌍 <strong>Europe</strong><br>
+      🌎 <strong>Amérique</strong> — 🌏 <strong>Océanie</strong> — 🧊 <strong>Antarctique</strong></div></div>
+      <div class="lesson-example"><div class="ex-label">🌸 Les 5 océans</div>
+      <div class="ex-content">
+      🌊 <strong>Pacifique</strong> (le plus grand) — 🌊 <strong>Atlantique</strong> — 🌊 <strong>Indien</strong><br>
+      🌊 <strong>Arctique</strong> (au nord) — 🌊 <strong>Antarctique/Austral</strong> (au sud)</div></div>
+      <div class="lesson-tip"><div class="tip-label">💡 Moyen mnémotechnique pour les océans</div>
+      <strong>P</strong>acifique, <strong>A</strong>tlantique, <strong>I</strong>ndien, <strong>A</strong>rctique, <strong>A</strong>ntarctique<br>
+      → <strong>PAIAA</strong> (ou retiens "PAI" pour les 3 principaux)</div>`,
+      exercise:{question:'Quel est le continent le plus peuplé ?',choices:['L\'Asie','L\'Afrique','L\'Europe','L\'Amérique'],correct:0}
+    }
+  ]
+},
+
+// ─── ANGLAIS ───
+eng_vocab: {
+  facile: [
+    { title:'Family & People', icon:'👨‍👩‍👧‍👦',
+      content:`<p>Les mots de la <strong>famille</strong> et des personnes en anglais :</p>
+      <div class="lesson-example"><div class="ex-label">🌸 La famille</div>
+      <div class="ex-content">
+      • <strong>mother</strong> = mère | <strong>father</strong> = père<br>
+      • <strong>sister</strong> = sœur | <strong>brother</strong> = frère<br>
+      • <strong>daughter</strong> = fille | <strong>son</strong> = fils<br>
+      • <strong>grandmother</strong> = grand-mère | <strong>grandfather</strong> = grand-père<br>
+      • <strong>parents</strong> = parents | <strong>children</strong> = enfants<br>
+      • <strong>friend</strong> = ami(e)</div></div>
+      <div class="lesson-tip"><div class="tip-label">💡 Astuce</div>
+      <strong>Grand-</strong> en français = <strong>grand-</strong> en anglais aussi !<br>
+      grandmother, grandfather, grandparents</div>`,
+      exercise:{question:'Comment dit-on "frère" en anglais ?',choices:['brother','sister','father','son'],correct:0}
+    },
+    { title:'Colors & Numbers', icon:'🎨',
+      content:`<p>Les <strong>couleurs</strong> et <strong>nombres</strong> sont essentiels en anglais !</p>
+      <div class="lesson-example"><div class="ex-label">🌸 Les couleurs</div>
+      <div class="ex-content">
+      🔴 <strong>red</strong> | 🔵 <strong>blue</strong> | 🟢 <strong>green</strong> | 🟡 <strong>yellow</strong><br>
+      🟠 <strong>orange</strong> | 🟣 <strong>purple</strong> | ⚫ <strong>black</strong> | ⚪ <strong>white</strong><br>
+      🩷 <strong>pink</strong> | 🤎 <strong>brown</strong> | 🩶 <strong>grey</strong></div></div>
+      <div class="lesson-example"><div class="ex-label">🌸 Les nombres 1-20</div>
+      <div class="ex-content">
+      1 <strong>one</strong> | 2 <strong>two</strong> | 3 <strong>three</strong> | 4 <strong>four</strong> | 5 <strong>five</strong><br>
+      6 <strong>six</strong> | 7 <strong>seven</strong> | 8 <strong>eight</strong> | 9 <strong>nine</strong> | 10 <strong>ten</strong><br>
+      11 <strong>eleven</strong> | 12 <strong>twelve</strong> | 13 <strong>thirteen</strong> | 14 <strong>fourteen</strong><br>
+      15 <strong>fifteen</strong> | 16 <strong>sixteen</strong> | 17 <strong>seventeen</strong><br>
+      18 <strong>eighteen</strong> | 19 <strong>nineteen</strong> | 20 <strong>twenty</strong></div></div>`,
+      exercise:{question:'Comment dit-on "vert" en anglais ?',choices:['green','blue','red','grey'],correct:0}
+    }
+  ]
+},
+
+eng_grammar: {
+  facile: [
+    { title:'Le verbe BE (être)', icon:'📏',
+      content:`<p>Le verbe <strong>to be</strong> est le verbe le plus important en anglais !</p>
+      <div class="lesson-formula">I <strong>am</strong> | you <strong>are</strong> | he/she/it <strong>is</strong><br>we <strong>are</strong> | they <strong>are</strong></div>
+      <div class="lesson-example"><div class="ex-label">🌸 Exemples</div>
+      <div class="ex-content">
+      I <strong>am</strong> happy. (Je suis content.)<br>
+      She <strong>is</strong> a student. (Elle est étudiante.)<br>
+      They <strong>are</strong> friends. (Ils sont amis.)</div></div>
+      <div class="lesson-tip"><div class="tip-label">💡 Contractions</div>
+      I am → <strong>I'm</strong><br>
+      You are → <strong>You're</strong><br>
+      He is → <strong>He's</strong><br>
+      They are → <strong>They're</strong></div>
+      <div class="lesson-tip"><div class="tip-label">📌 Pour dire son âge</div>
+      En anglais on utilise BE, pas "avoir" !<br>
+      I <strong>am</strong> 11 years old. (J'<strong>ai</strong> 11 ans.)</div>`,
+      exercise:{question:'Complète : "She ... a teacher"',choices:['is','am','are','be'],correct:0}
+    },
+    { title:'Le Present Simple', icon:'🔄',
+      content:`<p>Le <strong>Present Simple</strong> décrit les habitudes et les vérités générales.</p>
+      <div class="lesson-formula">Forme affirmative :<br>I/you/we/they + verbe<br>he/she/it + verbe + <strong>S</strong></div>
+      <div class="lesson-example"><div class="ex-label">🌸 Exemples</div>
+      <div class="ex-content">
+      I <strong>play</strong> football. (Je joue au foot.)<br>
+      She <strong>plays</strong> piano. (Elle joue du piano.) → <strong>+S</strong> !<br>
+      They <strong>live</strong> in Paris. (Ils vivent à Paris.)<br>
+      He <strong>lives</strong> in London. → <strong>+S</strong> !</div></div>
+      <div class="lesson-tip"><div class="tip-label">⚠️ La règle du S</div>
+      À la 3e personne du singulier (he, she, it), on ajoute <strong>-S</strong> au verbe.<br>
+      C'est l'erreur n°1 des élèves de 6ème !</div>
+      <div class="lesson-tip"><div class="tip-label">📌 Forme négative</div>
+      I/you/we/they <strong>don't</strong> + verbe<br>
+      He/she/it <strong>doesn't</strong> + verbe (sans le S !)<br>
+      She <strong>doesn't play</strong> tennis. ✅<br>
+      She <strong>doesn't plays</strong> tennis. ❌</div>`,
+      exercise:{question:'Complète : "He ... chocolate" (aimer)',choices:['likes','like','liking','liked'],correct:0}
+    }
+  ]
+},
+
+eng_irregular: {
+  facile: [
+    { title:'Les 10 verbes irréguliers essentiels', icon:'⚡',
+      content:`<p>Les <strong>verbes irréguliers</strong> ne suivent pas la règle du -ed au passé. Il faut les apprendre par cœur !</p>
+      <div class="lesson-example"><div class="ex-label">🌸 Les 10 plus importants</div>
+      <div class="ex-content">
+      <strong>be</strong> → was/were → been (être)<br>
+      <strong>have</strong> → had → had (avoir)<br>
+      <strong>go</strong> → went → gone (aller)<br>
+      <strong>do</strong> → did → done (faire)<br>
+      <strong>say</strong> → said → said (dire)<br>
+      <strong>make</strong> → made → made (fabriquer)<br>
+      <strong>take</strong> → took → taken (prendre)<br>
+      <strong>come</strong> → came → come (venir)<br>
+      <strong>see</strong> → saw → seen (voir)<br>
+      <strong>get</strong> → got → got (obtenir)</div></div>
+      <div class="lesson-tip"><div class="tip-label">💡 Astuce pour les retenir</div>
+      Classe-les par <strong>type</strong> :<br>
+      • Verbes qui ne changent pas : <strong>cut-cut-cut</strong>, <strong>put-put-put</strong><br>
+      • Verbes avec le même passé et participe : <strong>have-had-had</strong>, <strong>make-made-made</strong><br>
+      • Verbes tout différents : <strong>go-went-gone</strong>, <strong>be-was-been</strong></div>`,
+      exercise:{question:'Quel est le prétérit de "go" ?',choices:['went','goed','gone','going'],correct:0}
+    },
+    { title:'10 autres verbes irréguliers', icon:'📖',
+      content:`<p>Continuons avec 10 verbes irréguliers très fréquents :</p>
+      <div class="lesson-example"><div class="ex-label">🌸 Groupe 2</div>
+      <div class="ex-content">
+      <strong>eat</strong> → ate → eaten (manger)<br>
+      <strong>drink</strong> → drank → drunk (boire)<br>
+      <strong>write</strong> → wrote → written (écrire)<br>
+      <strong>read</strong> → read → read (lire) ⚠️ prononciation change !<br>
+      <strong>speak</strong> → spoke → spoken (parler)<br>
+      <strong>give</strong> → gave → given (donner)<br>
+      <strong>know</strong> → knew → known (savoir)<br>
+      <strong>think</strong> → thought → thought (penser)<br>
+      <strong>buy</strong> → bought → bought (acheter)<br>
+      <strong>find</strong> → found → found (trouver)</div></div>
+      <div class="lesson-tip"><div class="tip-label">📌 Astuce</div>
+      <strong>think-thought-thought</strong> et <strong>buy-bought-bought</strong> se ressemblent !<br>
+      Le son "-ought" revient souvent dans les verbes irréguliers anglais.</div>`,
+      exercise:{question:'Quel est le prétérit de "eat" ?',choices:['ate','eated','eaten','eating'],correct:0}
+    }
+  ]
+}
+
+}; // end LESSONS
+
+// ══════════════════════════════════════
+// LESSON ENGINE
+// ══════════════════════════════════════
+let lesson = { topicId: null, steps: [], current: 0 };
+
+function startLesson(topicId, level) {
+  level = level || 'facile';
+  const topicLessons = LESSONS[topicId];
+  if (!topicLessons) { showToast('❌', 'Cours pas encore disponible'); return; }
+  const steps = topicLessons[level];
+  if (!steps) { showToast('❌', 'Ce niveau n\'est pas encore disponible'); return; }
+  lesson = { topicId, level, steps, current: 0, exerciseCorrectFirst: 0, exerciseAttempted: {} };
+  const t = TOPICS.find(t => t.id === topicId);
+  const lvlLabel = level === 'facile' ? '🟢 Facile' : level === 'moyen' ? '🔵 Moyen' : '🟡 Difficile';
+  document.getElementById('lessonTopicLabel').textContent = `📖 ${t ? t.name : topicId} — ${lvlLabel}`;
+  document.getElementById('lessonNextBtn').style.display = '';
+  document.getElementById('lessonPrevBtn').style.display = '';
+  showScreen('screenLesson');
+  renderLessonStep();
+}
+
+function renderLessonStep() {
+  const s = lesson.steps[lesson.current];
+  const total = lesson.steps.length;
+  document.getElementById('lessonStepText').textContent = `Étape ${lesson.current + 1} / ${total}`;
+  document.getElementById('lessonProgressFill').style.width = ((lesson.current + 1) / total * 100) + '%';
+
+  const container = document.getElementById('lessonContent');
+  let html = `<div class="lesson-card">
+    <div class="lesson-icon">${s.icon}</div>
+    <h2>${s.title}</h2>
+    <div class="lesson-content">${s.content}</div>`;
+
+  if (s.exercise) {
+    const ex = s.exercise;
+    html += `<div class="lesson-exercise" id="lessonExercise">
+      <div class="ex-question">${ex.question}</div>`;
+    if (ex.choices) {
+      html += `<div class="mini-answers" id="miniAnswers">`;
+      ex.choices.forEach((c, i) => {
+        html += `<button class="mini-btn" onclick="checkLessonAnswer(this, ${i}, ${ex.correct})">${c}</button>`;
+      });
+      html += `</div>`;
+    } else if (ex.answer !== undefined) {
+      html += `<div class="lesson-input-row">
+        <input type="text" class="lesson-input" id="lessonExInput" placeholder="?" onkeydown="if(event.key==='Enter')checkLessonInput('${ex.answer}')">
+        <button class="lesson-ok-btn" onclick="checkLessonInput('${ex.answer}')">OK</button>
+      </div>`;
+    }
+    html += `<div class="mini-feedback" id="miniFeedback"></div></div>`;
+  }
+  html += `</div>`;
+  container.innerHTML = html;
+
+  document.getElementById('lessonPrevBtn').style.visibility = lesson.current === 0 ? 'hidden' : 'visible';
+  const nextBtn = document.getElementById('lessonNextBtn');
+  if (lesson.current >= total - 1) {
+    nextBtn.textContent = '✅ Terminer le cours';
+    nextBtn.onclick = () => finishLesson();
+  } else {
+    nextBtn.textContent = 'Suivant →';
+    nextBtn.onclick = () => lessonNext();
+  }
+}
+
+function checkLessonAnswer(btn, idx, correctIdx) {
+  const btns = document.querySelectorAll('#miniAnswers .mini-btn');
+  btns.forEach((b, i) => {
+    b.classList.add('disabled');
+    if (i === correctIdx) b.classList.add('mini-correct');
+    else if (i === idx && idx !== correctIdx) b.classList.add('mini-wrong');
+  });
+  const stepKey = lesson.current;
+  const isFirstAttempt = !lesson.exerciseAttempted[stepKey];
+  lesson.exerciseAttempted[stepKey] = true;
+  const feedback = document.getElementById('miniFeedback');
+  if (idx === correctIdx) {
+    feedback.innerHTML = '<span style="color:var(--accent)">🌟 Correct ! Bien joué !</span>';
+    if (isFirstAttempt) lesson.exerciseCorrectFirst = (lesson.exerciseCorrectFirst || 0) + 1;
+    state.totalXp += 3; state.currentXp += 3;
+    checkLevelUp(); saveState(); updateTopBarOnly();
+  } else {
+    feedback.innerHTML = '<span style="color:var(--red)">❌ Pas tout à fait... relis l\'explication !</span>';
+  }
+}
+
+function checkLessonInput(correctAnswer) {
+  const input = document.getElementById('lessonExInput');
+  const val = input.value.trim().replace(',', '.');
+  const feedback = document.getElementById('miniFeedback');
+  const isCorrect = val === correctAnswer || val === correctAnswer.replace('.', ',');
+  const stepKey = lesson.current;
+  const isFirstAttempt = !lesson.exerciseAttempted[stepKey];
+  lesson.exerciseAttempted[stepKey] = true;
+  input.disabled = true;
+  if (isCorrect) {
+    input.style.borderColor = 'var(--accent)';
+    feedback.innerHTML = '<span style="color:var(--accent)">🌟 Correct ! Bien joué !</span>';
+    if (isFirstAttempt) lesson.exerciseCorrectFirst = (lesson.exerciseCorrectFirst || 0) + 1;
+    state.totalXp += 3; state.currentXp += 3;
+    checkLevelUp(); saveState(); updateTopBarOnly();
+  } else {
+    input.style.borderColor = 'var(--red)';
+    feedback.innerHTML = `<span style="color:var(--red)">❌ La réponse était <strong>${correctAnswer}</strong></span>`;
+  }
+}
+
+function updateTopBarOnly() {
+  document.getElementById('totalXpDisplay').textContent = state.totalXp;
+  const needed = xpForLevel(state.level);
+  document.getElementById('levelDisplay').textContent = state.level;
+  document.getElementById('currentXp').textContent = state.currentXp;
+  document.getElementById('nextXp').textContent = needed;
+  document.getElementById('xpFill').style.width = (state.currentXp / needed * 100) + '%';
+  let title = 'Nouvelle habitante 🌱';
+  for (const [xp, t] of TITLES) { if (state.totalXp >= xp) title = t; }
+  document.getElementById('playerTitle').textContent = title;
+}
+
+function lessonNext() {
+  if (lesson.current < lesson.steps.length - 1) {
+    lesson.current++;
+    renderLessonStep();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
+function lessonPrev() {
+  if (lesson.current > 0) {
+    lesson.current--;
+    renderLessonStep();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
+function finishLesson() {
+  const key = lesson.topicId + '_' + lesson.level;
+  if (!state.lessonsCompleted) state.lessonsCompleted = {};
+  const alreadyDone = state.lessonsCompleted[key];
+
+  if (!alreadyDone) {
+    const xpReward = lesson.level === 'facile' ? 30 : lesson.level === 'moyen' ? 50 : 80;
+    const totalExercises = lesson.steps.filter(s => s.exercise).length;
+    const correctFirst = (lesson.exerciseCorrectFirst || 0);
+    const isPerfect = totalExercises > 0 && correctFirst >= totalExercises;
+    const bonus = isPerfect ? 20 : 0;
+    const totalXpGained = xpReward + bonus;
+
+    state.totalXp += totalXpGained;
+    state.currentXp += totalXpGained;
+    state.lessonsCompleted[key] = true;
+    checkLevelUp(); checkAchievements(); saveState();
+
+    const t = TOPICS.find(t => t.id === lesson.topicId);
+    const lvlLabel = lesson.level === 'facile' ? '🟢 Facile' : lesson.level === 'moyen' ? '🔵 Moyen' : '🟡 Difficile';
+    const container = document.getElementById('lessonContent');
+    container.innerHTML = `
+      <div class="lesson-card" style="text-align:center;">
+        <div style="font-size:56px;margin-bottom:14px;">🎉</div>
+        <h2>Cours terminé !</h2>
+        <p style="margin:10px 0;color:var(--text2);">${t ? t.name : ''} — ${lvlLabel}</p>
+        <div style="font-size:24px;font-weight:900;color:var(--nook);margin:14px 0;">+${totalXpGained} 🔔 clochettes</div>
+        <div style="font-size:13px;color:var(--text2);margin-bottom:8px;">
+          ${xpReward} 🔔 (cours) ${bonus > 0 ? `+ ${bonus} 🔔 (sans faute ⭐)` : ''}
+        </div>
+        ${isPerfect ? '<div style="color:var(--accent);font-weight:800;margin:8px 0;">⭐ Tous les exercices réussis du 1er coup !</div>' : ''}
+        <div style="display:flex;gap:10px;justify-content:center;margin-top:18px;">
+          <button class="btn btn-primary" onclick="showScreen('screenCours')">📚 Autres cours</button>
+          <button class="btn btn-primary" onclick="startQuiz('${lesson.topicId}')">🌟 Se tester</button>
+        </div>
+      </div>`;
+    document.getElementById('lessonNextBtn').style.display = 'none';
+    document.getElementById('lessonPrevBtn').style.display = 'none';
+    updateTopBarOnly();
+  } else {
+    showToast('✅', 'Cours déjà terminé !');
+    showScreen('screenCours');
+  }
 }
 
 // ══════════════════════════════════════
