@@ -654,7 +654,7 @@
       <span class="sep">—</span>
       <span class="away-score" id="liveMisses">0</span>
     </div>
-    <div class="timer-bar"><div class="timer-fill" id="timerFill"></div></div>
+    <div class="timer-bar" style="display:none;"><div class="timer-fill" id="timerFill"></div></div>
     <div class="question-card">
       <div class="q-label" id="qLabel">Question 1</div>
       <div class="q-text" id="qText"></div>
@@ -682,7 +682,6 @@
       <div class="results-stats">
         <div class="result-stat"><div class="val" id="resScore" style="color:var(--accent)">0</div><div class="label">Bonnes réponses</div></div>
         <div class="result-stat"><div class="val" id="resStreak" style="color:var(--yellow)">0</div><div class="label">Meilleure série</div></div>
-        <div class="result-stat"><div class="val" id="resTime" style="color:var(--sky)">0</div><div class="label">Temps moyen</div></div>
       </div>
       <div class="results-buttons" id="resultsButtons">
         <button class="btn btn-primary" onclick="retryQuiz()">🔄 Rejouer</button>
@@ -806,11 +805,11 @@ const TOPICS = [
 
 // Quiz phases (Animal Crossing island progression)
 const PHASES = [
-  { name: 'Tente de départ', icon: '⛺', minScore: 0, questCount: 10, timeLimit: 90 },
-  { name: 'Petite maison', icon: '🏠', minScore: 6, questCount: 10, timeLimit: 75 },
-  { name: 'Grande maison', icon: '🏡', minScore: 6, questCount: 10, timeLimit: 60 },
-  { name: 'Manoir de l\'île', icon: '🏰', minScore: 7, questCount: 10, timeLimit: 50 },
-  { name: 'Palais 5 étoiles', icon: '⭐', minScore: 8, questCount: 10, timeLimit: 45 },
+  { name: 'Tente de départ', icon: '⛺', minScore: 0, questCount: 10 },
+  { name: 'Petite maison', icon: '🏠', minScore: 6, questCount: 10 },
+  { name: 'Grande maison', icon: '🏡', minScore: 6, questCount: 10 },
+  { name: 'Manoir de l\'île', icon: '🏰', minScore: 7, questCount: 10 },
+  { name: 'Palais 5 étoiles', icon: '⭐', minScore: 8, questCount: 10 },
 ];
 
 const ACHIEVEMENTS = [
@@ -1355,7 +1354,7 @@ eng_irregular() {
 let quiz = {
   topic: null, questions: [], current: 0, score: 0, misses: 0,
   streak: 0, bestStreak: 0, xpEarned: 0, isDaily: false,
-  times: [], questionStart: 0, timerInterval: null, timeLimit: 60
+  times: [], questionStart: 0, timerInterval: null
 };
 
 function startQuiz(topicId, phaseIdx) {
@@ -1369,7 +1368,7 @@ function startQuiz(topicId, phaseIdx) {
   quiz = {
     topic: topicId, questions, current: 0, score: 0, misses: 0,
     streak: 0, bestStreak: 0, xpEarned: 0, isDaily: false,
-    times: [], questionStart: 0, timerInterval: null, timeLimit: phase.timeLimit,
+    times: [], questionStart: 0, timerInterval: null,
     phase: phaseIdx
   };
   if (!state.topicsPlayedSet.includes(topicId)) {
@@ -1393,7 +1392,7 @@ function startDaily() {
   quiz = {
     topic: 'daily', questions, current: 0, score: 0, misses: 0,
     streak: 0, bestStreak: 0, xpEarned: 0, isDaily: true,
-    times: [], questionStart: 0, timerInterval: null, timeLimit: 60
+    times: [], questionStart: 0, timerInterval: null
   };
   showScreen('screenQuiz');
   document.getElementById('quizTopicLabel').textContent = '🎁 Défi du jour — Tom Nook';
@@ -1439,31 +1438,6 @@ function showQuestion() {
   }
 
   quiz.questionStart = Date.now();
-  startTimer();
-}
-
-function startTimer() {
-  clearInterval(quiz.timerInterval);
-  const fill = document.getElementById('timerFill');
-  fill.style.width = '100%'; fill.className = 'timer-fill';
-  const start = Date.now();
-  quiz.timerInterval = setInterval(() => {
-    const elapsed = (Date.now() - start) / 1000;
-    const pct = Math.max(0, 100 - (elapsed / quiz.timeLimit * 100));
-    fill.style.width = pct + '%';
-    if (pct < 20) fill.className = 'timer-fill danger';
-    else if (pct < 50) fill.className = 'timer-fill warning';
-    if (elapsed >= quiz.timeLimit) { clearInterval(quiz.timerInterval); timeUp(); }
-  }, 100);
-}
-
-function timeUp() {
-  const q = quiz.questions[quiz.current];
-  quiz.streak = 0; quiz.misses++;
-  quiz.times.push(quiz.timeLimit);
-  updateLiveScore();
-  showExplanation(q, false);
-  disableAnswers(q);
 }
 
 function validateInput() {
@@ -1473,7 +1447,6 @@ function validateInput() {
 }
 
 function checkAnswer(value, q, btnEl) {
-  clearInterval(quiz.timerInterval);
   const elapsed = (Date.now() - quiz.questionStart) / 1000;
   quiz.times.push(elapsed);
 
@@ -1532,7 +1505,6 @@ function nextQuestion() {
 }
 
 function endQuiz() {
-  clearInterval(quiz.timerInterval);
 
   state.totalXp += quiz.xpEarned;
   state.currentXp += quiz.xpEarned;
@@ -1592,7 +1564,6 @@ function endQuiz() {
   document.getElementById('xpGained').textContent = `+${quiz.xpEarned} 🔔 clochettes`;
   document.getElementById('resScore').textContent = quiz.score;
   document.getElementById('resStreak').textContent = quiz.bestStreak;
-  document.getElementById('resTime').textContent = `${avgTime}s`;
 
   const btns = document.getElementById('resultsButtons');
   btns.innerHTML = '';
@@ -1720,13 +1691,12 @@ function updateUI() {
         : sc
           ? `<span class="tc-score played" style="color:${sc.score>=8?'var(--accent)':sc.score>=6?'var(--nook)':'var(--red)'}">${sc.score}/${sc.score+sc.misses}</span>`
           : '<span class="tc-score">▶️ Jouer</span>';
-      const timeInfo = !locked && phase.timeLimit < 90 ? `<span style="font-size:11px;color:var(--text2);margin-left:6px;">⏱️${phase.timeLimit}s</span>` : '';
       card.innerHTML = `
         <div class="tc-header">
           <span class="tc-emoji">${phase.icon}</span>
           <div class="tc-info">
-            <div class="tc-name">${phase.name}${timeInfo}</div>
-            <div class="tc-desc">${locked ? 'Score de '+ PHASES[pi].minScore +'/10 requis au niveau précédent' : pi === 0 ? 'Premier niveau — Pas de limite de temps stressante !' : 'Timer : '+phase.timeLimit+'s par question'}</div>
+            <div class="tc-name">${phase.name}</div>
+            <div class="tc-desc">${locked ? 'Score de '+ PHASES[pi].minScore +'/10 requis au niveau précédent' : 'Prends ton temps, pas de chrono ! 🌸'}</div>
           </div>
           ${scoreHtml}
         </div>
