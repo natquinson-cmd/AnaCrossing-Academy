@@ -813,23 +813,75 @@ const PHASES = [
 ];
 
 const ACHIEVEMENTS = [
+  // ─── Premiers pas ───
   { id:'first_quiz', icon:'🌱', name:'Première graine', desc:'Termine ton premier quiz', check: s => s.totalSolved >= 5 },
+  { id:'first_lesson', icon:'📖', name:'Premier cours', desc:'Termine ton premier cours', check: s => Object.keys(s.lessonsCompleted||{}).length >= 1 },
+
+  // ─── Séries ───
   { id:'streak_3', icon:'🌸', name:'Bouquet de fleurs', desc:'3 bonnes réponses d\'affilée', check: s => s.bestStreak >= 3 },
   { id:'streak_5', icon:'🌺', name:'Jardin fleuri', desc:'5 réponses d\'affilée !', check: s => s.bestStreak >= 5 },
+  { id:'streak_7', icon:'🌻', name:'Champ de tournesols', desc:'7 réponses d\'affilée !', check: s => s.bestStreak >= 7 },
   { id:'streak_10', icon:'🌟', name:'Étoile filante', desc:'10 réponses d\'affilée !', check: s => s.bestStreak >= 10 },
+  { id:'streak_15', icon:'💫', name:'Constellation', desc:'15 réponses d\'affilée !', check: s => s.bestStreak >= 15 },
+
+  // ─── Perfection ───
   { id:'perfect', icon:'🏆', name:'Quiz parfait', desc:'10/10 à un quiz !', check: s => s.perfectQuizzes >= 1 },
+  { id:'perfect_3', icon:'💎', name:'Diamant', desc:'3 quiz parfaits !', check: s => s.perfectQuizzes >= 3 },
+  { id:'perfect_10', icon:'👑', name:'Couronne royale', desc:'10 quiz parfaits !', check: s => s.perfectQuizzes >= 10 },
+
+  // ─── Clochettes (XP) ───
+  { id:'xp_100', icon:'🪙', name:'Premières économies', desc:'100 clochettes amassées', check: s => s.totalXp >= 100 },
   { id:'xp_500', icon:'🔔', name:'500 clochettes', desc:'Amasse 500 clochettes', check: s => s.totalXp >= 500 },
+  { id:'xp_1000', icon:'💛', name:'Sac d\'or', desc:'1000 clochettes !', check: s => s.totalXp >= 1000 },
   { id:'xp_2000', icon:'💰', name:'Riche insulaire', desc:'2000 clochettes !', check: s => s.totalXp >= 2000 },
-  { id:'solved_50', icon:'📖', name:'50 questions', desc:'Réponds à 50 questions', check: s => s.totalSolved >= 50 },
+  { id:'xp_5000', icon:'🏦', name:'Banque de Tom Nook', desc:'5000 clochettes !', check: s => s.totalXp >= 5000 },
+
+  // ─── Volume de questions ───
+  { id:'solved_20', icon:'🐚', name:'Coquillages', desc:'Réponds à 20 questions', check: s => s.totalSolved >= 20 },
+  { id:'solved_50', icon:'🐠', name:'Aquarium', desc:'Réponds à 50 questions', check: s => s.totalSolved >= 50 },
+  { id:'solved_100', icon:'🦋', name:'Collection d\'insectes', desc:'100 questions répondues !', check: s => s.totalSolved >= 100 },
   { id:'solved_200', icon:'🎓', name:'Encyclopédie', desc:'200 questions répondues !', check: s => s.totalSolved >= 200 },
+  { id:'solved_500', icon:'🗿', name:'Fossile légendaire', desc:'500 questions !', check: s => s.totalSolved >= 500 },
+
+  // ─── Défis du jour ───
+  { id:'daily_1', icon:'📬', name:'Courrier de Tom Nook', desc:'1er défi du jour complété', check: s => s.dailyCompleted >= 1 },
   { id:'daily_3', icon:'🎁', name:'3 cadeaux', desc:'3 défis du jour complétés', check: s => s.dailyCompleted >= 3 },
+  { id:'daily_7', icon:'🎀', name:'Semaine parfaite', desc:'7 défis du jour complétés', check: s => s.dailyCompleted >= 7 },
+  { id:'daily_15', icon:'🎪', name:'Festivalière', desc:'15 défis du jour !', check: s => s.dailyCompleted >= 15 },
+
+  // ─── Régularité ───
   { id:'speed', icon:'⚡', name:'Éclair', desc:'Bonne réponse en moins de 3s', check: s => s.fastAnswer },
+  { id:'days_3', icon:'☀️', name:'Beau temps', desc:'3 jours consécutifs', check: s => s.dailyStreak >= 3 },
+  { id:'days_7', icon:'🌈', name:'Arc-en-ciel', desc:'7 jours consécutifs !', check: s => s.dailyStreak >= 7 },
+  { id:'days_14', icon:'🏕️', name:'Campeuse assidue', desc:'14 jours consécutifs !', check: s => s.dailyStreak >= 14 },
+  { id:'days_30', icon:'🗓️', name:'Habitante modèle', desc:'30 jours consécutifs !', check: s => s.dailyStreak >= 30 },
+
+  // ─── Exploration ───
   { id:'all_topics', icon:'🌍', name:'Globe-trotter', desc:'Joue tous les thèmes', check: s => s.topicsPlayed >= TOPICS.length },
+  { id:'level_3', icon:'🏠', name:'Petite maison', desc:'Atteins le niveau 3', check: s => s.level >= 3 },
   { id:'level_5', icon:'🏡', name:'Belle maison', desc:'Atteins le niveau 5', check: s => s.level >= 5 },
+  { id:'level_8', icon:'🏰', name:'Manoir', desc:'Atteins le niveau 8', check: s => s.level >= 8 },
+  { id:'level_12', icon:'🌴', name:'Île paradisiaque', desc:'Atteins le niveau 12', check: s => s.level >= 12 },
+
+  // ─── Cours / Entraînement ───
+  { id:'lessons_3', icon:'📚', name:'Bonne élève', desc:'3 cours terminés', check: s => Object.keys(s.lessonsCompleted||{}).length >= 3 },
+  { id:'lessons_5', icon:'🎨', name:'Artisane du savoir', desc:'5 cours terminés', check: s => Object.keys(s.lessonsCompleted||{}).length >= 5 },
+  { id:'lessons_10', icon:'🧪', name:'Scientifique', desc:'10 cours terminés', check: s => Object.keys(s.lessonsCompleted||{}).length >= 10 },
+
+  // ─── Maîtrise par matière ───
   { id:'math_master', icon:'📐', name:'As des maths', desc:'Score parfait en maths', check: s => TOPICS.filter(t=>t.subject==='math').some(t=>(s.topicsBest[t.id]||0)>=10) },
-  { id:'french_master', icon:'📖', name:'Plume d\'or', desc:'Score parfait en français', check: s => TOPICS.filter(t=>t.subject==='french').some(t=>(s.topicsBest[t.id]||0)>=10) },
-  { id:'history_master', icon:'🏛️', name:'Historien', desc:'Score parfait en histoire-géo', check: s => TOPICS.filter(t=>t.subject==='history').some(t=>(s.topicsBest[t.id]||0)>=10) },
+  { id:'french_master', icon:'✒️', name:'Plume d\'or', desc:'Score parfait en français', check: s => TOPICS.filter(t=>t.subject==='french').some(t=>(s.topicsBest[t.id]||0)>=10) },
+  { id:'history_master', icon:'🏛️', name:'Historienne', desc:'Score parfait en histoire-géo', check: s => TOPICS.filter(t=>t.subject==='history').some(t=>(s.topicsBest[t.id]||0)>=10) },
   { id:'english_master', icon:'🇬🇧', name:'Polyglotte', desc:'Score parfait en anglais', check: s => TOPICS.filter(t=>t.subject==='english').some(t=>(s.topicsBest[t.id]||0)>=10) },
+
+  // ─── Progression phases ───
+  { id:'first_unlock', icon:'🔓', name:'Première porte', desc:'Débloque un 2e niveau de quiz', check: s => Object.values(s.topicPhases||{}).some(v=>v>=1) },
+  { id:'reach_mansion', icon:'🏰', name:'Le manoir', desc:'Atteins le Manoir dans un thème', check: s => Object.values(s.topicPhases||{}).some(v=>v>=3) },
+  { id:'reach_palace', icon:'⭐', name:'Palais 5 étoiles', desc:'Atteins le palais dans un thème !', check: s => Object.values(s.topicPhases||{}).some(v=>v>=4) },
+  { id:'all_houses', icon:'🏘️', name:'Village complet', desc:'Débloque la Petite maison partout', check: s => TOPICS.every(t=>(s.topicPhases||{})[t.id]>=1) },
+
+  // ─── Ultime ───
+  { id:'island_queen', icon:'👸', name:'Reine de l\'île', desc:'Score parfait dans chaque matière + 5 cours', check: s => SUBJECTS.every(sub=>TOPICS.filter(t=>t.subject===sub.id).some(t=>(s.topicsBest[t.id]||0)>=10)) && Object.keys(s.lessonsCompleted||{}).length>=5 },
 ];
 
 // ══════════════════════════════════════
@@ -1713,7 +1765,7 @@ function updateUI() {
   document.getElementById('dailyStatus').textContent = state.lastDaily === today ? '✅ Défi terminé !' : '';
 
   // Achievements
-  renderAchievements('achievementsHome', 8);
+  renderAchievements('achievementsHome', 12);
   renderAchievements('achievementsStats', ACHIEVEMENTS.length);
 
   // Stats
