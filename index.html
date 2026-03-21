@@ -804,6 +804,15 @@ const TOPICS = [
   { id:'eng_irregular', subject:'english', emoji:'⚡', name:'Irregular verbs', desc:'Les verbes irréguliers de base' },
 ];
 
+// Quiz phases (Animal Crossing island progression)
+const PHASES = [
+  { name: 'Tente de départ', icon: '⛺', minScore: 0, questCount: 10, timeLimit: 90 },
+  { name: 'Petite maison', icon: '🏠', minScore: 6, questCount: 10, timeLimit: 75 },
+  { name: 'Grande maison', icon: '🏡', minScore: 6, questCount: 10, timeLimit: 60 },
+  { name: 'Manoir de l\'île', icon: '🏰', minScore: 7, questCount: 10, timeLimit: 50 },
+  { name: 'Palais 5 étoiles', icon: '⭐', minScore: 8, questCount: 10, timeLimit: 45 },
+];
+
 const ACHIEVEMENTS = [
   { id:'first_quiz', icon:'🌱', name:'Première graine', desc:'Termine ton premier quiz', check: s => s.totalSolved >= 5 },
   { id:'streak_3', icon:'🌸', name:'Bouquet de fleurs', desc:'3 bonnes réponses d\'affilée', check: s => s.bestStreak >= 3 },
@@ -847,6 +856,7 @@ const STATE_DEFAULTS = {
   bestStreak: 0, totalSolved: 0, totalCorrect: 0,
   perfectQuizzes: 0, dailyCompleted: 0, fastAnswer: false,
   topicsPlayed: 0, topicsBest: {}, topicScores: {},
+  topicPhases: {}, phaseScores: {},
   achievements: [],
   lastDaily: null, dailyStreak: 0, lastPlayDate: null,
   topicsPlayedSet: [],
@@ -1348,13 +1358,19 @@ let quiz = {
   times: [], questionStart: 0, timerInterval: null, timeLimit: 60
 };
 
-function startQuiz(topicId) {
+function startQuiz(topicId, phaseIdx) {
+  if (phaseIdx === undefined) {
+    phaseIdx = (state.topicPhases && state.topicPhases[topicId]) || 0;
+  }
+  const phase = PHASES[phaseIdx] || PHASES[0];
+
   const questions = [];
-  for (let i = 0; i < 10; i++) questions.push(generators[topicId]());
+  for (let i = 0; i < phase.questCount; i++) questions.push(generators[topicId]());
   quiz = {
     topic: topicId, questions, current: 0, score: 0, misses: 0,
     streak: 0, bestStreak: 0, xpEarned: 0, isDaily: false,
-    times: [], questionStart: 0, timerInterval: null, timeLimit: 60
+    times: [], questionStart: 0, timerInterval: null, timeLimit: phase.timeLimit,
+    phase: phaseIdx
   };
   if (!state.topicsPlayedSet.includes(topicId)) {
     state.topicsPlayedSet.push(topicId);
@@ -1363,7 +1379,7 @@ function startQuiz(topicId) {
   }
   showScreen('screenQuiz');
   const t = TOPICS.find(t => t.id === topicId);
-  document.getElementById('quizTopicLabel').textContent = t ? `${t.emoji} ${t.name}` : 'Quiz du jour';
+  document.getElementById('quizTopicLabel').textContent = t ? `${phase.icon} ${t.name} — ${phase.name}` : 'Quiz du jour';
   updateLiveScore();
   showQuestion();
 }
@@ -1530,7 +1546,22 @@ function endQuiz() {
   if (quiz.topic !== 'daily') {
     const prev = state.topicsBest[quiz.topic] || 0;
     if (quiz.score > prev) state.topicsBest[quiz.topic] = quiz.score;
+    // Save phase score
+    const phaseKey = quiz.topic + '_' + quiz.phase;
+    if (!state.phaseScores) state.phaseScores = {};
+    state.phaseScores[phaseKey] = { score: quiz.score, misses: quiz.misses };
     state.topicScores[quiz.topic] = { score: quiz.score, misses: quiz.misses };
+    // Unlock next phase if score is enough
+    if (!state.topicPhases) state.topicPhases = {};
+    const currentPhase = quiz.phase;
+    const nextPhase = currentPhase + 1;
+    if (nextPhase < PHASES.length && quiz.score >= PHASES[nextPhase].minScore) {
+      const prevUnlocked = state.topicPhases[quiz.topic] || 0;
+      if (nextPhase > prevUnlocked) {
+        state.topicPhases[quiz.topic] = nextPhase;
+        showToast('🔓', `${PHASES[nextPhase].icon} ${PHASES[nextPhase].name} débloqué !`);
+      }
+    }
   }
 
   const today = new Date().toDateString();
@@ -1565,8 +1596,21 @@ function endQuiz() {
 
   const btns = document.getElementById('resultsButtons');
   btns.innerHTML = '';
+  // Show "next level" button if unlocked
+  if (quiz.topic !== 'daily') {
+    const nextP = quiz.phase + 1;
+    const unlocked = (state.topicPhases[quiz.topic] || 0);
+    if (nextP < PHASES.length && nextP <= unlocked) {
+      const np = PHASES[nextP];
+      const nBtn = document.createElement('button');
+      nBtn.className = 'btn btn-primary';
+      nBtn.textContent = `${np.icon} Niveau suivant : ${np.name}`;
+      nBtn.onclick = () => startQuiz(quiz.topic, nextP);
+      btns.appendChild(nBtn);
+    }
+  }
   const retryBtn = document.createElement('button');
-  retryBtn.className = 'btn btn-primary';
+  retryBtn.className = 'btn btn-secondary';
   retryBtn.textContent = '🔄 Rejouer';
   retryBtn.onclick = () => retryQuiz();
   btns.appendChild(retryBtn);
@@ -1580,7 +1624,7 @@ function endQuiz() {
 }
 
 function retryQuiz() {
-  if (quiz.topic === 'daily') startDaily(); else startQuiz(quiz.topic);
+  if (quiz.topic === 'daily') startDaily(); else startQuiz(quiz.topic, quiz.phase);
 }
 
 // ══════════════════════════════════════
@@ -1647,25 +1691,48 @@ function updateUI() {
     tabsEl.appendChild(btn);
   });
 
-  // Topics grid
+  // Topics grid with phases
   const grid = document.getElementById('topicsGrid');
   grid.innerHTML = '';
   TOPICS.filter(t => t.subject === currentSubject).forEach(t => {
-    const best = state.topicsBest[t.id] || 0;
-    const card = document.createElement('div');
-    card.className = 'topic-card';
-    card.onclick = () => startQuiz(t.id);
-    card.innerHTML = `
-      <div class="tc-header">
-        <span class="tc-emoji">${t.emoji}</span>
-        <div class="tc-info">
-          <div class="tc-name">${t.name}</div>
-          <div class="tc-desc">${t.desc}</div>
+    if (!state.topicPhases) state.topicPhases = {};
+    if (!state.phaseScores) state.phaseScores = {};
+    const unlockedPhase = state.topicPhases[t.id] || 0;
+
+    // Topic header
+    const header = document.createElement('div');
+    header.style.cssText = 'font-size:14px;font-weight:900;color:var(--nook);margin-top:12px;margin-bottom:4px;display:flex;align-items:center;gap:6px;';
+    header.innerHTML = `<span style="font-size:20px">${t.emoji}</span> ${t.name} <span style="font-size:11px;color:var(--text2);font-weight:600;">— ${t.desc}</span>`;
+    grid.appendChild(header);
+
+    // Phase cards for this topic
+    PHASES.forEach((phase, pi) => {
+      const locked = pi > unlockedPhase;
+      const phaseKey = t.id + '_' + pi;
+      const sc = state.phaseScores[phaseKey] || null;
+      const card = document.createElement('div');
+      card.className = 'topic-card';
+      card.style.opacity = locked ? '0.4' : '1';
+      card.style.pointerEvents = locked ? 'none' : 'auto';
+      if (!locked) card.onclick = () => startQuiz(t.id, pi);
+      const scoreHtml = locked
+        ? '<span class="tc-score">🔒 Verrouillé</span>'
+        : sc
+          ? `<span class="tc-score played" style="color:${sc.score>=8?'var(--accent)':sc.score>=6?'var(--nook)':'var(--red)'}">${sc.score}/${sc.score+sc.misses}</span>`
+          : '<span class="tc-score">▶️ Jouer</span>';
+      const timeInfo = !locked && phase.timeLimit < 90 ? `<span style="font-size:11px;color:var(--text2);margin-left:6px;">⏱️${phase.timeLimit}s</span>` : '';
+      card.innerHTML = `
+        <div class="tc-header">
+          <span class="tc-emoji">${phase.icon}</span>
+          <div class="tc-info">
+            <div class="tc-name">${phase.name}${timeInfo}</div>
+            <div class="tc-desc">${locked ? 'Score de '+ PHASES[pi].minScore +'/10 requis au niveau précédent' : pi === 0 ? 'Premier niveau — Pas de limite de temps stressante !' : 'Timer : '+phase.timeLimit+'s par question'}</div>
+          </div>
+          ${scoreHtml}
         </div>
-        <span class="tc-score ${best>0?'played':''}">${best > 0 ? '⭐ '+best+'/10' : '▶️ Jouer'}</span>
-      </div>
-    `;
-    grid.appendChild(card);
+      `;
+      grid.appendChild(card);
+    });
   });
 
   // Cours grid
