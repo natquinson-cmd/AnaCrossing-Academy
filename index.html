@@ -248,17 +248,6 @@
   .score-display .sep { color: var(--text2); margin: 0 6px; }
   .score-display .away-score { color: var(--red); }
 
-  .timer-bar {
-    height: 8px; background: #e8f5e9; border-radius: 4px;
-    margin-bottom: 16px; overflow: hidden; border: 1px solid #c8e6c9;
-  }
-  .timer-fill {
-    height: 100%; border-radius: 4px; background: var(--accent2);
-    transition: width 0.1s linear, background-color 0.5s;
-  }
-  .timer-fill.warning { background: var(--yellow); }
-  .timer-fill.danger { background: var(--red); }
-
   .question-card {
     background: #fff; border-radius: var(--radius); padding: 24px;
     margin-bottom: 14px; text-align: center;
@@ -654,7 +643,6 @@
       <span class="sep">—</span>
       <span class="away-score" id="liveMisses">0</span>
     </div>
-    <div class="timer-bar" style="display:none;"><div class="timer-fill" id="timerFill"></div></div>
     <div class="question-card">
       <div class="q-label" id="qLabel">Question 1</div>
       <div class="q-text" id="qText"></div>
@@ -1406,7 +1394,7 @@ eng_irregular() {
 let quiz = {
   topic: null, questions: [], current: 0, score: 0, misses: 0,
   streak: 0, bestStreak: 0, xpEarned: 0, isDaily: false,
-  times: [], questionStart: 0, timerInterval: null
+  times: [], questionStart: 0
 };
 
 function startQuiz(topicId, phaseIdx) {
@@ -1416,11 +1404,20 @@ function startQuiz(topicId, phaseIdx) {
   const phase = PHASES[phaseIdx] || PHASES[0];
 
   const questions = [];
-  for (let i = 0; i < phase.questCount; i++) questions.push(generators[topicId]());
+  const usedQuestions = new Set();
+  for (let i = 0; i < phase.questCount; i++) {
+    let q, attempts = 0;
+    do {
+      q = generators[topicId]();
+      attempts++;
+    } while (usedQuestions.has(q.question) && attempts < 50);
+    usedQuestions.add(q.question);
+    questions.push(q);
+  }
   quiz = {
     topic: topicId, questions, current: 0, score: 0, misses: 0,
     streak: 0, bestStreak: 0, xpEarned: 0, isDaily: false,
-    times: [], questionStart: 0, timerInterval: null,
+    times: [], questionStart: 0,
     phase: phaseIdx
   };
   if (!state.topicsPlayedSet.includes(topicId)) {
@@ -1440,11 +1437,20 @@ function startDaily() {
   if (state.lastDaily === today) { showToast('✅', 'Déjà joué aujourd\'hui !'); return; }
   const allTopicIds = TOPICS.map(t => t.id);
   const questions = [];
-  for (let i = 0; i < 10; i++) questions.push(generators[pick(allTopicIds)]());
+  const usedQuestions = new Set();
+  for (let i = 0; i < 10; i++) {
+    let q, attempts = 0;
+    do {
+      q = generators[pick(allTopicIds)]();
+      attempts++;
+    } while (usedQuestions.has(q.question) && attempts < 50);
+    usedQuestions.add(q.question);
+    questions.push(q);
+  }
   quiz = {
     topic: 'daily', questions, current: 0, score: 0, misses: 0,
     streak: 0, bestStreak: 0, xpEarned: 0, isDaily: true,
-    times: [], questionStart: 0, timerInterval: null
+    times: [], questionStart: 0
   };
   showScreen('screenQuiz');
   document.getElementById('quizTopicLabel').textContent = '🎁 Défi du jour — Tom Nook';
@@ -1461,7 +1467,12 @@ function showQuestion() {
   const q = quiz.questions[quiz.current];
   document.getElementById('quizProgress').textContent = `Question ${quiz.current+1} / ${quiz.questions.length}`;
   document.getElementById('qText').innerHTML = q.question;
-  document.getElementById('qHint').textContent = q.hint ? '💡 ' + q.hint : '';
+  // Show hint if available, or bonus hint if course completed for this topic
+  let hintText = q.hint ? '💡 ' + q.hint : '';
+  if (!hintText && quiz.topic !== 'daily' && state.lessonsCompleted && state.lessonsCompleted[quiz.topic + '_facile']) {
+    hintText = '📖 Tu as suivi le cours, tu connais la réponse !';
+  }
+  document.getElementById('qHint').textContent = hintText;
   document.getElementById('qLabel').textContent = `🌸 Question n°${quiz.current+1}`;
   document.getElementById('explanationBox').classList.remove('visible');
   document.getElementById('nextBtnWrap').style.display = 'none';
@@ -1830,13 +1841,24 @@ function updateCoursUI() {
       { key:'difficile', label:'Difficile', cls:'difficile', icon:'🟡' }
     ];
 
+    const unlockedPhase = (state.topicPhases && state.topicPhases[t.id]) || 0;
     LEVELS.forEach(lv => {
       const steps = topicLessons[lv.key];
+      // Unlock logic based on quiz phases: facile=always, moyen=2 phases, difficile=4 phases
+      const requiredPhases = lv.key === 'facile' ? 0 : lv.key === 'moyen' ? 2 : 4;
+      const isUnlocked = unlockedPhase >= requiredPhases;
       if (!steps) {
         // No content for this level — show locked placeholder
         const card = document.createElement('div');
         card.className = 'cours-level-card locked';
         card.innerHTML = `<span class="diff-badge diff-${lv.cls}">${lv.icon} ${lv.label}</span><span class="lock-msg">🔒 Bientôt</span>`;
+        row.appendChild(card);
+        return;
+      }
+      if (!isUnlocked) {
+        const card = document.createElement('div');
+        card.className = 'cours-level-card locked';
+        card.innerHTML = `<span class="diff-badge diff-${lv.cls}">${lv.icon} ${lv.label}</span><span class="lock-msg">🔒 Débloque ${requiredPhases} phases de quiz</span>`;
         row.appendChild(card);
         return;
       }
@@ -1861,6 +1883,33 @@ const LESSONS = {
 
 // ─── MATHS ───
 decimaux: {
+  moyen: [
+    { title:'Encadrer un décimal', icon:'📦',
+      content:`<p><strong>Encadrer</strong> un nombre, c'est trouver les deux nombres entiers ou décimaux entre lesquels il se situe.</p>
+      <div class="lesson-formula">Encadrer 3,7 à l'unité : 3 < 3,7 < 4<br>Encadrer 3,74 au dixième : 3,7 < 3,74 < 3,8</div>
+      <div class="lesson-example"><div class="ex-label">🌸 Exemple</div>
+      <div class="ex-content">Encadre 12,356 au centième :<br>
+      <span class="step">On regarde les centièmes : 12,35...</span><br>
+      <span class="step">Le centième suivant : 12,36</span><br>
+      <span class="step">Donc : <strong>12,35 < 12,356 < 12,36</strong></span></div></div>
+      <div class="lesson-tip"><div class="tip-label">💡 Astuce</div>
+      Pour encadrer au dixième, garde 1 chiffre après la virgule. Au centième, garde 2 chiffres.</div>`,
+      exercise:{question:'Encadre 5,83 à l\'unité. Quel est le nombre en dessous ?',choices:['5','6','5,8','5,9'],correct:0}
+    },
+    { title:'Diviser par 10, 100, 1000', icon:'➗',
+      content:`<p>Diviser par 10, 100 ou 1000 déplace la virgule vers la <strong>gauche</strong>.</p>
+      <div class="lesson-formula">÷ 10 → virgule 1 rang à gauche<br>÷ 100 → virgule 2 rangs à gauche<br>÷ 1000 → virgule 3 rangs à gauche</div>
+      <div class="lesson-example"><div class="ex-label">🌸 Exemples</div>
+      <div class="ex-content">345 ÷ 10 = <strong>34,5</strong><br>
+      345 ÷ 100 = <strong>3,45</strong><br>
+      345 ÷ 1000 = <strong>0,345</strong><br><br>
+      7,2 ÷ 10 = <strong>0,72</strong></div></div>
+      <div class="lesson-tip"><div class="tip-label">📌 Retiens la règle inverse</div>
+      Multiplier = virgule à <strong>droite</strong><br>
+      Diviser = virgule à <strong>gauche</strong></div>`,
+      exercise:{question:'Calcule : 56 ÷ 100 =',choices:['0,56','5,6','0,056','560'],correct:0}
+    }
+  ],
   facile: [
     { title:'Les nombres décimaux', icon:'🔢',
       content:`<p>Un <strong>nombre décimal</strong> a une partie entière et une partie décimale, séparées par une virgule.</p>
@@ -1911,6 +1960,33 @@ decimaux: {
 },
 
 operations: {
+  moyen: [
+    { title:'Opérations avec des décimaux', icon:'🔢',
+      content:`<p>On peut additionner et soustraire des décimaux comme des entiers, mais il faut <strong>aligner les virgules</strong> !</p>
+      <div class="lesson-formula">Aligne les virgules<br>Ajoute des zéros si nécessaire<br>Calcule colonne par colonne</div>
+      <div class="lesson-example"><div class="ex-label">🌸 Exemple</div>
+      <div class="ex-content">12,5 + 3,47 = ?<br>
+      <span class="step">  12,50 (on ajoute un zéro)</span><br>
+      <span class="step">+  3,47</span><br>
+      <span class="step">= <strong>15,97</strong></span></div></div>
+      <div class="lesson-tip"><div class="tip-label">⚠️ Erreur classique</div>
+      Ne fais JAMAIS : 12,5 + 3,47 = 15,52 (en oubliant d'aligner)<br>
+      Pense toujours à compléter avec des zéros : 12,<strong>50</strong> + 3,<strong>47</strong></div>`,
+      exercise:{question:'Calcule : 7,3 + 2,85 =',choices:['10,15','9,85','10,55','9,35'],correct:0}
+    },
+    { title:'Multiplication posée', icon:'✖️',
+      content:`<p>Pour multiplier deux nombres à plusieurs chiffres, on utilise la <strong>multiplication posée</strong>.</p>
+      <div class="lesson-formula">1. Multiplier par les unités<br>2. Multiplier par les dizaines (décaler d'un rang)<br>3. Additionner les résultats partiels</div>
+      <div class="lesson-example"><div class="ex-label">🌸 Exemple : 23 × 14</div>
+      <div class="ex-content">
+      <span class="step">23 × 4 = 92</span><br>
+      <span class="step">23 × 10 = 230</span><br>
+      <span class="step">92 + 230 = <strong>322</strong></span></div></div>
+      <div class="lesson-tip"><div class="tip-label">💡 Astuce de vérification</div>
+      Vérifie avec un ordre de grandeur : 23 × 14 ≈ 20 × 15 = 300. Ton résultat (322) est proche, c'est bon !</div>`,
+      exercise:{question:'Calcule : 15 × 12 =',choices:['180','170','192','168'],correct:0}
+    }
+  ],
   facile: [
     { title:'Les tables de multiplication', icon:'✖️',
       content:`<p>Les tables de multiplication sont <strong>indispensables</strong>. Il faut les connaître par cœur jusqu'à 12 !</p>
@@ -1956,6 +2032,36 @@ operations: {
 },
 
 fractions6: {
+  moyen: [
+    { title:'Fractions égales', icon:'⚖️',
+      content:`<p>Deux fractions sont <strong>égales</strong> si on multiplie (ou divise) le numérateur et le dénominateur par le même nombre.</p>
+      <div class="lesson-formula">a/b = (a×k)/(b×k)</div>
+      <div class="lesson-example"><div class="ex-label">🌸 Exemples</div>
+      <div class="ex-content">
+      1/2 = 2/4 = 3/6 = 5/10 = 50/100<br>
+      <span class="step">On a multiplié numérateur et dénominateur par le même nombre</span><br><br>
+      6/8 = 3/4 (on divise par 2)<br>
+      <span class="step">C'est la <strong>simplification</strong></span></div></div>
+      <div class="lesson-tip"><div class="tip-label">📌 Simplifier une fraction</div>
+      Pour simplifier, divise le numérateur et le dénominateur par un même nombre (le plus grand possible).<br>
+      12/18 : on divise par 6 → <strong>2/3</strong></div>`,
+      exercise:{question:'Simplifie 4/8 :',choices:['1/2','2/4','4/8','1/4'],correct:0}
+    },
+    { title:'Comparer des fractions', icon:'🔍',
+      content:`<p>Pour comparer deux fractions de <strong>même dénominateur</strong>, on compare les numérateurs.</p>
+      <div class="lesson-formula">Même dénominateur → plus grand numérateur = plus grande fraction<br>3/7 < 5/7 car 3 < 5</div>
+      <div class="lesson-example"><div class="ex-label">🌸 Et si les dénominateurs sont différents ?</div>
+      <div class="ex-content">
+      Compare 2/3 et 3/4 :<br>
+      <span class="step">On met au même dénominateur (12) :</span><br>
+      <span class="step">2/3 = 8/12 et 3/4 = 9/12</span><br>
+      <span class="step">8/12 < 9/12 donc <strong>2/3 < 3/4</strong></span></div></div>
+      <div class="lesson-tip"><div class="tip-label">💡 Astuce rapide</div>
+      Pour comparer a/b et c/d, compare a×d et c×b :<br>
+      2/3 vs 3/4 → 2×4=8 vs 3×3=9 → 8 < 9 donc 2/3 < 3/4</div>`,
+      exercise:{question:'Quelle fraction est la plus grande : 3/5 ou 2/3 ?',choices:['2/3','3/5','Elles sont égales'],correct:0}
+    }
+  ],
   facile: [
     { title:'Qu\'est-ce qu\'une fraction ?', icon:'🍕',
       content:`<p>Une <strong>fraction</strong> représente une partie d'un tout. C'est un nombre écrit avec un <strong>numérateur</strong> (en haut) et un <strong>dénominateur</strong> (en bas).</p>
@@ -1999,6 +2105,32 @@ fractions6: {
 },
 
 geometrie: {
+  moyen: [
+    { title:'Aire du triangle', icon:'📐',
+      content:`<p>L'aire d'un <strong>triangle</strong> se calcule avec la base et la hauteur.</p>
+      <div class="lesson-formula">A = (base × hauteur) / 2</div>
+      <div class="lesson-example"><div class="ex-label">🌸 Exemple</div>
+      <div class="ex-content">Triangle avec base = 8 cm et hauteur = 5 cm :<br>
+      <span class="step">A = (8 × 5) / 2 = 40 / 2 = <strong>20 cm²</strong></span></div></div>
+      <div class="lesson-tip"><div class="tip-label">💡 Pourquoi diviser par 2 ?</div>
+      Un triangle, c'est la moitié d'un rectangle ! Si tu "doubles" le triangle, tu obtiens un rectangle de même base et hauteur.</div>`,
+      exercise:{question:'Aire d\'un triangle de base 6 cm et hauteur 4 cm ?',choices:['12 cm²','24 cm²','10 cm²','20 cm²'],correct:0}
+    },
+    { title:'Le cercle : périmètre et aire', icon:'⭕',
+      content:`<p>Le <strong>cercle</strong> a des formules qui utilisent le nombre <strong>π (pi)</strong> ≈ 3,14.</p>
+      <div class="lesson-formula">Périmètre = 2 × π × r = π × d<br>Aire = π × r²</div>
+      <div class="lesson-example"><div class="ex-label">🌸 Vocabulaire</div>
+      <div class="ex-content">
+      • <strong>Rayon (r)</strong> = du centre au bord<br>
+      • <strong>Diamètre (d)</strong> = d'un bord à l'autre = 2 × r<br>
+      • <strong>π ≈ 3,14</strong></div></div>
+      <div class="lesson-example"><div class="ex-label">🌸 Exemple</div>
+      <div class="ex-content">Cercle de rayon 5 cm :<br>
+      <span class="step">Périmètre = 2 × 3,14 × 5 = <strong>31,4 cm</strong></span><br>
+      <span class="step">Aire = 3,14 × 5² = 3,14 × 25 = <strong>78,5 cm²</strong></span></div></div>`,
+      exercise:{question:'Périmètre d\'un cercle de rayon 10 cm ? (π ≈ 3,14)',choices:['62,8 cm','31,4 cm','314 cm²','20 cm'],correct:0}
+    }
+  ],
   facile: [
     { title:'Périmètre d\'un rectangle', icon:'📐',
       content:`<p>Le <strong>périmètre</strong> est la longueur du contour d'une figure. Pour un rectangle :</p>
@@ -2041,6 +2173,36 @@ geometrie: {
 },
 
 proportionnalite6: {
+  moyen: [
+    { title:'Le tableau de proportionnalité', icon:'📊',
+      content:`<p>Un <strong>tableau de proportionnalité</strong> permet de trouver des valeurs manquantes grâce au <strong>coefficient de proportionnalité</strong>.</p>
+      <div class="lesson-formula">coefficient = valeur d'arrivée / valeur de départ<br>Toutes les colonnes ont le même coefficient !</div>
+      <div class="lesson-example"><div class="ex-label">🌸 Exemple</div>
+      <div class="ex-content">
+      | Pommes | 2 | 5 | ? |<br>
+      | Prix (€) | 3 | ? | 12 |<br>
+      <span class="step">Coefficient : 3 ÷ 2 = 1,5</span><br>
+      <span class="step">5 pommes : 5 × 1,5 = <strong>7,50€</strong></span><br>
+      <span class="step">? pommes pour 12€ : 12 ÷ 1,5 = <strong>8 pommes</strong></span></div></div>
+      <div class="lesson-tip"><div class="tip-label">💡 Autre méthode : le produit en croix</div>
+      2 pommes → 3€<br>5 pommes → ?€<br>
+      ? = (5 × 3) / 2 = <strong>7,50€</strong></div>`,
+      exercise:{question:'Si 4 stylos coûtent 6€, combien coûtent 10 stylos ?',choices:['15€','14€','12€','10€'],correct:0}
+    },
+    { title:'Appliquer un pourcentage', icon:'🏷️',
+      content:`<p>Les pourcentages sont partout : soldes, notes, statistiques. Savoir les calculer est essentiel !</p>
+      <div class="lesson-formula">x% de N = N × x / 100</div>
+      <div class="lesson-example"><div class="ex-label">🌸 Exemple : les soldes</div>
+      <div class="ex-content">Un jeu à 40€ avec 30% de réduction :<br>
+      <span class="step">Réduction = 40 × 30 / 100 = <strong>12€</strong></span><br>
+      <span class="step">Prix final = 40 - 12 = <strong>28€</strong></span></div></div>
+      <div class="lesson-tip"><div class="tip-label">💡 Méthode rapide</div>
+      30% = 3 × 10%<br>
+      10% de 40 = 4€<br>
+      30% de 40 = 3 × 4 = <strong>12€</strong></div>`,
+      exercise:{question:'Un livre à 20€ avec 15% de réduction. Prix final ?',choices:['17€','18€','15€','3€'],correct:0}
+    }
+  ],
   facile: [
     { title:'C\'est quoi la proportionnalité ?', icon:'⚖️',
       content:`<p>Deux grandeurs sont <strong>proportionnelles</strong> quand on multiplie l'une par un nombre fixe pour obtenir l'autre.</p>
@@ -2075,6 +2237,38 @@ proportionnalite6: {
 
 // ─── FRANÇAIS ───
 grammaire: {
+  moyen: [
+    { title:'Les compléments circonstanciels', icon:'📍',
+      content:`<p>Les <strong>compléments circonstanciels</strong> (CC) donnent des informations sur les <strong>circonstances</strong> de l'action : où, quand, comment.</p>
+      <div class="lesson-formula">CC de lieu → <strong>où ?</strong><br>CC de temps → <strong>quand ?</strong><br>CC de manière → <strong>comment ?</strong></div>
+      <div class="lesson-example"><div class="ex-label">🌸 Exemples</div>
+      <div class="ex-content">
+      "Il joue <strong>dans le jardin</strong>." → Où ? → CC de lieu<br>
+      "Il joue <strong>le mardi</strong>." → Quand ? → CC de temps<br>
+      "Il joue <strong>joyeusement</strong>." → Comment ? → CC de manière</div></div>
+      <div class="lesson-tip"><div class="tip-label">💡 Différence avec COD/COI</div>
+      Le CC est <strong>déplaçable et supprimable</strong> :<br>
+      "<strong>Le mardi</strong>, il joue dans le jardin" ✅<br>
+      "Il joue dans le jardin" (sans le CC de temps) ✅<br>
+      Le COD ne peut pas être supprimé : "Il mange ~~une pomme~~" change le sens !</div>`,
+      exercise:{question:'Dans "Il dort sous un arbre", "sous un arbre" est un...',choices:['CC de lieu','COD','COI','Sujet'],correct:0}
+    },
+    { title:'Les types et formes de phrases', icon:'❗',
+      content:`<p>Il existe 4 <strong>types</strong> de phrases et 2 <strong>formes</strong> principales.</p>
+      <div class="lesson-formula"><strong>4 types :</strong> déclarative (.), interrogative (?), exclamative (!), injonctive (ordre)<br><strong>2 formes :</strong> affirmative et négative</div>
+      <div class="lesson-example"><div class="ex-label">🌸 Exemples</div>
+      <div class="ex-content">
+      "Tu aimes le chocolat." → déclarative, affirmative<br>
+      "Tu n'aimes <strong>pas</strong> le chocolat." → déclarative, <strong>négative</strong><br>
+      "Aimes-tu le chocolat ?" → interrogative<br>
+      "Quel beau gâteau !" → exclamative<br>
+      "Mange ton gâteau." → injonctive (ordre)</div></div>
+      <div class="lesson-tip"><div class="tip-label">📌 La négation</div>
+      La négation encadre le verbe avec deux mots :<br>
+      <strong>ne...pas</strong>, ne...plus, ne...jamais, ne...rien, ne...personne</div>`,
+      exercise:{question:'"Ne cours pas !" est une phrase...',choices:['injonctive négative','déclarative affirmative','interrogative','exclamative affirmative'],correct:0}
+    }
+  ],
   facile: [
     { title:'Les classes de mots', icon:'📝',
       content:`<p>Chaque mot de la langue française appartient à une <strong>classe grammaticale</strong> (sa nature). C'est sa carte d'identité !</p>
@@ -2124,6 +2318,35 @@ grammaire: {
 },
 
 conjugaison: {
+  moyen: [
+    { title:'Le passé simple', icon:'📜',
+      content:`<p>Le <strong>passé simple</strong> exprime une action passée courte et terminée. On le trouve surtout dans les <strong>récits écrits</strong>.</p>
+      <div class="lesson-formula">1er groupe : -ai, -as, -a, -âmes, -âtes, -èrent<br>2e groupe : -is, -is, -it, -îmes, -îtes, -irent<br>3e groupe : variable !</div>
+      <div class="lesson-example"><div class="ex-label">🌸 Exemples</div>
+      <div class="ex-content">
+      <strong>Manger</strong> : je mang<strong>eai</strong>, il mang<strong>ea</strong>, ils mang<strong>èrent</strong><br>
+      <strong>Finir</strong> : je fin<strong>is</strong>, il fin<strong>it</strong>, ils fin<strong>irent</strong><br>
+      <strong>Être</strong> : je <strong>fus</strong>, il <strong>fut</strong>, ils <strong>furent</strong><br>
+      <strong>Avoir</strong> : j'<strong>eus</strong>, il <strong>eut</strong>, ils <strong>eurent</strong></div></div>
+      <div class="lesson-tip"><div class="tip-label">📌 Ne confonds pas !</div>
+      Imparfait = action longue/répétée : "Il <strong>marchait</strong> tous les jours"<br>
+      Passé simple = action ponctuelle : "Soudain, il <strong>tomba</strong>"</div>`,
+      exercise:{question:'Conjugue "voir" au passé simple avec "il" :',choices:['vit','voyait','vu','vois'],correct:0}
+    },
+    { title:'Passé composé vs imparfait', icon:'⏳',
+      content:`<p>Le <strong>passé composé</strong> et l'<strong>imparfait</strong> décrivent le passé, mais différemment.</p>
+      <div class="lesson-formula">Passé composé = action terminée, ponctuelle<br>Imparfait = action en cours, description, habitude</div>
+      <div class="lesson-example"><div class="ex-label">🌸 Exemples</div>
+      <div class="ex-content">
+      "Il <strong>pleuvait</strong> (imparfait = décor) quand je <strong>suis sorti</strong> (passé composé = action)"<br><br>
+      "Quand j'<strong>étais</strong> petit (imparfait = habitude), je <strong>jouais</strong> (imparfait) dehors."<br><br>
+      "Hier, j'<strong>ai mangé</strong> (passé composé) une pizza."</div></div>
+      <div class="lesson-tip"><div class="tip-label">💡 Astuce</div>
+      L'imparfait = le décor, l'arrière-plan 🎬<br>
+      Le passé composé = l'action principale, le premier plan 🎬</div>`,
+      exercise:{question:'Quel temps pour "Soudain, il est tombé" ?',choices:['Passé composé','Imparfait','Futur','Présent'],correct:0}
+    }
+  ],
   facile: [
     { title:'Le présent de l\'indicatif', icon:'⏰',
       content:`<p>Le <strong>présent</strong> exprime une action qui se passe maintenant, ou une habitude.</p>
@@ -2172,6 +2395,36 @@ conjugaison: {
 },
 
 orthographe: {
+  moyen: [
+    { title:'son/sont et on/ont', icon:'🔊',
+      content:`<p>Encore des homophones à ne pas confondre !</p>
+      <div class="lesson-formula"><strong>son</strong> = déterminant possessif → remplace par "mon/ton"<br><strong>sont</strong> = verbe être (3e pluriel) → remplace par "étaient"</div>
+      <div class="lesson-example"><div class="ex-label">🌸 Exemples</div>
+      <div class="ex-content">
+      Il a pris <strong>son</strong> sac. → Il a pris <em>mon</em> sac ✅ → possessif<br>
+      Ils <strong>sont</strong> partis. → Ils <em>étaient</em> partis ✅ → verbe être</div></div>
+      <div class="lesson-formula"><strong>on</strong> = pronom (= il/nous) → remplace par "il"<br><strong>ont</strong> = verbe avoir (3e pluriel) → remplace par "avaient"</div>
+      <div class="lesson-example"><div class="ex-label">🌸 Exemples</div>
+      <div class="ex-content">
+      <strong>On</strong> mange. → <em>Il</em> mange ✅ → pronom<br>
+      Ils <strong>ont</strong> mangé. → Ils <em>avaient</em> mangé ✅ → verbe avoir</div></div>`,
+      exercise:{question:'Choisis : "Ils ... pris ... livre"',choices:['ont / son','on / sont','on / son','ont / sont'],correct:0}
+    },
+    { title:'L\'accord du participe passé', icon:'📝',
+      content:`<p>Le <strong>participe passé</strong> s'accorde selon l'auxiliaire utilisé.</p>
+      <div class="lesson-formula">Avec <strong>être</strong> → accord avec le sujet<br>Avec <strong>avoir</strong> → pas d'accord (sauf cas spécial)</div>
+      <div class="lesson-example"><div class="ex-label">🌸 Exemples</div>
+      <div class="ex-content">
+      Elle <strong>est partie</strong> → accord fém. sing. (parti<strong>e</strong>)<br>
+      Ils <strong>sont allés</strong> → accord masc. plur. (allé<strong>s</strong>)<br>
+      Elles <strong>sont arrivées</strong> → accord fém. plur. (arrivé<strong>es</strong>)<br><br>
+      Elle <strong>a mangé</strong> une pomme → PAS d'accord avec "avoir" !</div></div>
+      <div class="lesson-tip"><div class="tip-label">💡 Moyen mnémotechnique</div>
+      Avec <strong>ÊTRE</strong> → accord, comme un <strong>adjectif</strong> !<br>
+      "Elle est grande" ↔ "Elle est parti<strong>e</strong>"</div>`,
+      exercise:{question:'Complète : "Les filles sont arriv..."',choices:['ées','és','é','ée'],correct:0}
+    }
+  ],
   facile: [
     { title:'Les homophones a/à et est/et', icon:'✏️',
       content:`<p>Les <strong>homophones</strong> se prononcent pareil mais s'écrivent différemment !</p>
@@ -2206,6 +2459,32 @@ orthographe: {
 },
 
 vocabulaire: {
+  moyen: [
+    { title:'Les champs lexicaux', icon:'🌐',
+      content:`<p>Un <strong>champ lexical</strong> est un ensemble de mots qui se rapportent au même thème.</p>
+      <div class="lesson-example"><div class="ex-label">🌸 Exemples</div>
+      <div class="ex-content">
+      <strong>Champ lexical de la mer :</strong> vague, océan, plage, marée, poisson, nager, salé...<br><br>
+      <strong>Champ lexical de l'école :</strong> élève, professeur, cahier, leçon, apprendre, classe...<br><br>
+      <strong>Champ lexical de la peur :</strong> trembler, effrayer, terreur, pâlir, angoisse...</div></div>
+      <div class="lesson-tip"><div class="tip-label">💡 À quoi ça sert ?</div>
+      En rédaction, utiliser un champ lexical riche rend ton texte plus vivant ! Au lieu de juste dire "il avait peur", tu peux écrire : "il <strong>tremblait</strong>, le <strong>cœur battant</strong>, envahi par l'<strong>angoisse</strong>".</div>`,
+      exercise:{question:'Quel mot N\'appartient PAS au champ lexical de la forêt ?',choices:['vague','arbre','feuille','champignon'],correct:0}
+    },
+    { title:'Sens propre et sens figuré', icon:'🎭',
+      content:`<p>Un mot peut avoir un <strong>sens propre</strong> (concret, réel) et un <strong>sens figuré</strong> (image, métaphore).</p>
+      <div class="lesson-example"><div class="ex-label">🌸 Exemples</div>
+      <div class="ex-content">
+      "Le lion <strong>dévore</strong> sa proie" → sens <strong>propre</strong> (manger vraiment)<br>
+      "Il <strong>dévore</strong> son livre" → sens <strong>figuré</strong> (lire avidement)<br><br>
+      "Une <strong>pluie</strong> de confettis" → sens figuré (il ne pleut pas vraiment)<br>
+      "La <strong>pluie</strong> tombe" → sens propre</div></div>
+      <div class="lesson-tip"><div class="tip-label">📌 Comment reconnaître ?</div>
+      Le sens propre = le sens <strong>premier</strong>, concret, physique.<br>
+      Le sens figuré = un sens <strong>imagé</strong>, souvent plus expressif.</div>`,
+      exercise:{question:'"Il a un cœur d\'or" est au sens...',choices:['figuré','propre'],correct:0}
+    }
+  ],
   facile: [
     { title:'Synonymes et antonymes', icon:'🔄',
       content:`<p>Les <strong>synonymes</strong> sont des mots de sens proche. Les <strong>antonymes</strong> sont des mots de sens contraire.</p>
@@ -2243,6 +2522,20 @@ vocabulaire: {
 
 // ─── HISTOIRE-GÉO ───
 prehistoire: {
+  moyen: [
+    { title:'L\'art préhistorique', icon:'🎨',
+      content:`<p>Les hommes préhistoriques ont créé les premières œuvres d'art il y a plus de <strong>30 000 ans</strong>.</p>
+      <div class="lesson-example"><div class="ex-label">🌸 Les formes d'art</div>
+      <div class="ex-content">
+      • <strong>Peintures rupestres</strong> : sur les parois des grottes (Lascaux, Chauvet)<br>
+      • <strong>Gravures</strong> : dessins tracés dans la roche<br>
+      • <strong>Sculptures</strong> : petites statuettes (Vénus de Willendorf)<br>
+      • <strong>Parures</strong> : colliers de coquillages et de dents</div></div>
+      <div class="lesson-tip"><div class="tip-label">📌 Pourquoi peignaient-ils ?</div>
+      On ne sait pas exactement ! Hypothèses : rituels magiques pour la chasse, communication, art pour le plaisir... Les animaux peints (chevaux, bisons, taureaux) étaient importants dans leur vie.</div>`,
+      exercise:{question:'Les peintures de Lascaux représentent surtout des...',choices:['animaux','humains','plantes','maisons'],correct:0}
+    }
+  ],
   facile: [
     { title:'Les premiers hommes', icon:'🦴',
       content:`<p>L'<strong>humanité</strong> est apparue en <strong>Afrique</strong> il y a environ <strong>7 millions d'années</strong>. Les premiers hommes étaient des <strong>nomades</strong> qui vivaient de chasse et de cueillette.</p>
@@ -2275,6 +2568,20 @@ prehistoire: {
 },
 
 antiquite: {
+  moyen: [
+    { title:'La République romaine', icon:'🏛️',
+      content:`<p>Rome n'a pas toujours été un empire. Avant, c'était une <strong>République</strong> (de 509 à 27 av. J.-C.).</p>
+      <div class="lesson-example"><div class="ex-label">🌸 Comment fonctionnait la République ?</div>
+      <div class="ex-content">
+      • <strong>Sénat</strong> : assemblée de riches Romains (patriciens)<br>
+      • <strong>Consuls</strong> : 2 chefs élus pour 1 an<br>
+      • <strong>Citoyens</strong> : les hommes libres pouvaient voter<br>
+      • <strong>Patriciens</strong> = nobles / <strong>Plébéiens</strong> = le peuple</div></div>
+      <div class="lesson-tip"><div class="tip-label">📌 De la République à l'Empire</div>
+      Jules César prend le pouvoir, puis son fils adoptif <strong>Auguste</strong> devient le premier empereur en <strong>27 av. J.-C.</strong> C'est le début de l'Empire romain.</div>`,
+      exercise:{question:'Combien de consuls dirigeaient la République romaine ?',choices:['2','1','3','5'],correct:0}
+    }
+  ],
   facile: [
     { title:'L\'Égypte antique', icon:'🏺',
       content:`<p>La civilisation égyptienne est née le long du <strong>Nil</strong> vers <strong>3100 av. J.-C.</strong> Elle est célèbre pour ses pyramides et ses pharaons.</p>
@@ -2306,6 +2613,23 @@ antiquite: {
 },
 
 geo_habiter: {
+  moyen: [
+    { title:'Habiter les littoraux', icon:'🏖️',
+      content:`<p>Les <strong>littoraux</strong> (côtes) attirent de plus en plus de population. On parle de <strong>littoralisation</strong>.</p>
+      <div class="lesson-example"><div class="ex-label">🌸 Pourquoi habiter le littoral ?</div>
+      <div class="ex-content">
+      • <strong>Tourisme</strong> : plages, stations balnéaires<br>
+      • <strong>Commerce</strong> : ports, échanges internationaux<br>
+      • <strong>Pêche</strong> : ressource alimentaire<br>
+      • <strong>Climat</strong> agréable</div></div>
+      <div class="lesson-tip"><div class="tip-label">⚠️ Les risques</div>
+      L'urbanisation des côtes pose des problèmes :<br>
+      • <strong>Érosion</strong> du littoral<br>
+      • <strong>Pollution</strong> de la mer<br>
+      • Risques de <strong>submersion</strong> avec la montée des eaux</div>`,
+      exercise:{question:'La littoralisation, c\'est...',choices:['la concentration sur les côtes','la montée des eaux','la pêche','la pollution des plages'],correct:0}
+    }
+  ],
   facile: [
     { title:'Habiter une métropole', icon:'🏙️',
       content:`<p>Une <strong>métropole</strong> est une très grande ville qui concentre population, activités économiques et pouvoir de décision.</p>
@@ -2341,6 +2665,24 @@ geo_habiter: {
 
 // ─── ANGLAIS ───
 eng_vocab: {
+  moyen: [
+    { title:'Food & Drinks', icon:'🍕',
+      content:`<p>Le vocabulaire de la <strong>nourriture</strong> et des <strong>boissons</strong> en anglais :</p>
+      <div class="lesson-example"><div class="ex-label">🌸 Les fruits</div>
+      <div class="ex-content">
+      🍎 <strong>apple</strong> | 🍌 <strong>banana</strong> | 🍊 <strong>orange</strong> | 🍓 <strong>strawberry</strong><br>
+      🍇 <strong>grapes</strong> | 🍑 <strong>peach</strong> | 🍒 <strong>cherry</strong> | 🍋 <strong>lemon</strong></div></div>
+      <div class="lesson-example"><div class="ex-label">🌸 Les repas</div>
+      <div class="ex-content">
+      🍞 <strong>bread</strong> (pain) | 🧀 <strong>cheese</strong> (fromage) | 🥚 <strong>egg</strong> (œuf)<br>
+      🍗 <strong>chicken</strong> (poulet) | 🐟 <strong>fish</strong> (poisson) | 🍚 <strong>rice</strong> (riz)<br>
+      ☕ <strong>tea</strong> (thé) | 🥛 <strong>milk</strong> (lait) | 🧃 <strong>juice</strong> (jus)</div></div>
+      <div class="lesson-tip"><div class="tip-label">💡 Countable vs Uncountable</div>
+      On peut compter : <strong>an</strong> apple, <strong>two</strong> eggs<br>
+      On ne peut pas compter : <strong>some</strong> milk, <strong>some</strong> bread (pas "a milk")</div>`,
+      exercise:{question:'Comment dit-on "fromage" en anglais ?',choices:['cheese','chicken','chips','cherry'],correct:0}
+    }
+  ],
   facile: [
     { title:'Family & People', icon:'👨‍👩‍👧‍👦',
       content:`<p>Les mots de la <strong>famille</strong> et des personnes en anglais :</p>
@@ -2377,6 +2719,24 @@ eng_vocab: {
 },
 
 eng_grammar: {
+  moyen: [
+    { title:'Les questions en anglais', icon:'❓',
+      content:`<p>En anglais, pour poser une question au Present Simple, on utilise <strong>Do/Does</strong>.</p>
+      <div class="lesson-formula">Do + I/you/we/they + verbe ?<br>Does + he/she/it + verbe (sans S) ?</div>
+      <div class="lesson-example"><div class="ex-label">🌸 Exemples</div>
+      <div class="ex-content">
+      "<strong>Do</strong> you <strong>like</strong> pizza?" → Tu aimes la pizza ?<br>
+      "<strong>Does</strong> she <strong>play</strong> tennis?" → Est-ce qu'elle joue au tennis ?<br>
+      <span class="step">⚠️ Pas de S après "does" : Does she play<strong>s</strong> ❌</span></div></div>
+      <div class="lesson-example"><div class="ex-label">🌸 Les mots interrogatifs</div>
+      <div class="ex-content">
+      <strong>What</strong> = quoi | <strong>Where</strong> = où | <strong>When</strong> = quand<br>
+      <strong>Who</strong> = qui | <strong>Why</strong> = pourquoi | <strong>How</strong> = comment<br><br>
+      "<strong>Where</strong> do you live?" → Où habites-tu ?<br>
+      "<strong>What</strong> does he eat?" → Que mange-t-il ?</div></div>`,
+      exercise:{question:'Traduis : "Est-ce qu\'il aime le football ?"',choices:['Does he like football?','Do he likes football?','Is he like football?','Does he likes football?'],correct:0}
+    }
+  ],
   facile: [
     { title:'Le verbe BE (être)', icon:'📏',
       content:`<p>Le verbe <strong>to be</strong> est le verbe le plus important en anglais !</p>
@@ -2419,6 +2779,26 @@ eng_grammar: {
 },
 
 eng_irregular: {
+  moyen: [
+    { title:'Utiliser les verbes irréguliers', icon:'🔧',
+      content:`<p>Les verbes irréguliers sont utilisés au <strong>prétérit</strong> (passé simple) et au <strong>present perfect</strong>.</p>
+      <div class="lesson-formula">Prétérit = 2e colonne (V2)<br>Present perfect = have/has + 3e colonne (V3)</div>
+      <div class="lesson-example"><div class="ex-label">🌸 Prétérit (passé)</div>
+      <div class="ex-content">
+      "I <strong>went</strong> to school." → Je suis allé à l'école.<br>
+      "She <strong>ate</strong> an apple." → Elle a mangé une pomme.<br>
+      "They <strong>saw</strong> a film." → Ils ont vu un film.</div></div>
+      <div class="lesson-example"><div class="ex-label">🌸 Present Perfect</div>
+      <div class="ex-content">
+      "I <strong>have eaten</strong>." → J'ai mangé.<br>
+      "She <strong>has gone</strong>." → Elle est partie.<br>
+      <span class="step">have/has + participe passé (V3)</span></div></div>
+      <div class="lesson-tip"><div class="tip-label">📌 Quand utiliser quoi ?</div>
+      <strong>Prétérit</strong> = action passée avec une date/moment précis ("yesterday", "last week")<br>
+      <strong>Present perfect</strong> = action passée sans moment précis, résultat visible maintenant</div>`,
+      exercise:{question:'Complète : "I have never ... sushi" (eat)',choices:['eaten','ate','eat','eating'],correct:0}
+    }
+  ],
   facile: [
     { title:'Les 10 verbes irréguliers essentiels', icon:'⚡',
       content:`<p>Les <strong>verbes irréguliers</strong> ne suivent pas la règle du -ed au passé. Il faut les apprendre par cœur !</p>
