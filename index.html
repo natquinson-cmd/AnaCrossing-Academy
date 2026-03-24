@@ -793,12 +793,21 @@ const TOPICS = [
 
 // Quiz phases (Animal Crossing island progression)
 const PHASES = [
-  { name: 'Tente de départ', icon: '⛺', minScore: 0, questCount: 10 },
-  { name: 'Petite maison', icon: '🏠', minScore: 6, questCount: 10 },
-  { name: 'Grande maison', icon: '🏡', minScore: 6, questCount: 10 },
-  { name: 'Manoir de l\'île', icon: '🏰', minScore: 7, questCount: 10 },
-  { name: 'Palais 5 étoiles', icon: '⭐', minScore: 8, questCount: 10 },
+  { name: 'Tente de départ', icon: '⛺', diff: 1, minScore: 0, questCount: 10 },
+  { name: 'Petite maison', icon: '🏠', diff: 1, minScore: 6, questCount: 10 },
+  { name: 'Grande maison', icon: '🏡', diff: 2, minScore: 6, questCount: 10 },
+  { name: 'Manoir de l\'île', icon: '🏰', diff: 2, minScore: 7, questCount: 10 },
+  { name: 'Palais 5 étoiles', icon: '⭐', diff: 3, minScore: 8, questCount: 10 },
 ];
+
+// Difficulty system: phases control question difficulty
+let _forcedDiff = 0;
+function getDiff() {
+  if (_forcedDiff) return _forcedDiff;
+  if (state.level <= 2) return 1;
+  if (state.level <= 5) return 2;
+  return 3;
+}
 
 const ACHIEVEMENTS = [
   // ─── Premiers pas ───
@@ -943,412 +952,398 @@ function generateChoices(correct, wrongs) {
   return shuffle(choices);
 }
 
-// ─── MATHS GENERATORS ───
+// ─── ALL GENERATORS WITH 3 DIFFICULTY LEVELS ───
 const generators = {
 
+// ═══ MATHS ═══
 decimaux() {
-  const sub = randInt(1,4);
-  if (sub === 1) {
-    // Comparer deux décimaux
-    const a = (randInt(10,99)/10).toFixed(1);
-    const b = (randInt(10,99)/10).toFixed(1);
-    if (a === b) return generators.decimaux();
-    const answer = parseFloat(a) > parseFloat(b) ? '>' : '<';
-    return {
-      question: `Compare : ${a} ☐ ${b}`, answer, type: 'mcq',
-      choices: [{text:'>',value:'>'},{text:'<',value:'<'},{text:'=',value:'='}],
-      explanation: `${a} est ${answer==='>'?'plus grand':'plus petit'} que ${b}`
-    };
-  } else if (sub === 2) {
-    // Arrondir à l'unité
-    const n = (randInt(10,990)/10).toFixed(1);
-    const answer = Math.round(parseFloat(n)).toString();
-    return {
-      question: `Arrondis ${n} à l'unité`, answer, type: 'mcq',
-      choices: generateChoices(answer, [Math.floor(parseFloat(n)).toString(), Math.ceil(parseFloat(n)).toString(), (parseFloat(n)+1).toFixed(0)]),
-      explanation: `${n} arrondi à l'unité = ${answer}`
-    };
-  } else if (sub === 3) {
-    // Multiplier par 10, 100, 1000
-    const n = (randInt(1,99)/10).toFixed(1);
-    const mult = pick([10,100,1000]);
-    const answer = (parseFloat(n)*mult).toString();
-    return {
-      question: `Calcule : ${n} × ${mult}`, answer, type: 'input',
-      explanation: `On décale la virgule de ${mult===10?1:mult===100?2:3} rang(s) vers la droite : ${answer}`
-    };
+  const d = getDiff();
+  if (d === 1) {
+    const sub = randInt(1,2);
+    if (sub === 1) { const a=(randInt(10,50)/10).toFixed(1), b=(randInt(10,50)/10).toFixed(1); if(a===b) return generators.decimaux(); const answer=parseFloat(a)>parseFloat(b)?'>':'<'; return { question:`Compare : ${a} ☐ ${b}`, answer, type:'mcq', choices:[{text:'>',value:'>'},{text:'<',value:'<'},{text:'=',value:'='}], explanation:`${a} est ${answer==='>'?'plus grand':'plus petit'} que ${b}` }; }
+    else { const n=(randInt(10,99)/10).toFixed(1), answer=Math.round(parseFloat(n)).toString(); return { question:`Arrondis ${n} à l'unité`, answer, type:'mcq', hint:'Regarde le chiffre après la virgule : >= 5 on arrondit au-dessus', choices:generateChoices(answer,[Math.floor(parseFloat(n)).toString(),Math.ceil(parseFloat(n)).toString(),(parseFloat(n)+1).toFixed(0)]), explanation:`${n} arrondi à l'unité = ${answer}` }; }
+  } else if (d === 2) {
+    const sub = randInt(1,3);
+    if (sub === 1) { const a=(randInt(100,999)/100).toFixed(2), b=(randInt(100,999)/100).toFixed(2); if(a===b) return generators.decimaux(); const answer=parseFloat(a)>parseFloat(b)?'>':'<'; return { question:`Compare : ${a} ☐ ${b}`, answer, type:'mcq', choices:[{text:'>',value:'>'},{text:'<',value:'<'},{text:'=',value:'='}], explanation:`${a} est ${answer==='>'?'plus grand':'plus petit'} que ${b}` }; }
+    else if (sub === 2) { const n=(randInt(1,99)/10).toFixed(1), mult=pick([10,100,1000]), answer=(parseFloat(n)*mult).toString(); return { question:`Calcule : ${n} × ${mult}`, answer, type:'input', explanation:`On décale la virgule de ${mult===10?1:mult===100?2:3} rang(s) vers la droite : ${answer}` }; }
+    else { const n=(randInt(10,9900)/100).toFixed(2), answer=(parseFloat(n)/10).toString(); return { question:`Calcule : ${n} ÷ 10`, answer, type:'input', explanation:`On décale la virgule d'1 rang vers la gauche : ${answer}` }; }
   } else {
-    // Ranger dans l'ordre croissant (simplifié en QCM)
-    const nums = [randInt(10,50)/10, randInt(10,50)/10, randInt(10,50)/10].map(n=>n.toFixed(1));
-    const sorted = [...nums].sort((a,b)=>parseFloat(a)-parseFloat(b));
-    const answer = sorted.join(' < ');
-    const wrong1 = [...nums].sort((a,b)=>parseFloat(b)-parseFloat(a)).join(' < ');
-    const wrong2 = [nums[1],nums[0],nums[2]].join(' < ');
-    return {
-      question: `Range dans l'ordre croissant : ${nums.join(' ; ')}`, answer, type: 'mcq',
-      choices: generateChoices(answer, [wrong1, wrong2, nums.join(' < ')]),
-      explanation: `Ordre croissant (du plus petit au plus grand) : ${answer}`
-    };
+    const sub = randInt(1,2);
+    if (sub === 1) { const nums=[randInt(100,500)/100,randInt(100,500)/100,randInt(100,500)/100].map(n=>n.toFixed(2)); const sorted=[...nums].sort((a,b)=>parseFloat(a)-parseFloat(b)); const answer=sorted.join(' < '); const wrong1=[...nums].sort((a,b)=>parseFloat(b)-parseFloat(a)).join(' < '); return { question:`Range dans l'ordre croissant : ${nums.join(' ; ')}`, answer, type:'mcq', choices:generateChoices(answer,[wrong1,[nums[1],nums[0],nums[2]].join(' < '),nums.join(' < ')]), explanation:`Ordre croissant : ${answer}` }; }
+    else { const n=randInt(1,99)/10, answer=`${Math.floor(n)} < ${n.toFixed(1)} < ${Math.ceil(n)}`; return { question:`Encadre ${n.toFixed(1)} entre deux entiers consécutifs`, answer, type:'mcq', choices:generateChoices(answer,[`${Math.floor(n)-1} < ${n.toFixed(1)} < ${Math.floor(n)}`,`${Math.ceil(n)} < ${n.toFixed(1)} < ${Math.ceil(n)+1}`,`${Math.floor(n)} < ${n.toFixed(1)} < ${Math.ceil(n)+1}`]), explanation:`${Math.floor(n)} < ${n.toFixed(1)} < ${Math.ceil(n)}` }; }
   }
 },
 
 operations() {
-  const sub = randInt(1,4);
-  if (sub === 1) {
-    const a = randInt(10,99), b = randInt(10,99);
-    const answer = (a+b).toString();
-    return {
-      question: `Calcule : ${a} + ${b}`, answer, type: 'input',
-      hint: 'Pose l\'addition si besoin',
-      explanation: `${a} + ${b} = ${answer}`
-    };
-  } else if (sub === 2) {
-    const b = randInt(10,50), a = b + randInt(5,50);
-    const answer = (a-b).toString();
-    return {
-      question: `Calcule : ${a} − ${b}`, answer, type: 'input',
-      explanation: `${a} − ${b} = ${answer}`
-    };
-  } else if (sub === 3) {
-    const a = randInt(2,12), b = randInt(2,12);
-    const answer = (a*b).toString();
-    return {
-      question: `Calcule : ${a} × ${b}`, answer, type: 'mcq',
-      choices: generateChoices(answer, [(a*b+a).toString(), (a*b-b).toString(), (a*(b+1)).toString()]),
-      explanation: `${a} × ${b} = ${answer}`
-    };
+  const d = getDiff();
+  if (d === 1) {
+    const sub = randInt(1,3);
+    if (sub === 1) { const a=randInt(5,50),b=randInt(5,50); return { question:`Calcule : ${a} + ${b}`, answer:(a+b).toString(), type:'input', hint:'Pose l\'addition si besoin', explanation:`${a} + ${b} = ${a+b}` }; }
+    else if (sub === 2) { const b=randInt(5,30),a=b+randInt(3,30); return { question:`Calcule : ${a} − ${b}`, answer:(a-b).toString(), type:'input', explanation:`${a} − ${b} = ${a-b}` }; }
+    else { const a=randInt(2,10),b=randInt(2,10),ans=a*b; return { question:`Calcule : ${a} × ${b}`, answer:ans.toString(), type:'mcq', choices:generateChoices(ans.toString(),[(ans+a).toString(),(ans-b).toString(),(a*(b+1)).toString()]), explanation:`${a} × ${b} = ${ans}` }; }
+  } else if (d === 2) {
+    const sub = randInt(1,3);
+    if (sub === 1) { const a=randInt(10,99),b=randInt(10,99); return { question:`Calcule : ${a} + ${b}`, answer:(a+b).toString(), type:'input', explanation:`${a} + ${b} = ${a+b}` }; }
+    else if (sub === 2) { const a=randInt(2,12),b=randInt(2,12),ans=a*b; return { question:`Calcule : ${a} × ${b}`, answer:ans.toString(), type:'input', explanation:`${a} × ${b} = ${ans}` }; }
+    else { const b=randInt(2,12),q=randInt(2,12),a=b*q; return { question:`Calcule : ${a} ÷ ${b}`, answer:q.toString(), type:'input', hint:`Combien de fois ${b} dans ${a} ?`, explanation:`${a} ÷ ${b} = ${q}` }; }
   } else {
-    const b = randInt(2,12), q = randInt(2,12);
-    const a = b * q;
-    const answer = q.toString();
-    return {
-      question: `Calcule : ${a} ÷ ${b}`, answer, type: 'input',
-      hint: `Combien de fois ${b} dans ${a} ?`,
-      explanation: `${a} ÷ ${b} = ${answer}`
-    };
+    const sub = randInt(1,3);
+    if (sub === 1) { const a=randInt(2,8),b=randInt(2,5),c=randInt(1,10),ans=a*b+c; return { question:`Calcule : ${a} × ${b} + ${c}`, answer:ans.toString(), type:'input', hint:'La multiplication est prioritaire !', explanation:`${a} × ${b} + ${c} = ${a*b} + ${c} = ${ans}` }; }
+    else if (sub === 2) { const a=randInt(2,6),b=randInt(2,6),c=randInt(1,5),ans=a*(b+c); return { question:`Calcule : ${a} × (${b} + ${c})`, answer:ans.toString(), type:'input', hint:'Calcule d\'abord la parenthèse', explanation:`${a} × (${b} + ${c}) = ${a} × ${b+c} = ${ans}` }; }
+    else { const a=randInt(100,999),b=randInt(10,99); return { question:`Calcule : ${a} − ${b}`, answer:(a-b).toString(), type:'input', explanation:`${a} − ${b} = ${a-b}` }; }
   }
 },
 
 fractions6() {
-  const sub = randInt(1,3);
-  if (sub === 1) {
-    // Nommer une fraction
-    const n = randInt(1,7), d = randInt(2,10);
-    if (n >= d) return generators.fractions6();
-    const answer = `${n}/${d}`;
-    return {
-      question: `Quelle fraction représente ${n} parts sur ${d} ?`, answer, type: 'mcq',
-      choices: generateChoices(answer, [`${d}/${n}`, `${n+1}/${d}`, `${n}/${d+1}`]),
-      explanation: `${n} parts sur ${d} = ${n}/${d}`
-    };
-  } else if (sub === 2) {
-    // Addition même dénominateur
-    const d = pick([2,3,4,5,6,8,10]);
-    const a = randInt(1, d-2), b = randInt(1, d-a-1);
-    const answer = `${a+b}/${d}`;
-    return {
-      question: `Calcule : ${a}/${d} + ${b}/${d}`, answer, type: 'mcq',
-      choices: generateChoices(answer, [`${a+b}/${d*2}`, `${a*b}/${d}`, `${a}/${d+b}`]),
-      explanation: `Même dénominateur : (${a}+${b})/${d} = ${a+b}/${d}`
-    };
+  const d = getDiff();
+  if (d === 1) {
+    const sub = randInt(1,2);
+    if (sub === 1) { const n=randInt(1,5),dd=randInt(2,8); if(n>=dd) return generators.fractions6(); return { question:`Quelle fraction représente ${n} parts sur ${dd} ?`, answer:`${n}/${dd}`, type:'mcq', choices:generateChoices(`${n}/${dd}`,[`${dd}/${n}`,`${n+1}/${dd}`,`${n}/${dd+1}`]), explanation:`${n} parts sur ${dd} = ${n}/${dd}` }; }
+    else { const n=randInt(1,10),dd=randInt(2,10); if(n===dd) return generators.fractions6(); const answer=n<dd?'< 1':'> 1'; return { question:`${n}/${dd} est plus petit ou plus grand que 1 ?`, answer, type:'mcq', choices:[{text:'< 1',value:'< 1'},{text:'> 1',value:'> 1'},{text:'= 1',value:'= 1'}], explanation:`Numérateur (${n}) ${n<dd?'<':'>'} dénominateur (${dd}), donc ${answer}` }; }
+  } else if (d === 2) {
+    const sub = randInt(1,2);
+    if (sub === 1) { const dd=pick([2,3,4,5,6,8,10]),a=randInt(1,dd-2),b=randInt(1,dd-a-1); return { question:`Calcule : ${a}/${dd} + ${b}/${dd}`, answer:`${a+b}/${dd}`, type:'mcq', hint:'Même dénominateur → on additionne les numérateurs', choices:generateChoices(`${a+b}/${dd}`,[`${a+b}/${dd*2}`,`${a*b}/${dd}`,`${a}/${dd+b}`]), explanation:`Même dénominateur : (${a}+${b})/${dd} = ${a+b}/${dd}` }; }
+    else { const dd=pick([4,6,8,10]),a=randInt(1,dd-2),b=randInt(1,dd-a-1); return { question:`Calcule : ${a}/${dd} − ${b}/${dd}`, answer:`${a-b}/${dd}`, type:'mcq', choices:generateChoices(`${a-b}/${dd}`,[`${a+b}/${dd}`,`${a-b}/${dd*2}`,`${b-a}/${dd}`]), explanation:`Même dénominateur : (${a}−${b})/${dd} = ${a-b}/${dd}` }; }
   } else {
-    // Comparer à 1 (fraction < ou > 1)
-    const n = randInt(1,10), d = randInt(2,10);
-    if (n === d) return generators.fractions6();
-    const answer = n < d ? '< 1' : '> 1';
-    return {
-      question: `${n}/${d} est-il plus petit ou plus grand que 1 ?`, answer, type: 'mcq',
-      choices: [{text:'< 1',value:'< 1'},{text:'> 1',value:'> 1'},{text:'= 1',value:'= 1'}],
-      explanation: `${n}/${d} : numérateur (${n}) ${n<d?'<':'>'} dénominateur (${d}), donc ${answer}`
-    };
+    const sub = randInt(1,2);
+    if (sub === 1) { const d1=pick([2,3,4,5]),d2=d1*2,a=randInt(1,d1-1),b=randInt(1,d2-1),mult=d2/d1,num=a*mult+b; return { question:`Calcule : ${a}/${d1} + ${b}/${d2}`, answer:`${num}/${d2}`, type:'mcq', hint:`Mets au même dénominateur (${d2})`, choices:generateChoices(`${num}/${d2}`,[`${a+b}/${d1+d2}`,`${a+b}/${d2}`,`${a*b}/${d1*d2}`]), explanation:`${a}/${d1} = ${a*mult}/${d2}, donc ${a*mult}/${d2} + ${b}/${d2} = ${num}/${d2}` }; }
+    else { const a=randInt(1,5),b=randInt(2,6),c=randInt(1,5),dd=randInt(2,6),rn=a*c,rd=b*dd; function gcd(x,y){x=Math.abs(x);y=Math.abs(y);while(y){[x,y]=[y,x%y];}return x;} const g=gcd(rn,rd); const answer=rd/g===1?`${rn/g}`:`${rn/g}/${rd/g}`; return { question:`Calcule : ${a}/${b} × ${c}/${dd}`, answer, type:'mcq', hint:'On multiplie numérateurs ensemble et dénominateurs ensemble', choices:generateChoices(answer,[`${a+c}/${b+dd}`,`${a*c}/${b+dd}`,`${a*dd}/${b*c}`]), explanation:`(${a}×${c})/(${b}×${dd}) = ${rn}/${rd}${g>1?' = '+answer:''}` }; }
   }
 },
 
 geometrie() {
-  const sub = randInt(1,4);
-  if (sub === 1) {
-    // Périmètre rectangle
-    const L = randInt(3,15), l = randInt(2,L);
-    const answer = (2*(L+l)).toString();
-    return {
-      question: `Périmètre d'un rectangle de ${L} cm par ${l} cm ?`, answer, type: 'input',
-      hint: 'P = 2 × (L + l)',
-      explanation: `P = 2 × (${L} + ${l}) = 2 × ${L+l} = ${answer} cm`
-    };
-  } else if (sub === 2) {
-    // Aire rectangle
-    const L = randInt(3,12), l = randInt(2,10);
-    const answer = (L*l).toString();
-    return {
-      question: `Aire d'un rectangle de ${L} cm par ${l} cm ?`, answer, type: 'input',
-      hint: 'A = L × l',
-      explanation: `A = ${L} × ${l} = ${answer} cm²`
-    };
-  } else if (sub === 3) {
-    // Périmètre carré
-    const c = randInt(2,15);
-    const answer = (4*c).toString();
-    return {
-      question: `Périmètre d'un carré de côté ${c} cm ?`, answer, type: 'input',
-      hint: 'P = 4 × côté',
-      explanation: `P = 4 × ${c} = ${answer} cm`
-    };
+  const d = getDiff();
+  if (d === 1) {
+    const sub = randInt(1,2);
+    if (sub === 1) { const c=randInt(2,12); return { question:`Périmètre d'un carré de côté ${c} cm ?`, answer:(4*c).toString(), type:'input', hint:'P = 4 × côté', explanation:`P = 4 × ${c} = ${4*c} cm` }; }
+    else { const L=randInt(3,12),l=randInt(2,L); return { question:`Périmètre d'un rectangle de ${L} cm par ${l} cm ?`, answer:(2*(L+l)).toString(), type:'input', hint:'P = 2 × (L + l)', explanation:`P = 2 × (${L} + ${l}) = ${2*(L+l)} cm` }; }
+  } else if (d === 2) {
+    const sub = randInt(1,3);
+    if (sub === 1) { const L=randInt(3,12),l=randInt(2,10); return { question:`Aire d'un rectangle de ${L} cm par ${l} cm ?`, answer:(L*l).toString(), type:'input', hint:'A = L × l', explanation:`A = ${L} × ${l} = ${L*l} cm²` }; }
+    else if (sub === 2) { const c=randInt(2,10); return { question:`Aire d'un carré de côté ${c} cm ?`, answer:(c*c).toString(), type:'input', hint:'A = côté × côté', explanation:`A = ${c} × ${c} = ${c*c} cm²` }; }
+    else { const shapes=[{q:'Le carré a combien d\'axes de symétrie ?',a:'4',w:['2','1','8']},{q:'Le rectangle a combien d\'axes de symétrie ?',a:'2',w:['4','1','3']},{q:'Le triangle équilatéral a combien d\'axes de symétrie ?',a:'3',w:['1','2','6']}]; const s=pick(shapes); return { question:s.q, answer:s.a, type:'mcq', choices:generateChoices(s.a,s.w), explanation:`La réponse est ${s.a}` }; }
   } else {
-    // Symétrie - reconnaître
-    const shapes = [
-      { q:'Le carré a combien d\'axes de symétrie ?', a:'4', w:['2','1','8'] },
-      { q:'Le rectangle a combien d\'axes de symétrie ?', a:'2', w:['4','1','3'] },
-      { q:'Le triangle équilatéral a combien d\'axes de symétrie ?', a:'3', w:['1','2','6'] },
-      { q:'Le cercle a combien d\'axes de symétrie ?', a:'Infini', w:['1','4','8'] },
-    ];
-    const s = pick(shapes);
-    return {
-      question: s.q, answer: s.a, type: 'mcq',
-      choices: generateChoices(s.a, s.w),
-      explanation: `La réponse est ${s.a}`
-    };
+    const sub = randInt(1,3);
+    if (sub === 1) { const b=randInt(4,12),h=randInt(3,10); return { question:`Aire d'un triangle de base ${b} cm et hauteur ${h} cm ?`, answer:(b*h/2).toString(), type:'input', hint:'A = (base × hauteur) ÷ 2', explanation:`A = (${b} × ${h}) ÷ 2 = ${b*h} ÷ 2 = ${b*h/2} cm²` }; }
+    else if (sub === 2) { const L=randInt(4,10),l=randInt(3,8); return { question:`Un rectangle a ${L} cm de long et ${l} cm de large. Quelle est son aire ET son périmètre ?<br>Donne l'aire`, answer:(L*l).toString(), type:'input', explanation:`Aire = ${L} × ${l} = ${L*l} cm², Périmètre = 2 × (${L}+${l}) = ${2*(L+l)} cm` }; }
+    else { const r=pick([3,5,7,10]); const answer=Math.round(2*3.14*r).toString(); return { question:`Périmètre d'un cercle de rayon ${r} cm ? (π ≈ 3,14, arrondis à l'unité)`, answer, type:'input', hint:'P = 2 × π × r', explanation:`P = 2 × 3,14 × ${r} ≈ ${answer} cm` }; }
   }
 },
 
 proportionnalite6() {
-  const sub = randInt(1,3);
-  if (sub === 1) {
-    // Pourcentage simple
-    const pct = pick([10,25,50]);
-    const base = pick([20,40,50,60,80,100,200]);
-    const answer = (base*pct/100).toString();
-    return {
-      question: `Combien font ${pct}% de ${base} ?`, answer, type: 'input',
-      hint: pct===50?'La moitié !':pct===25?'Le quart !':'Divise par 10 !',
-      explanation: `${pct}% de ${base} = ${answer}`
-    };
-  } else if (sub === 2) {
-    // Tableau de proportionnalité
-    const k = randInt(2,5), a = randInt(2,6);
-    const b = a * k, c = randInt(2,6), d = c * k;
-    return {
-      question: `Si ${a} bonbons coûtent ${b}€, combien coûtent ${c} bonbons ?`, answer: d.toString(), type: 'input',
-      explanation: `Prix d'un bonbon : ${b}÷${a} = ${k}€, donc ${c} bonbons = ${c}×${k} = ${d}€`
-    };
+  const d = getDiff();
+  if (d === 1) {
+    const pct=pick([10,50]),base=pick([20,40,50,60,80,100]); return { question:`Combien font ${pct}% de ${base} ?`, answer:(base*pct/100).toString(), type:'input', hint:pct===50?'La moitié !':'Divise par 10 !', explanation:`${pct}% de ${base} = ${base*pct/100}` };
+  } else if (d === 2) {
+    const sub = randInt(1,2);
+    if (sub === 1) { const pct=pick([10,20,25,50]),base=randInt(2,20)*10; return { question:`Combien font ${pct}% de ${base} ?`, answer:(base*pct/100).toString(), type:'input', explanation:`${pct}% de ${base} = ${base*pct/100}` }; }
+    else { const k=randInt(2,5),a=randInt(2,6),b=a*k,c=randInt(2,6),dd=c*k; return { question:`Si ${a} bonbons coûtent ${b}€, combien coûtent ${c} bonbons ?`, answer:dd.toString(), type:'input', explanation:`Prix d'un bonbon : ${b}÷${a} = ${k}€, donc ${c} × ${k} = ${dd}€` }; }
   } else {
-    const a = randInt(2,8), b = a * randInt(2,5);
-    const answer = (b/a).toString();
-    return {
-      question: `${a} cahiers coûtent ${b}€. Prix d'un cahier ?`, answer, type: 'input',
-      explanation: `${b} ÷ ${a} = ${answer}€`
-    };
+    const sub = randInt(1,2);
+    if (sub === 1) { const pct=pick([15,30,35,40,60,75]),base=randInt(2,20)*10,answer=(base*pct/100); return { question:`Combien font ${pct}% de ${base} ?`, answer:answer.toString(), type:'input', hint:`${pct}% = ${pct}/100`, explanation:`${pct}/100 × ${base} = ${answer}` }; }
+    else { const a=randInt(3,8),b=randInt(10,40),c=randInt(2,5); return { question:`${a} kg de pommes coûtent ${b}€. Prix de ${a*c} kg ?`, answer:(b*c).toString(), type:'input', explanation:`${a*c} ÷ ${a} = ${c}, donc ${b} × ${c} = ${b*c}€` }; }
   }
 },
 
-// ─── FRANÇAIS GENERATORS ───
+// ═══ FRANÇAIS ═══
 grammaire() {
-  const questions = [
-    { q:'Dans "Le chat dort", quelle est la nature de "chat" ?', a:'Nom commun', w:['Verbe','Adjectif','Pronom'], ex:'Chat est un nom commun (il désigne un être vivant)' },
-    { q:'Dans "Elle mange une pomme", quel est le verbe ?', a:'mange', w:['Elle','une','pomme'], ex:'Le verbe est "mange" (action de manger)' },
-    { q:'Dans "Le grand arbre", quelle est la nature de "grand" ?', a:'Adjectif', w:['Nom','Verbe','Déterminant'], ex:'"Grand" qualifie le nom "arbre" → c\'est un adjectif' },
-    { q:'Dans "Je parle", quel est le sujet ?', a:'Je', w:['parle','le','un'], ex:'Le sujet fait l\'action : "Je" parle → sujet = Je' },
-    { q:'Quel est le COD dans "Il mange une pomme" ?', a:'une pomme', w:['Il','mange','dans'], ex:'Il mange quoi ? → une pomme (COD)' },
-    { q:'"La" dans "la maison" est un...', a:'Déterminant', w:['Nom','Pronom','Adverbe'], ex:'"La" accompagne le nom → c\'est un déterminant (article défini)' },
-    { q:'Dans "Il court vite", "vite" est un...', a:'Adverbe', w:['Adjectif','Nom','Verbe'], ex:'"Vite" modifie le verbe "court" → c\'est un adverbe' },
-    { q:'Combien y a-t-il de groupes verbaux en français ?', a:'3', w:['2','4','1'], ex:'1er groupe (-er), 2ème (-ir comme finir), 3ème (les autres)' },
-    { q:'"Nous" est un pronom de quelle personne ?', a:'1ère personne du pluriel', w:['2ème personne du pluriel','3ème personne','1ère personne du singulier'], ex:'Nous = 1ère personne du pluriel' },
-    { q:'Un nom propre commence toujours par...', a:'Une majuscule', w:['Un article','Une minuscule','Un point'], ex:'Les noms propres (Paris, Tom Nook) prennent une majuscule' },
-    { q:'Le pluriel de "cheval" est...', a:'chevaux', w:['chevals','chevales','chevauxs'], ex:'Les noms en -al font leur pluriel en -aux : cheval → chevaux' },
-    { q:'Le féminin de "acteur" est...', a:'actrice', w:['acteuse','acteure','acteurse'], ex:'Acteur → actrice (suffixe -trice)' },
-  ];
-  const q = pick(questions);
-  return { question: q.q, answer: q.a, type: 'mcq', choices: generateChoices(q.a, q.w), explanation: q.ex };
+  const d = getDiff();
+  const pools = {
+    1: [
+      { q:'Dans "Le chat dort", "chat" est un...', a:'Nom commun', w:['Verbe','Adjectif','Pronom'], ex:'Chat désigne un être vivant → nom commun' },
+      { q:'Dans "Elle mange", quel est le verbe ?', a:'mange', w:['Elle','une','le'], ex:'"Mange" = action → verbe' },
+      { q:'Dans "Le grand arbre", "grand" est un...', a:'Adjectif', w:['Nom','Verbe','Déterminant'], ex:'"Grand" qualifie "arbre" → adjectif' },
+      { q:'Dans "Je parle", le sujet est...', a:'Je', w:['parle','le','un'], ex:'Qui fait l\'action ? → Je' },
+      { q:'"La" dans "la maison" est un...', a:'Déterminant', w:['Nom','Pronom','Adverbe'], ex:'"La" accompagne le nom → déterminant' },
+      { q:'Un nom propre commence par...', a:'Une majuscule', w:['Un article','Une minuscule','Un point'], ex:'Paris, Tom Nook → majuscule' },
+      { q:'Combien de groupes verbaux en français ?', a:'3', w:['2','4','1'], ex:'1er (-er), 2e (-ir/finir), 3e (les autres)' },
+    ],
+    2: [
+      { q:'Dans "Il court vite", "vite" est un...', a:'Adverbe', w:['Adjectif','Nom','Verbe'], ex:'"Vite" modifie le verbe → adverbe' },
+      { q:'"Nous" est un pronom de quelle personne ?', a:'1ère pers. du pluriel', w:['2e pers. du pluriel','3e personne','1ère pers. du singulier'], ex:'Nous = 1ère personne du pluriel' },
+      { q:'Le pluriel de "cheval" est...', a:'chevaux', w:['chevals','chevales','chevauxs'], ex:'Noms en -al → pluriel en -aux' },
+      { q:'Le féminin de "acteur" est...', a:'actrice', w:['acteuse','acteure','acteurse'], ex:'Acteur → actrice' },
+      { q:'"Ils" est un pronom...', a:'personnel', w:['possessif','démonstratif','relatif'], ex:'"Ils" remplace un groupe de personnes → pronom personnel' },
+      { q:'Dans "cette maison", "cette" est un...', a:'Déterminant démonstratif', w:['Pronom','Adjectif','Adverbe'], ex:'"Cette" montre, désigne → déterminant démonstratif' },
+    ],
+    3: [
+      { q:'Le COD dans "Il mange une pomme" est...', a:'une pomme', w:['Il','mange','une'], ex:'Il mange quoi ? → une pomme (COD)' },
+      { q:'Le COI dans "Il parle à Marie" est...', a:'à Marie', w:['Il','parle','Marie'], ex:'Il parle à qui ? → à Marie (COI, introduit par "à")' },
+      { q:'Dans "Il mange le soir", "le soir" est...', a:'Complément circonstanciel de temps', w:['COD','COI','Sujet'], ex:'Quand ? → le soir = CC de temps' },
+      { q:'Dans "Il va à Paris", "à Paris" est...', a:'Complément circonstanciel de lieu', w:['COD','COI','Attribut'], ex:'Où ? → à Paris = CC de lieu' },
+      { q:'Dans "Le ciel est bleu", "bleu" est...', a:'Attribut du sujet', w:['COD','Adverbe','CC'], ex:'Après "est" (verbe d\'état) → attribut du sujet' },
+      { q:'La nature d\'un mot c\'est...', a:'ce qu\'il est (nom, verbe...)', w:['son rôle dans la phrase','sa place','son genre'], ex:'Nature = catégorie (nom, verbe, adj...) / Fonction = rôle (sujet, COD...)' },
+    ]
+  };
+  const q = pick(pools[d]);
+  return { question:q.q, answer:q.a, type:'mcq', choices:generateChoices(q.a,q.w), explanation:q.ex };
 },
 
 conjugaison() {
-  const tenses = [
-    { name:'présent', verbs:[
-      {v:'manger',s:'je',a:'mange',w:['manges','mangé','mangent']},
-      {v:'finir',s:'tu',a:'finis',w:['fini','finit','fines']},
-      {v:'être',s:'nous',a:'sommes',w:['êtes','sont','suis']},
-      {v:'avoir',s:'ils',a:'ont',w:['avont','a','avez']},
-      {v:'aller',s:'je',a:'vais',w:['vas','va','alle']},
-      {v:'faire',s:'vous',a:'faites',w:['faisez','faitent','faîtes']},
-      {v:'prendre',s:'elle',a:'prend',w:['prends','prendt','prende']},
-      {v:'venir',s:'nous',a:'venons',w:['venions','viendons','venez']},
-    ]},
-    { name:'imparfait', verbs:[
-      {v:'manger',s:'je',a:'mangeais',w:['mangais','mangeai','mangé']},
-      {v:'finir',s:'tu',a:'finissais',w:['finisais','finissai','finais']},
-      {v:'être',s:'il',a:'était',w:['étais','étai','etait']},
-      {v:'avoir',s:'nous',a:'avions',w:['avons','avaient','avais']},
-      {v:'aller',s:'elles',a:'allaient',w:['allait','allez','allais']},
-      {v:'faire',s:'je',a:'faisais',w:['fesais','faisai','faisé']},
-    ]},
-    { name:'futur', verbs:[
-      {v:'manger',s:'je',a:'mangerai',w:['mangerais','mangera','mangeré']},
-      {v:'finir',s:'tu',a:'finiras',w:['finira','finirat','finirais']},
-      {v:'être',s:'il',a:'sera',w:['serat','serai','seras']},
-      {v:'avoir',s:'nous',a:'aurons',w:['avrons','auront','aurions']},
-      {v:'aller',s:'vous',a:'irez',w:['allerez','irrez','allez']},
-    ]},
-    { name:'passé simple', verbs:[
-      {v:'manger',s:'il',a:'mangea',w:['mangeat','manga','mangeait']},
-      {v:'finir',s:'elle',a:'finit',w:['fini','finît','finissa']},
-      {v:'être',s:'je',a:'fus',w:['fût','étais','suis']},
-      {v:'avoir',s:'il',a:'eut',w:['avait','eût','a']},
-      {v:'aller',s:'nous',a:'allâmes',w:['allèrent','allions','allirent']},
-    ]},
-  ];
-  const tense = pick(tenses);
-  const verb = pick(tense.verbs);
-  return {
-    question: `Conjugue "${verb.v}" au ${tense.name} avec "${verb.s}" :`,
-    answer: verb.a, type: 'mcq',
-    choices: generateChoices(verb.a, verb.w),
-    explanation: `${verb.s} ${verb.a} (${verb.v}, ${tense.name})`
+  const d = getDiff();
+  const pools = {
+    1: [
+      {v:'manger',s:'je',a:'mange',w:['manges','mangé','mangent'],t:'présent'},
+      {v:'finir',s:'tu',a:'finis',w:['fini','finit','fines'],t:'présent'},
+      {v:'être',s:'nous',a:'sommes',w:['êtes','sont','suis'],t:'présent'},
+      {v:'avoir',s:'ils',a:'ont',w:['avont','a','avez'],t:'présent'},
+      {v:'aller',s:'je',a:'vais',w:['vas','va','alle'],t:'présent'},
+      {v:'faire',s:'vous',a:'faites',w:['faisez','faitent','faîtes'],t:'présent'},
+      {v:'chanter',s:'elle',a:'chante',w:['chantes','chanté','chantent'],t:'présent'},
+      {v:'grandir',s:'nous',a:'grandissons',w:['grandisons','grandons','grandissez'],t:'présent'},
+    ],
+    2: [
+      {v:'manger',s:'je',a:'mangeais',w:['mangais','mangeai','mangé'],t:'imparfait'},
+      {v:'finir',s:'tu',a:'finissais',w:['finisais','finissai','finais'],t:'imparfait'},
+      {v:'être',s:'il',a:'était',w:['étais','étai','etait'],t:'imparfait'},
+      {v:'manger',s:'je',a:'mangerai',w:['mangerais','mangera','mangeré'],t:'futur'},
+      {v:'être',s:'il',a:'sera',w:['serat','serai','seras'],t:'futur'},
+      {v:'avoir',s:'nous',a:'aurons',w:['avrons','auront','aurions'],t:'futur'},
+      {v:'aller',s:'elles',a:'allaient',w:['allait','allez','allais'],t:'imparfait'},
+      {v:'finir',s:'tu',a:'finiras',w:['finira','finirat','finirais'],t:'futur'},
+    ],
+    3: [
+      {v:'manger',s:'il',a:'mangea',w:['mangeat','manga','mangeait'],t:'passé simple'},
+      {v:'finir',s:'elle',a:'finit',w:['fini','finît','finissa'],t:'passé simple'},
+      {v:'être',s:'je',a:'fus',w:['fût','étais','suis'],t:'passé simple'},
+      {v:'avoir',s:'il',a:'eut',w:['avait','eût','a'],t:'passé simple'},
+      {v:'manger',s:'j\'',a:'ai mangé',w:['a mangé','mangé','mangeais'],t:'passé composé'},
+      {v:'finir',s:'tu',a:'as fini',w:['a fini','finis','finissais'],t:'passé composé'},
+      {v:'aller',s:'elle',a:'est allée',w:['a allé','allait','alla'],t:'passé composé'},
+    ]
   };
+  const verb = pick(pools[d]);
+  return { question:`Conjugue "${verb.v}" au ${verb.t} avec "${verb.s}" :`, answer:verb.a, type:'mcq', choices:generateChoices(verb.a,verb.w), explanation:`${verb.s} ${verb.a} (${verb.v}, ${verb.t})` };
 },
 
 orthographe() {
-  const questions = [
-    { q:'Complète : "Les filles sont ..." (content)', a:'contentes', w:['content','contente','contents'], ex:'Féminin pluriel : content → contentes' },
-    { q:'Choisis : "Il ... très grand" (être au présent)', a:'est', w:['et','es','ai'], ex:'"Est" = verbe être. "Et" = conjonction (et aussi)' },
-    { q:'Choisis : "Je vais ... la plage"', a:'à', w:['a','as','ha'], ex:'"À" = préposition de lieu. "A" = verbe avoir' },
-    { q:'Choisis : "... partent en vacances"', a:'Ils', w:['Il','Ile','Ils\''], ex:'Sujet pluriel → Ils (sans apostrophe)' },
-    { q:'Complète : "Les oiseaux ... jolis" (être au présent)', a:'sont', w:['son','sons','sonts'], ex:'"Sont" = verbe être. "Son" = déterminant possessif' },
-    { q:'Choisis : "Elle a ... ses devoirs"', a:'fait', w:['faits','faite','fais'], ex:'Avec avoir, pas d\'accord si COD après : elle a fait ses devoirs' },
-    { q:'Choisis : "... beau aujourd\'hui"', a:'Il fait', w:['Ils fait','Il fais','Il fai'], ex:'Expression impersonnelle : Il fait beau (3e pers. singulier)' },
-    { q:'Le pluriel de "bijou" est...', a:'bijoux', w:['bijous','bijoues','bijouxs'], ex:'Les mots en -ou qui font -oux : bijou, caillou, chou, genou, hibou, joujou, pou' },
-    { q:'Choisis le bon homophone : "... mange une glace" (il ou ils)', a:'Il', w:['Ils','Ile','Il\''], ex:'Verbe "mange" au singulier → sujet singulier → Il' },
-    { q:'"On" se conjugue comme...', a:'il/elle', w:['nous','vous','ils'], ex:'"On" = 3e personne du singulier, comme "il" ou "elle"' },
-  ];
-  const q = pick(questions);
-  return { question: q.q, answer: q.a, type: 'mcq', choices: generateChoices(q.a, q.w), explanation: q.ex };
+  const d = getDiff();
+  const pools = {
+    1: [
+      { q:'Choisis : "Il ... très grand"', a:'est', w:['et','es','ai'], ex:'"Est" = verbe être. "Et" = conjonction' },
+      { q:'Complète : "Les oiseaux ... jolis"', a:'sont', w:['son','sons','sonts'], ex:'"Sont" = verbe être. "Son" = possessif' },
+      { q:'"On" se conjugue comme...', a:'il/elle', w:['nous','vous','ils'], ex:'"On" = 3e personne du singulier' },
+      { q:'Complète : "Les filles sont ..." (content)', a:'contentes', w:['content','contente','contents'], ex:'Féminin pluriel : content → contentes' },
+    ],
+    2: [
+      { q:'Choisis : "Je vais ... la plage"', a:'à', w:['a','as','ha'], ex:'"À" = préposition. "A" = verbe avoir' },
+      { q:'Choisis : "... partent en vacances"', a:'Ils', w:['Il','Ile','Ils\''], ex:'Sujet pluriel → Ils' },
+      { q:'Choisis : "... beau aujourd\'hui"', a:'Il fait', w:['Ils fait','Il fais','Il fai'], ex:'Impersonnel : Il fait beau' },
+      { q:'"ou" (sans accent) signifie...', a:'ou bien (choix)', w:['lieu (où vas-tu)','verbe avoir','pronom'], ex:'"Ou" = choix. "Où" = lieu' },
+      { q:'Choisis : "Il mange ... glace"', a:'sa', w:['ça','ca','çà'], ex:'"Sa" = possessif. "Ça" = pronom démonstratif' },
+    ],
+    3: [
+      { q:'Le pluriel de "bijou" est...', a:'bijoux', w:['bijous','bijoues','bijouxs'], ex:'7 mots en -ou font -oux : bijou, caillou, chou, genou, hibou, joujou, pou' },
+      { q:'Choisis : "Elle a ... ses devoirs"', a:'fait', w:['faits','faite','fais'], ex:'Avec avoir + COD après → pas d\'accord' },
+      { q:'Choisis : "La robe qu\'elle a ..."', a:'portée', w:['porté','portés','porter'], ex:'Avec avoir + COD avant (qu\') → accord avec le COD (robe = fém. sing.)' },
+      { q:'Le pluriel de "oeil" est...', a:'yeux', w:['oeils','oeilles','yeuxs'], ex:'Oeil → yeux (pluriel irrégulier)' },
+      { q:'Choisis : "ces" ou "ses" : "... chaussures sont à Marie"', a:'Ses', w:['Ces','C\'est','Sais'], ex:'"Ses" = à elle (possessif). "Ces" = ceux-là (démonstratif)' },
+    ]
+  };
+  const q = pick(pools[d]);
+  return { question:q.q, answer:q.a, type:'mcq', choices:generateChoices(q.a,q.w), explanation:q.ex };
 },
 
 vocabulaire() {
-  const questions = [
-    { q:'Quel est le synonyme de "content" ?', a:'heureux', w:['triste','fatigué','petit'], ex:'Content = heureux = joyeux (même sens)' },
-    { q:'Quel est l\'antonyme (contraire) de "grand" ?', a:'petit', w:['large','gros','haut'], ex:'L\'antonyme de grand est petit (sens opposé)' },
-    { q:'"Dentiste" vient de la famille du mot...', a:'dent', w:['tente','dense','dire'], ex:'Dentiste, dentier, dentition → famille du mot "dent"' },
-    { q:'Quel est le synonyme de "maison" ?', a:'demeure', w:['meuble','jardin','porte'], ex:'Maison = demeure = habitation' },
-    { q:'Quel est l\'antonyme de "rapide" ?', a:'lent', w:['vite','court','long'], ex:'Rapide ≠ lent' },
-    { q:'"Impossible" : quel est le préfixe ?', a:'im-', w:['imp-','in-','-ible'], ex:'Im-possible : "im-" est un préfixe qui signifie "pas"' },
-    { q:'Dans "refaire", le préfixe "re-" signifie...', a:'encore / à nouveau', w:['avant','après','contre'], ex:'Re-faire = faire à nouveau' },
-    { q:'Quel est le suffixe dans "joueur" ?', a:'-eur', w:['jou-','jo-','-ouer'], ex:'Jou-eur : "-eur" indique celui qui fait l\'action' },
-    { q:'Quel mot n\'est PAS de la famille de "terre" ?', a:'terrible', w:['terrain','terrasse','enterrer'], ex:'Terrible vient de "terreur", pas de "terre"' },
-    { q:'Un mot de la même famille que "fleur" :', a:'fleurir', w:['flair','flamme','fluide'], ex:'Fleur → fleurir, fleuriste, floral' },
-  ];
-  const q = pick(questions);
-  return { question: q.q, answer: q.a, type: 'mcq', choices: generateChoices(q.a, q.w), explanation: q.ex };
+  const d = getDiff();
+  const pools = {
+    1: [
+      { q:'Synonyme de "content" ?', a:'heureux', w:['triste','fatigué','petit'], ex:'Content = heureux = joyeux' },
+      { q:'Contraire de "grand" ?', a:'petit', w:['large','gros','haut'], ex:'Grand ≠ petit' },
+      { q:'Synonyme de "maison" ?', a:'demeure', w:['meuble','jardin','porte'], ex:'Maison = demeure = habitation' },
+      { q:'Contraire de "rapide" ?', a:'lent', w:['vite','court','long'], ex:'Rapide ≠ lent' },
+      { q:'Synonyme de "joli" ?', a:'beau', w:['laid','grand','vieux'], ex:'Joli = beau = mignon' },
+    ],
+    2: [
+      { q:'"Dentiste" vient de la famille de...', a:'dent', w:['tente','dense','dire'], ex:'Dentiste, dentier, dentition → "dent"' },
+      { q:'Le préfixe dans "impossible" est...', a:'im-', w:['imp-','in-','-ible'], ex:'Im-possible : "im-" = pas' },
+      { q:'"re-" dans "refaire" signifie...', a:'encore / à nouveau', w:['avant','après','contre'], ex:'Re-faire = faire à nouveau' },
+      { q:'Le suffixe dans "joueur" est...', a:'-eur', w:['jou-','jo-','-ouer'], ex:'-eur = celui qui fait l\'action' },
+      { q:'Un mot de la famille de "fleur" :', a:'fleurir', w:['flair','flamme','fluide'], ex:'Fleur → fleurir, fleuriste, floral' },
+    ],
+    3: [
+      { q:'Quel mot n\'est PAS de la famille de "terre" ?', a:'terrible', w:['terrain','terrasse','enterrer'], ex:'Terrible vient de "terreur", pas de "terre"' },
+      { q:'"Il pleut des cordes" est du sens...', a:'figuré', w:['propre','courant','soutenu'], ex:'Sens figuré = image. Il ne pleut pas vraiment des cordes !' },
+      { q:'"Bouquin" est du registre...', a:'familier', w:['courant','soutenu','littéraire'], ex:'Bouquin (familier) = livre (courant) = ouvrage (soutenu)' },
+      { q:'Le suffixe "-tion" dans "action" indique...', a:'un nom', w:['un verbe','un adjectif','un adverbe'], ex:'-tion forme des noms : action, punition, création' },
+      { q:'"Pré-" dans "préhistoire" signifie...', a:'avant', w:['après','pendant','contre'], ex:'Pré-histoire = avant l\'histoire' },
+    ]
+  };
+  const q = pick(pools[d]);
+  return { question:q.q, answer:q.a, type:'mcq', choices:generateChoices(q.a,q.w), explanation:q.ex };
 },
 
-// ─── HISTOIRE-GÉO GENERATORS ───
+// ═══ HISTOIRE-GÉO ═══
 prehistoire() {
-  const questions = [
-    { q:'Comment appelle-t-on la période avant l\'écriture ?', a:'La Préhistoire', w:['L\'Antiquité','Le Moyen Âge','La Renaissance'], ex:'La Préhistoire va de l\'apparition de l\'homme à l\'invention de l\'écriture (~3300 av. J.-C.)' },
-    { q:'Les premiers hommes étaient des...', a:'nomades', w:['sédentaires','agriculteurs','rois'], ex:'Les premiers hommes étaient nomades : ils se déplaçaient pour trouver de la nourriture' },
-    { q:'Le feu a été maîtrisé il y a environ...', a:'400 000 ans', w:['1 000 ans','10 000 ans','1 million d\'ans'], ex:'Homo erectus a maîtrisé le feu il y a environ 400 000 ans' },
-    { q:'Les peintures de Lascaux datent d\'environ...', a:'20 000 ans', w:['2 000 ans','200 ans','2 millions d\'ans'], ex:'Les peintures de la grotte de Lascaux datent d\'environ 20 000 ans (Paléolithique)' },
-    { q:'La "révolution néolithique" c\'est...', a:'le début de l\'agriculture', w:['l\'invention du feu','la première guerre','l\'invention de l\'écriture'], ex:'Au Néolithique (~10 000 av. J.-C.), les hommes deviennent agriculteurs et sédentaires' },
-    { q:'L\'outil typique de la Préhistoire est...', a:'le biface en silex', w:['l\'épée en fer','la charrue','la machine à vapeur'], ex:'Le biface en silex est l\'outil emblématique du Paléolithique' },
-    { q:'Les premiers hommes chassaient notamment...', a:'des mammouths', w:['des dinosaures','des vaches','des chats'], ex:'Les mammouths étaient chassés au Paléolithique (les dinosaures avaient disparu depuis longtemps !)' },
-    { q:'La sédentarisation signifie...', a:'s\'installer à un endroit fixe', w:['voyager sans cesse','chasser','dessiner dans les grottes'], ex:'Devenir sédentaire = s\'installer durablement au même endroit' },
-  ];
-  const q = pick(questions);
-  return { question: q.q, answer: q.a, type: 'mcq', choices: generateChoices(q.a, q.w), explanation: q.ex };
+  const d = getDiff();
+  const pools = {
+    1: [
+      { q:'La Préhistoire est la période avant...', a:'l\'écriture', w:['le feu','l\'agriculture','les guerres'], ex:'La Préhistoire finit avec l\'invention de l\'écriture (~3300 av. J.-C.)' },
+      { q:'Les premiers hommes étaient des...', a:'nomades', w:['sédentaires','agriculteurs','rois'], ex:'Nomades = ils se déplaçaient pour trouver de la nourriture' },
+      { q:'Les peintures de Lascaux datent d\'environ...', a:'20 000 ans', w:['2 000 ans','200 ans','2 millions d\'ans'], ex:'Grotte de Lascaux ≈ 20 000 ans (Paléolithique)' },
+      { q:'Les premiers hommes chassaient des...', a:'mammouths', w:['dinosaures','vaches','chats'], ex:'Mammouths (les dinosaures avaient disparu depuis longtemps !)' },
+    ],
+    2: [
+      { q:'Le feu a été maîtrisé il y a environ...', a:'400 000 ans', w:['1 000 ans','10 000 ans','1 million d\'ans'], ex:'Homo erectus a maîtrisé le feu il y a ~400 000 ans' },
+      { q:'La "révolution néolithique" c\'est...', a:'le début de l\'agriculture', w:['l\'invention du feu','la première guerre','l\'invention de l\'écriture'], ex:'Néolithique (~10 000 av. J.-C.) = agriculture + sédentarisation' },
+      { q:'L\'outil typique du Paléolithique est...', a:'le biface en silex', w:['l\'épée en fer','la charrue','le moulin'], ex:'Le biface en silex est l\'outil emblématique' },
+      { q:'La sédentarisation signifie...', a:'s\'installer à un endroit fixe', w:['voyager sans cesse','chasser','dessiner dans les grottes'], ex:'Sédentaire = s\'installer durablement' },
+    ],
+    3: [
+      { q:'Le Paléolithique est l\'âge de la...', a:'pierre taillée', w:['pierre polie','bronze','fer'], ex:'Paléolithique = pierre taillée / Néolithique = pierre polie' },
+      { q:'Quelle espèce humaine a peint Lascaux ?', a:'Homo sapiens', w:['Homo erectus','Néandertal','Homo habilis'], ex:'Les peintures de Lascaux sont l\'œuvre d\'Homo sapiens' },
+      { q:'L\'agriculture est apparue en premier en...', a:'Mésopotamie (Proche-Orient)', w:['Europe','Amérique','Chine'], ex:'Le "Croissant fertile" (Mésopotamie) vers 10 000 av. J.-C.' },
+      { q:'Le Néolithique a apporté quel animal domestique ?', a:'le chien, puis mouton, chèvre', w:['le chat uniquement','le cheval uniquement','aucun animal'], ex:'Le chien a été le premier animal domestiqué, suivi des moutons et chèvres' },
+    ]
+  };
+  const q = pick(pools[d]);
+  return { question:q.q, answer:q.a, type:'mcq', choices:generateChoices(q.a,q.w), explanation:q.ex };
 },
 
 antiquite() {
-  const questions = [
-    { q:'Quelle civilisation a construit les pyramides ?', a:'Les Égyptiens', w:['Les Romains','Les Grecs','Les Gaulois'], ex:'Les grandes pyramides de Gizeh ont été construites par les Égyptiens vers 2500 av. J.-C.' },
-    { q:'La démocratie est née à...', a:'Athènes', w:['Rome','Paris','Le Caire'], ex:'La démocratie est née à Athènes (Grèce) au Ve siècle av. J.-C.' },
-    { q:'Le Nil est un fleuve important pour...', a:'l\'Égypte', w:['la Grèce','Rome','la Gaule'], ex:'Le Nil fertilisait les terres d\'Égypte chaque année grâce à ses crues' },
-    { q:'Les Jeux olympiques antiques se déroulaient en...', a:'Grèce', w:['Italie','Égypte','France'], ex:'Les premiers Jeux olympiques ont eu lieu à Olympie, en Grèce, en 776 av. J.-C.' },
-    { q:'Rome a été fondée selon la légende en...', a:'753 av. J.-C.', w:['753 apr. J.-C.','100 av. J.-C.','2000 av. J.-C.'], ex:'Selon la légende, Romulus a fondé Rome en 753 avant J.-C.' },
-    { q:'Jules César était un chef...', a:'romain', w:['grec','égyptien','gaulois'], ex:'Jules César était un général et homme politique romain' },
-    { q:'L\'écriture des Égyptiens s\'appelle les...', a:'hiéroglyphes', w:['runes','lettres','cunéiformes'], ex:'Les hiéroglyphes sont le système d\'écriture de l\'Égypte ancienne' },
-    { q:'Le Parthénon se trouve à...', a:'Athènes', w:['Rome','Alexandrie','Sparte'], ex:'Le Parthénon est un temple dédié à Athéna, sur l\'Acropole d\'Athènes' },
-    { q:'Les Gaulois vivaient dans...', a:'la France actuelle', w:['l\'Italie','l\'Égypte','la Grèce'], ex:'La Gaule correspondait approximativement à la France, Belgique et Suisse actuelles' },
-    { q:'Cléopâtre était une reine de...', a:'l\'Égypte', w:['la Grèce','Rome','Carthage'], ex:'Cléopâtre VII était la dernière reine de l\'Égypte antique' },
-  ];
-  const q = pick(questions);
-  return { question: q.q, answer: q.a, type: 'mcq', choices: generateChoices(q.a, q.w), explanation: q.ex };
+  const d = getDiff();
+  const pools = {
+    1: [
+      { q:'Qui a construit les pyramides ?', a:'Les Égyptiens', w:['Les Romains','Les Grecs','Les Gaulois'], ex:'Pyramides de Gizeh construites par les Égyptiens ~2500 av. J.-C.' },
+      { q:'La démocratie est née à...', a:'Athènes', w:['Rome','Paris','Le Caire'], ex:'Démocratie née à Athènes au Ve siècle av. J.-C.' },
+      { q:'Jules César était...', a:'romain', w:['grec','égyptien','gaulois'], ex:'Jules César = général et homme politique romain' },
+      { q:'Le Parthénon est à...', a:'Athènes', w:['Rome','Alexandrie','Sparte'], ex:'Temple dédié à Athéna, sur l\'Acropole d\'Athènes' },
+    ],
+    2: [
+      { q:'Rome a été fondée en...', a:'753 av. J.-C.', w:['753 apr. J.-C.','100 av. J.-C.','2000 av. J.-C.'], ex:'Légende : Romulus fonde Rome en 753 av. J.-C.' },
+      { q:'L\'écriture égyptienne s\'appelle...', a:'les hiéroglyphes', w:['les runes','les cunéiformes','l\'alphabet'], ex:'Hiéroglyphes = écriture de l\'Égypte ancienne' },
+      { q:'Les Jeux olympiques antiques étaient en...', a:'Grèce', w:['Italie','Égypte','France'], ex:'Premiers JO à Olympie (Grèce) en 776 av. J.-C.' },
+      { q:'Les Gaulois vivaient dans...', a:'la France actuelle', w:['l\'Italie','l\'Égypte','la Grèce'], ex:'La Gaule ≈ France + Belgique + Suisse' },
+      { q:'Le Nil est important pour...', a:'l\'Égypte', w:['la Grèce','Rome','la Gaule'], ex:'Le Nil fertilisait les terres d\'Égypte grâce à ses crues' },
+    ],
+    3: [
+      { q:'Cléopâtre était reine de...', a:'l\'Égypte', w:['la Grèce','Rome','Carthage'], ex:'Cléopâtre VII = dernière reine de l\'Égypte antique' },
+      { q:'La République romaine est remplacée par...', a:'l\'Empire romain', w:['la Démocratie','le Moyen Âge','la Monarchie grecque'], ex:'L\'Empire romain commence avec Auguste en 27 av. J.-C.' },
+      { q:'Quelle bataille marque la conquête de la Gaule ?', a:'Alésia', w:['Marathon','Waterloo','Actium'], ex:'Alésia (52 av. J.-C.) : César bat Vercingétorix' },
+      { q:'Le monothéisme est apparu d\'abord chez...', a:'les Hébreux', w:['les Grecs','les Égyptiens','les Romains'], ex:'Les Hébreux sont les premiers monothéistes (un seul dieu)' },
+      { q:'La chute de Rome (476) marque la fin de...', a:'l\'Antiquité', w:['la Préhistoire','le Moyen Âge','la Renaissance'], ex:'476 apr. J.-C. = fin de l\'Empire romain d\'Occident = fin de l\'Antiquité' },
+    ]
+  };
+  const q = pick(pools[d]);
+  return { question:q.q, answer:q.a, type:'mcq', choices:generateChoices(q.a,q.w), explanation:q.ex };
 },
 
 geo_habiter() {
-  const questions = [
-    { q:'Une métropole est...', a:'une très grande ville', w:['un petit village','un pays','un continent'], ex:'Une métropole est une très grande ville qui concentre population et activités' },
-    { q:'Combien d\'habitants a environ la Terre ?', a:'8 milliards', w:['1 milliard','80 millions','800 millions'], ex:'La population mondiale est d\'environ 8 milliards d\'habitants en 2024' },
-    { q:'Le continent le plus peuplé est...', a:'l\'Asie', w:['l\'Afrique','l\'Europe','l\'Amérique'], ex:'L\'Asie est le continent le plus peuplé avec plus de 4,5 milliards d\'habitants' },
-    { q:'Combien y a-t-il de continents ?', a:'6', w:['5','7','4'], ex:'6 continents : Afrique, Amérique, Antarctique, Asie, Europe, Océanie' },
-    { q:'Combien y a-t-il d\'océans ?', a:'5', w:['3','4','7'], ex:'5 océans : Pacifique, Atlantique, Indien, Arctique, Antarctique (Austral)' },
-    { q:'Le plus grand océan est...', a:'le Pacifique', w:['l\'Atlantique','l\'Indien','l\'Arctique'], ex:'L\'océan Pacifique est le plus grand et le plus profond des océans' },
-    { q:'Un littoral est...', a:'une zone côtière', w:['une montagne','une forêt','un désert'], ex:'Le littoral est la bande de terre en bordure de mer ou d\'océan' },
-    { q:'L\'urbanisation signifie...', a:'la croissance des villes', w:['la disparition des villes','la création de forêts','la montée des eaux'], ex:'L\'urbanisation est le phénomène de concentration de la population dans les villes' },
-    { q:'La capitale de la France est...', a:'Paris', w:['Lyon','Marseille','Bordeaux'], ex:'Paris est la capitale de la France' },
-    { q:'L\'espace rural désigne...', a:'la campagne', w:['la ville','la banlieue','l\'océan'], ex:'L\'espace rural (campagne) se caractérise par une faible densité de population' },
-  ];
-  const q = pick(questions);
-  return { question: q.q, answer: q.a, type: 'mcq', choices: generateChoices(q.a, q.w), explanation: q.ex };
+  const d = getDiff();
+  const pools = {
+    1: [
+      { q:'Combien de continents ?', a:'6', w:['5','7','4'], ex:'Afrique, Amérique, Antarctique, Asie, Europe, Océanie' },
+      { q:'Combien d\'océans ?', a:'5', w:['3','4','7'], ex:'Pacifique, Atlantique, Indien, Arctique, Austral' },
+      { q:'La capitale de la France est...', a:'Paris', w:['Lyon','Marseille','Bordeaux'], ex:'Paris = capitale de la France' },
+      { q:'Le plus grand océan est...', a:'le Pacifique', w:['l\'Atlantique','l\'Indien','l\'Arctique'], ex:'L\'océan Pacifique est le plus grand' },
+    ],
+    2: [
+      { q:'Une métropole est...', a:'une très grande ville', w:['un village','un pays','un continent'], ex:'Métropole = très grande ville qui concentre population et activités' },
+      { q:'Le continent le plus peuplé est...', a:'l\'Asie', w:['l\'Afrique','l\'Europe','l\'Amérique'], ex:'L\'Asie > 4,5 milliards d\'habitants' },
+      { q:'L\'urbanisation signifie...', a:'la croissance des villes', w:['la disparition des villes','la montée des eaux','la déforestation'], ex:'Urbanisation = concentration de population dans les villes' },
+      { q:'Un littoral est...', a:'une zone côtière', w:['une montagne','une forêt','un désert'], ex:'Littoral = bande de terre en bord de mer' },
+      { q:'La population mondiale est d\'environ...', a:'8 milliards', w:['1 milliard','80 millions','800 millions'], ex:'≈ 8 milliards d\'habitants en 2024' },
+    ],
+    3: [
+      { q:'L\'espace rural désigne...', a:'la campagne', w:['la ville','la banlieue','l\'océan'], ex:'Espace rural = campagne (faible densité)' },
+      { q:'La densité de population mesure...', a:'le nombre d\'hab. par km²', w:['le nombre total d\'hab.','la surface d\'un pays','la distance entre villes'], ex:'Densité = population ÷ surface (hab/km²)' },
+      { q:'L\'exode rural c\'est...', a:'le départ des campagnes vers les villes', w:['l\'arrivée en campagne','la fuite d\'un pays','un voyage'], ex:'Exode rural = migration des campagnes vers les villes' },
+      { q:'Un bidonville est...', a:'un quartier pauvre auto-construit', w:['un village de campagne','une ville moyenne','un parc industriel'], ex:'Bidonville = habitat précaire dans les grandes villes' },
+      { q:'Le tourisme de masse peut provoquer...', a:'la pollution des littoraux', w:['la baisse de température','la création de forêts','la diminution de la population'], ex:'Le tourisme de masse dégrade souvent les environnements littoraux' },
+    ]
+  };
+  const q = pick(pools[d]);
+  return { question:q.q, answer:q.a, type:'mcq', choices:generateChoices(q.a,q.w), explanation:q.ex };
 },
 
-// ─── ANGLAIS GENERATORS ───
+// ═══ ANGLAIS ═══
 eng_vocab() {
-  const questions = [
-    { q:'Comment dit-on "frère" en anglais ?', a:'brother', w:['sister','father','mother'], ex:'Brother = frère' },
-    { q:'Comment dit-on "école" en anglais ?', a:'school', w:['house','book','teacher'], ex:'School = école' },
-    { q:'"Cat" signifie...', a:'chat', w:['chien','chapeau','chaîne'], ex:'Cat = chat' },
-    { q:'Comment dit-on "rouge" en anglais ?', a:'red', w:['blue','green','yellow'], ex:'Red = rouge' },
-    { q:'"Apple" signifie...', a:'pomme', w:['orange','banane','fraise'], ex:'Apple = pomme' },
-    { q:'Comment dit-on "maison" en anglais ?', a:'house', w:['horse','mouse','ham'], ex:'House = maison' },
-    { q:'"Dog" signifie...', a:'chien', w:['chat','cochon','canard'], ex:'Dog = chien' },
-    { q:'Comment dit-on "livre" en anglais ?', a:'book', w:['look','cook','hook'], ex:'Book = livre' },
-    { q:'"Water" signifie...', a:'eau', w:['feu','air','terre'], ex:'Water = eau' },
-    { q:'Comment dit-on "ami" en anglais ?', a:'friend', w:['fiend','fried','freed'], ex:'Friend = ami' },
-    { q:'"Tuesday" signifie...', a:'mardi', w:['lundi','mercredi','jeudi'], ex:'Tuesday = mardi' },
-    { q:'Comment dit-on "manger" en anglais ?', a:'to eat', w:['to drink','to sleep','to read'], ex:'To eat = manger' },
-    { q:'"Happy" signifie...', a:'heureux', w:['triste','fatigué','en colère'], ex:'Happy = heureux, content' },
-    { q:'Comment dit-on "petit" en anglais ?', a:'small', w:['big','tall','short'], ex:'Small = petit' },
-    { q:'"Kitchen" signifie...', a:'cuisine', w:['chambre','salon','jardin'], ex:'Kitchen = cuisine' },
-  ];
-  const q = pick(questions);
-  return { question: q.q, answer: q.a, type: 'mcq', choices: generateChoices(q.a, q.w), explanation: q.ex };
+  const d = getDiff();
+  const pools = {
+    1: [
+      { q:'"Cat" signifie...', a:'chat', w:['chien','chapeau','chaîne'], ex:'Cat = chat' },
+      { q:'"Dog" signifie...', a:'chien', w:['chat','cochon','canard'], ex:'Dog = chien' },
+      { q:'Comment dit-on "rouge" ?', a:'red', w:['blue','green','yellow'], ex:'Red = rouge' },
+      { q:'"Apple" signifie...', a:'pomme', w:['orange','banane','fraise'], ex:'Apple = pomme' },
+      { q:'Comment dit-on "maison" ?', a:'house', w:['horse','mouse','ham'], ex:'House = maison' },
+      { q:'"Water" signifie...', a:'eau', w:['feu','air','terre'], ex:'Water = eau' },
+      { q:'Comment dit-on "livre" ?', a:'book', w:['look','cook','hook'], ex:'Book = livre' },
+    ],
+    2: [
+      { q:'Comment dit-on "frère" ?', a:'brother', w:['sister','father','mother'], ex:'Brother = frère' },
+      { q:'Comment dit-on "école" ?', a:'school', w:['house','book','teacher'], ex:'School = école' },
+      { q:'"Kitchen" signifie...', a:'cuisine', w:['chambre','salon','jardin'], ex:'Kitchen = cuisine' },
+      { q:'Comment dit-on "ami" ?', a:'friend', w:['fiend','fried','freed'], ex:'Friend = ami' },
+      { q:'"Tuesday" signifie...', a:'mardi', w:['lundi','mercredi','jeudi'], ex:'Tuesday = mardi' },
+      { q:'Comment dit-on "petit" ?', a:'small', w:['big','tall','short'], ex:'Small = petit' },
+      { q:'"Happy" signifie...', a:'heureux', w:['triste','fatigué','en colère'], ex:'Happy = heureux' },
+      { q:'Comment dit-on "manger" ?', a:'to eat', w:['to drink','to sleep','to read'], ex:'To eat = manger' },
+    ],
+    3: [
+      { q:'"Wardrobe" signifie...', a:'armoire', w:['garde','guerre','salle de bain'], ex:'Wardrobe = armoire' },
+      { q:'Comment dit-on "se souvenir" ?', a:'to remember', w:['to forget','to remind','to remain'], ex:'To remember = se souvenir' },
+      { q:'"Angry" signifie...', a:'en colère', w:['triste','affamé','fatigué'], ex:'Angry = en colère' },
+      { q:'Comment dit-on "peut-être" ?', a:'maybe / perhaps', w:['never','always','often'], ex:'Maybe / perhaps = peut-être' },
+      { q:'"Homework" signifie...', a:'devoirs (à la maison)', w:['travail','maison','école'], ex:'Homework = devoirs à la maison' },
+      { q:'Comment dit-on "emprunter" ?', a:'to borrow', w:['to lend','to buy','to steal'], ex:'To borrow = emprunter (to lend = prêter)' },
+    ]
+  };
+  const q = pick(pools[d]);
+  return { question:q.q, answer:q.a, type:'mcq', choices:generateChoices(q.a,q.w), explanation:q.ex };
 },
 
 eng_grammar() {
-  const questions = [
-    { q:'Complète : "I ... a student" (être)', a:'am', w:['is','are','be'], ex:'I am (je suis) — "am" est pour "I"' },
-    { q:'Complète : "She ... a cat" (avoir)', a:'has', w:['have','is','haves'], ex:'She has (elle a) — "has" est pour he/she/it' },
-    { q:'Complète : "They ... happy"', a:'are', w:['is','am','be'], ex:'They are (ils sont) — "are" pour they/we/you' },
-    { q:'Complète : "He ... football every day"', a:'plays', w:['play','playes','playing'], ex:'He plays — Au present simple, on ajoute -s à la 3e personne' },
-    { q:'Complète : "I ... not like spiders"', a:'do', w:['does','am','is'], ex:'I do not (don\'t) like — "do" pour I/you/we/they' },
-    { q:'Complète : "She ... not eat meat"', a:'does', w:['do','is','has'], ex:'She does not (doesn\'t) eat — "does" pour he/she/it' },
-    { q:'"There is" s\'utilise avec...', a:'un nom singulier', w:['un nom pluriel','un verbe','un adjectif'], ex:'There is a cat (singulier) / There are cats (pluriel)' },
-    { q:'Le pluriel de "child" est...', a:'children', w:['childs','childrens','childes'], ex:'Child → children (pluriel irrégulier)' },
-    { q:'Traduis : "I am 12 years old"', a:'J\'ai 12 ans', w:['Je suis 12 ans','J\'ai 12 années','Je suis âgé de 12'], ex:'En anglais on dit "I am... years old" (je suis... ans) pour donner son âge' },
-    { q:'"Do you like music?" est...', a:'une question', w:['une exclamation','une réponse','un ordre'], ex:'"Do you...?" est la forme interrogative du present simple' },
-  ];
-  const q = pick(questions);
-  return { question: q.q, answer: q.a, type: 'mcq', choices: generateChoices(q.a, q.w), explanation: q.ex };
+  const d = getDiff();
+  const pools = {
+    1: [
+      { q:'Complète : "I ... a student" (être)', a:'am', w:['is','are','be'], ex:'I am — "am" pour "I"' },
+      { q:'Complète : "She ... a cat" (avoir)', a:'has', w:['have','is','haves'], ex:'She has — "has" pour he/she/it' },
+      { q:'Complète : "They ... happy"', a:'are', w:['is','am','be'], ex:'They are — "are" pour they/we/you' },
+      { q:'Complète : "He ... tall"', a:'is', w:['am','are','be'], ex:'He is — "is" pour he/she/it' },
+    ],
+    2: [
+      { q:'Complète : "He ... football" (play)', a:'plays', w:['play','playes','playing'], ex:'He plays — on ajoute -s à la 3e personne' },
+      { q:'Complète : "I ... not like spiders"', a:'do', w:['does','am','is'], ex:'I do not (don\'t) — "do" pour I/you/we/they' },
+      { q:'Complète : "She ... not eat meat"', a:'does', w:['do','is','has'], ex:'She does not (doesn\'t) — "does" pour he/she/it' },
+      { q:'"There is" s\'utilise avec...', a:'un nom singulier', w:['un nom pluriel','un verbe','un adjectif'], ex:'There is a cat (sing.) / There are cats (plur.)' },
+    ],
+    3: [
+      { q:'Le pluriel de "child" est...', a:'children', w:['childs','childrens','childes'], ex:'Child → children (irrégulier)' },
+      { q:'Traduis : "I am 12 years old"', a:'J\'ai 12 ans', w:['Je suis 12 ans','J\'ai 12 années','Je suis âgé'], ex:'En anglais on dit "I am... years old" pour l\'âge' },
+      { q:'"Do you like music?" est...', a:'une question', w:['une exclamation','un ordre','une négation'], ex:'"Do you...?" = forme interrogative' },
+      { q:'Forme la négation : "She likes pizza"', a:'She doesn\'t like pizza', w:['She don\'t like pizza','She not likes pizza','She no like pizza'], ex:'She doesn\'t (does not) like — auxiliaire "does" + not' },
+      { q:'Complète : "... you play tennis?"', a:'Do', w:['Does','Are','Is'], ex:'Do you...? pour former une question au present simple (you)' },
+    ]
+  };
+  const q = pick(pools[d]);
+  return { question:q.q, answer:q.a, type:'mcq', choices:generateChoices(q.a,q.w), explanation:q.ex };
 },
 
 eng_irregular() {
-  const verbs = [
+  const d = getDiff();
+  const easy = [
     { base:'be', past:'was/were', pp:'been', fr:'être' },
     { base:'have', past:'had', pp:'had', fr:'avoir' },
     { base:'go', past:'went', pp:'gone', fr:'aller' },
     { base:'eat', past:'ate', pp:'eaten', fr:'manger' },
-    { base:'drink', past:'drank', pp:'drunk', fr:'boire' },
     { base:'see', past:'saw', pp:'seen', fr:'voir' },
-    { base:'take', past:'took', pp:'taken', fr:'prendre' },
-    { base:'make', past:'made', pp:'made', fr:'faire/fabriquer' },
-    { base:'give', past:'gave', pp:'given', fr:'donner' },
+    { base:'make', past:'made', pp:'made', fr:'faire' },
     { base:'come', past:'came', pp:'come', fr:'venir' },
+    { base:'say', past:'said', pp:'said', fr:'dire' },
+  ];
+  const medium = [...easy,
+    { base:'take', past:'took', pp:'taken', fr:'prendre' },
+    { base:'give', past:'gave', pp:'given', fr:'donner' },
     { base:'know', past:'knew', pp:'known', fr:'savoir' },
     { base:'write', past:'wrote', pp:'written', fr:'écrire' },
     { base:'read', past:'read', pp:'read', fr:'lire' },
-    { base:'speak', past:'spoke', pp:'spoken', fr:'parler' },
     { base:'buy', past:'bought', pp:'bought', fr:'acheter' },
-    { base:'think', past:'thought', pp:'thought', fr:'penser' },
     { base:'get', past:'got', pp:'got', fr:'obtenir' },
-    { base:'say', past:'said', pp:'said', fr:'dire' },
+  ];
+  const hard = [...medium,
+    { base:'drink', past:'drank', pp:'drunk', fr:'boire' },
+    { base:'speak', past:'spoke', pp:'spoken', fr:'parler' },
+    { base:'think', past:'thought', pp:'thought', fr:'penser' },
     { base:'find', past:'found', pp:'found', fr:'trouver' },
     { base:'run', past:'ran', pp:'run', fr:'courir' },
     { base:'swim', past:'swam', pp:'swum', fr:'nager' },
@@ -1357,33 +1352,12 @@ eng_irregular() {
     { base:'win', past:'won', pp:'won', fr:'gagner' },
     { base:'lose', past:'lost', pp:'lost', fr:'perdre' },
   ];
+  const verbs = d === 1 ? easy : d === 2 ? medium : hard;
   const v = pick(verbs);
   const sub = randInt(1,3);
-  if (sub === 1) {
-    // Base → prétérit
-    const others = verbs.filter(x=>x.past!==v.past).map(x=>x.past);
-    return {
-      question: `Prétérit de "${v.base}" (${v.fr}) ?`, answer: v.past, type: 'mcq',
-      choices: generateChoices(v.past, shuffle(others).slice(0,3)),
-      explanation: `${v.base} → ${v.past} → ${v.pp}`
-    };
-  } else if (sub === 2) {
-    // Français → base
-    const others = verbs.filter(x=>x.base!==v.base).map(x=>x.base);
-    return {
-      question: `Comment dit-on "${v.fr}" en anglais ?`, answer: v.base, type: 'mcq',
-      choices: generateChoices(v.base, shuffle(others).slice(0,3)),
-      explanation: `${v.fr} = ${v.base} (${v.past}, ${v.pp})`
-    };
-  } else {
-    // Prétérit → base
-    const others = verbs.filter(x=>x.base!==v.base).map(x=>x.base);
-    return {
-      question: `"${v.past}" est le prétérit de...`, answer: v.base, type: 'mcq',
-      choices: generateChoices(v.base, shuffle(others).slice(0,3)),
-      explanation: `${v.base} → ${v.past} → ${v.pp} (${v.fr})`
-    };
-  }
+  if (sub === 1) { const others=verbs.filter(x=>x.past!==v.past).map(x=>x.past); return { question:`Prétérit de "${v.base}" (${v.fr}) ?`, answer:v.past, type:'mcq', choices:generateChoices(v.past,shuffle(others).slice(0,3)), explanation:`${v.base} → ${v.past} → ${v.pp}` }; }
+  else if (sub === 2) { const others=verbs.filter(x=>x.base!==v.base).map(x=>x.base); return { question:`Comment dit-on "${v.fr}" en anglais ?`, answer:v.base, type:'mcq', choices:generateChoices(v.base,shuffle(others).slice(0,3)), explanation:`${v.fr} = ${v.base} (${v.past}, ${v.pp})` }; }
+  else { const others=verbs.filter(x=>x.base!==v.base).map(x=>x.base); return { question:`"${v.past}" est le prétérit de...`, answer:v.base, type:'mcq', choices:generateChoices(v.base,shuffle(others).slice(0,3)), explanation:`${v.base} → ${v.past} → ${v.pp} (${v.fr})` }; }
 }
 
 }; // end generators
@@ -1402,6 +1376,7 @@ function startQuiz(topicId, phaseIdx) {
     phaseIdx = (state.topicPhases && state.topicPhases[topicId]) || 0;
   }
   const phase = PHASES[phaseIdx] || PHASES[0];
+  _forcedDiff = phase.diff;
 
   const questions = [];
   const usedQuestions = new Set();
@@ -1414,6 +1389,7 @@ function startQuiz(topicId, phaseIdx) {
     usedQuestions.add(q.question);
     questions.push(q);
   }
+  _forcedDiff = 0;
   quiz = {
     topic: topicId, questions, current: 0, score: 0, misses: 0,
     streak: 0, bestStreak: 0, xpEarned: 0, isDaily: false,
