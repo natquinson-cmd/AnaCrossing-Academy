@@ -2819,7 +2819,318 @@ eng_irregular: {
   ]
 }
 
-}; // end LESSONS
+// ═══════════════════════════════════════
+// DIFFICILE LESSONS (added to each topic)
+// ═══════════════════════════════════════
+};
+
+// Inject difficile levels into existing LESSONS
+LESSONS.decimaux.difficile = [
+  { title:'Encadrements et ordres de grandeur', icon:'🎯',
+    content:`<p>L'<strong>ordre de grandeur</strong> d'un nombre, c'est la puissance de 10 la plus proche.</p>
+    <div class="lesson-formula">Ordre de grandeur de 350 → 100 (car 350 est plus proche de 100 que de 1000)<br>Ordre de grandeur de 7 200 → 10 000</div>
+    <div class="lesson-example"><div class="ex-label">🌸 Exemple</div>
+    <div class="ex-content">Un meuble Animal Crossing coûte 4 850 clochettes.<br><span class="step">Ordre de grandeur = 5 000 (≈ 10³·⁷ → arrondi à 5 × 10³)</span></div></div>
+    <div class="lesson-tip"><div class="tip-label">💡 Astuce</div>L'ordre de grandeur sert à estimer rapidement si un résultat est cohérent.</div>`,
+    exercise:{question:'Ordre de grandeur de 6 800 ?',choices:['10 000','1 000','100','100 000'],correct:0}
+  },
+  { title:'Opérations sur les décimaux', icon:'🧮',
+    content:`<p>Pour additionner ou soustraire des décimaux, aligne les virgules. Pour multiplier, compte le total de chiffres après la virgule.</p>
+    <div class="lesson-formula">2,5 × 0,3 : 25 × 3 = 75, puis 1+1 = 2 chiffres après la virgule → 0,75</div>
+    <div class="lesson-example"><div class="ex-label">🌸 Exemple</div>
+    <div class="ex-content">1,2 × 0,4 :<br><span class="step">12 × 4 = 48</span><br><span class="step">1 + 1 = 2 chiffres après virgule → <strong>0,48</strong></span></div></div>
+    <div class="lesson-tip"><div class="tip-label">📌 Vérification</div>1,2 × 0,4 ≈ 1 × 0,5 = 0,5. Notre résultat 0,48 est cohérent !</div>`,
+    exercise:{question:'Calcule : 0,6 × 0,3 =',choices:['0,18','1,8','0,018','18'],correct:0}
+  }
+];
+
+LESSONS.operations.difficile = [
+  { title:'Priorités opératoires', icon:'📋',
+    content:`<p>Dans un calcul avec plusieurs opérations, il y a un <strong>ordre de priorité</strong> :</p>
+    <div class="lesson-formula">1. Parenthèses (  )<br>2. Multiplications × et divisions ÷<br>3. Additions + et soustractions −</div>
+    <div class="lesson-example"><div class="ex-label">🌸 Exemple pas à pas</div>
+    <div class="ex-content">3 + 4 × 2 = ?<br>
+    <span class="step">❌ Faux : (3 + 4) × 2 = 14</span><br>
+    <span class="step">✅ Correct : 3 + (4 × 2) = 3 + 8 = <strong>11</strong></span><br><br>
+    (5 + 3) × 2 − 4 = ?<br>
+    <span class="step">Parenthèses : 5 + 3 = 8</span><br>
+    <span class="step">Multiplication : 8 × 2 = 16</span><br>
+    <span class="step">Soustraction : 16 − 4 = <strong>12</strong></span></div></div>
+    <div class="lesson-tip"><div class="tip-label">💡 Moyen mnémotechnique</div>Les « × et ÷ » passent avant les « + et − ». Les parenthèses passent avant tout !</div>`,
+    exercise:{question:'Calcule : 2 + 5 × 3 =',choices:['17','21','15','13'],correct:0}
+  },
+  { title:'Division euclidienne', icon:'➗',
+    content:`<p>La <strong>division euclidienne</strong>, c'est diviser avec un reste.</p>
+    <div class="lesson-formula">Dividende = Diviseur × Quotient + Reste<br>Le reste est toujours < au diviseur</div>
+    <div class="lesson-example"><div class="ex-label">🌸 Exemple</div>
+    <div class="ex-content">23 ÷ 5 = ?<br><span class="step">5 × 4 = 20 (le plus proche sans dépasser 23)</span><br>
+    <span class="step">Reste : 23 − 20 = 3</span><br>
+    <span class="step">23 = 5 × <strong>4</strong> + <strong>3</strong> (quotient = 4, reste = 3)</span></div></div>`,
+    exercise:{question:'Dans 29 ÷ 6, quel est le reste ?',choices:['5','3','4','6'],correct:0}
+  }
+];
+
+LESSONS.fractions6.difficile = [
+  { title:'Additionner avec des dénominateurs différents', icon:'🔢',
+    content:`<p>Quand les dénominateurs sont différents, il faut les <strong>mettre au même dénominateur</strong> !</p>
+    <div class="lesson-formula">1. Trouver un dénominateur commun<br>2. Transformer chaque fraction<br>3. Additionner les numérateurs</div>
+    <div class="lesson-example"><div class="ex-label">🌸 Exemple</div>
+    <div class="ex-content">1/3 + 1/6<br>
+    <span class="step">Dénominateur commun : 6</span><br>
+    <span class="step">1/3 = 2/6 (on multiplie haut et bas par 2)</span><br>
+    <span class="step">2/6 + 1/6 = <strong>3/6 = 1/2</strong></span></div></div>
+    <div class="lesson-tip"><div class="tip-label">💡 Astuce</div>Le plus simple : multiplie les deux dénominateurs ! 3 × 6 = 18 marche aussi (même si 6 suffit ici).</div>`,
+    exercise:{question:'Calcule : 1/2 + 1/4 =',choices:['3/4','2/6','1/6','2/4'],correct:0}
+  },
+  { title:'Multiplier des fractions', icon:'✖️',
+    content:`<p>Multiplier des fractions est plus simple qu'additionner : on multiplie <strong>numérateur × numérateur</strong> et <strong>dénominateur × dénominateur</strong>.</p>
+    <div class="lesson-formula">a/b × c/d = (a×c) / (b×d)</div>
+    <div class="lesson-example"><div class="ex-label">🌸 Exemple</div>
+    <div class="ex-content">2/3 × 4/5 = (2×4) / (3×5) = <strong>8/15</strong></div></div>
+    <div class="lesson-tip"><div class="tip-label">📌 Simplifier</div>Pense à simplifier avant ou après ! 3/4 × 2/3 → le 3 se simplifie → 1/4 × 2/1 = 2/4 = <strong>1/2</strong></div>`,
+    exercise:{question:'Calcule : 3/5 × 2/3 =',choices:['6/15','5/8','6/8','1/5'],correct:0}
+  }
+];
+
+LESSONS.geometrie.difficile = [
+  { title:'Aire du triangle', icon:'📐',
+    content:`<p>L'aire d'un triangle se calcule avec la <strong>base</strong> et la <strong>hauteur</strong> correspondante.</p>
+    <div class="lesson-formula">Aire = (base × hauteur) ÷ 2</div>
+    <div class="lesson-example"><div class="ex-label">🌸 Exemple</div>
+    <div class="ex-content">Triangle avec base = 8 cm et hauteur = 5 cm :<br>
+    <span class="step">A = (8 × 5) ÷ 2 = 40 ÷ 2 = <strong>20 cm²</strong></span></div></div>
+    <div class="lesson-tip"><div class="tip-label">💡 Pourquoi ÷ 2 ?</div>Un triangle, c'est la moitié d'un rectangle ! Rectangle = base × hauteur, donc triangle = moitié.</div>`,
+    exercise:{question:'Aire d\'un triangle : base 10 cm, hauteur 6 cm ?',choices:['30 cm²','60 cm²','16 cm²','20 cm²'],correct:0}
+  },
+  { title:'Le périmètre du cercle', icon:'⭕',
+    content:`<p>Le périmètre (tour) d'un cercle s'appelle la <strong>circonférence</strong>.</p>
+    <div class="lesson-formula">Périmètre = 2 × π × rayon = π × diamètre<br>π ≈ 3,14</div>
+    <div class="lesson-example"><div class="ex-label">🌸 Exemple</div>
+    <div class="ex-content">Cercle de rayon 5 cm :<br>
+    <span class="step">P = 2 × 3,14 × 5 = <strong>31,4 cm</strong></span></div></div>
+    <div class="lesson-tip"><div class="tip-label">📌 Rayon vs diamètre</div>Le diamètre = 2 × rayon. Si on te donne le diamètre, divise par 2 pour avoir le rayon !</div>`,
+    exercise:{question:'Périmètre d\'un cercle de rayon 10 cm ? (π ≈ 3,14)',choices:['62,8 cm','31,4 cm','314 cm','20 cm'],correct:0}
+  }
+];
+
+LESSONS.proportionnalite6.difficile = [
+  { title:'Le produit en croix', icon:'✖️',
+    content:`<p>Le <strong>produit en croix</strong> permet de trouver une valeur manquante dans un tableau de proportionnalité.</p>
+    <div class="lesson-formula">Si a/b = c/d → a × d = b × c<br>Valeur manquante : x = (b × c) ÷ a</div>
+    <div class="lesson-example"><div class="ex-label">🌸 Exemple</div>
+    <div class="ex-content">3 kg de pommes → 6€. Combien pour 5 kg ?<br>
+    <span class="step">3 → 6</span><br>
+    <span class="step">5 → x</span><br>
+    <span class="step">x = (5 × 6) ÷ 3 = 30 ÷ 3 = <strong>10€</strong></span></div></div>`,
+    exercise:{question:'4 stylos coûtent 6€. Prix de 10 stylos ?',choices:['15€','24€','10€','60€'],correct:0}
+  },
+  { title:'Pourcentages avancés', icon:'📊',
+    content:`<p>Pour calculer n'importe quel pourcentage, multiplie par la fraction correspondante.</p>
+    <div class="lesson-formula">p% de N = (p ÷ 100) × N = p × N ÷ 100</div>
+    <div class="lesson-example"><div class="ex-label">🌸 Exemples</div>
+    <div class="ex-content">35% de 200 = 35 × 200 ÷ 100 = 7 000 ÷ 100 = <strong>70</strong><br><br>
+    Un meuble à 1 500 clochettes soldé de 20% :<br>
+    <span class="step">Réduction : 20% de 1500 = 300</span><br>
+    <span class="step">Prix final : 1500 − 300 = <strong>1 200 clochettes</strong></span></div></div>`,
+    exercise:{question:'30% de 150 =',choices:['45','50','30','15'],correct:0}
+  }
+];
+
+LESSONS.grammaire.difficile = [
+  { title:'Les fonctions dans la phrase', icon:'🔍',
+    content:`<p>Chaque mot ou groupe de mots a une <strong>fonction</strong> (un rôle) dans la phrase.</p>
+    <div class="lesson-formula">Sujet : qui fait l'action ?<br>COD : verbe + quoi/qui ? (sans préposition)<br>COI : verbe + à qui/de qui ?<br>CC : où ? quand ? comment ? pourquoi ?</div>
+    <div class="lesson-example"><div class="ex-label">🌸 Exemple</div>
+    <div class="ex-content"><strong>Marie</strong> donne <strong>un cadeau</strong> <strong>à Tom Nook</strong> <strong>le matin</strong>.<br>
+    <span class="step">Marie → sujet</span><br>
+    <span class="step">un cadeau → COD (donne quoi ?)</span><br>
+    <span class="step">à Tom Nook → COI (donne à qui ?)</span><br>
+    <span class="step">le matin → CC de temps (quand ?)</span></div></div>
+    <div class="lesson-tip"><div class="tip-label">📌 Nature ≠ Fonction</div>Nature = ce que le mot EST (nom, verbe...)<br>Fonction = le RÔLE qu'il joue (sujet, COD...)</div>`,
+    exercise:{question:'Dans "Il lit un livre", "un livre" est...',choices:['COD','COI','Sujet','CC'],correct:0}
+  },
+  { title:'Les types et formes de phrases', icon:'📝',
+    content:`<p>Il y a 4 <strong>types</strong> de phrases : déclarative, interrogative, exclamative, impérative.</p>
+    <div class="lesson-formula">Déclarative : Il fait beau.<br>Interrogative : Fait-il beau ?<br>Exclamative : Comme il fait beau !<br>Impérative : Viens ici.</div>
+    <p>Et 2 <strong>formes</strong> : affirmative et négative.</p>
+    <div class="lesson-example"><div class="ex-label">🌸 La négation</div>
+    <div class="ex-content">ne...pas, ne...plus, ne...jamais, ne...rien<br>
+    <span class="step">Il <strong>ne</strong> mange <strong>pas</strong>.</span><br>
+    <span class="step">Elle <strong>n'</strong>a <strong>rien</strong> vu.</span></div></div>`,
+    exercise:{question:'"Viens ici !" est une phrase...',choices:['impérative','déclarative','interrogative','exclamative'],correct:0}
+  }
+];
+
+LESSONS.conjugaison.difficile = [
+  { title:'Le passé simple', icon:'📜',
+    content:`<p>Le <strong>passé simple</strong> s'utilise dans les récits écrits pour raconter des actions passées terminées.</p>
+    <div class="lesson-formula">1er groupe (-er) : -ai, -as, -a, -âmes, -âtes, -èrent<br>2e groupe (-ir) : -is, -is, -it, -îmes, -îtes, -irent</div>
+    <div class="lesson-example"><div class="ex-label">🌸 Exemples</div>
+    <div class="ex-content">Manger : je mange<strong>ai</strong>, tu mange<strong>as</strong>, il mange<strong>a</strong><br>
+    Finir : je fin<strong>is</strong>, tu fin<strong>is</strong>, il fin<strong>it</strong><br>
+    Être : je fus, tu fus, il fut<br>
+    Avoir : j'eus, tu eus, il eut</div></div>
+    <div class="lesson-tip"><div class="tip-label">📌 Attention</div>Le passé simple est rare à l'oral ! On le trouve surtout dans les livres et les contes.</div>`,
+    exercise:{question:'Conjugue "manger" au passé simple avec "elle" :',choices:['mangea','mangeait','a mangé','mange'],correct:0}
+  },
+  { title:'Le passé composé', icon:'⏰',
+    content:`<p>Le <strong>passé composé</strong> = auxiliaire (avoir ou être) au présent + participe passé.</p>
+    <div class="lesson-formula">J'<strong>ai mangé</strong> (avoir + mangé)<br>Elle <strong>est allée</strong> (être + allée)</div>
+    <div class="lesson-example"><div class="ex-label">🌸 Être ou avoir ?</div>
+    <div class="ex-content">La plupart → <strong>avoir</strong> : j'ai mangé, j'ai fini<br>
+    Verbes de mouvement → <strong>être</strong> : je suis allé(e), je suis venu(e)<br>
+    <span class="step">Avec être : on accorde ! Elle est allée (e car féminin)</span></div></div>
+    <div class="lesson-tip"><div class="tip-label">💡 Les 14 verbes avec "être"</div>aller, venir, arriver, partir, entrer, sortir, monter, descendre, naître, mourir, tomber, rester, retourner, passer</div>`,
+    exercise:{question:'Conjugue "aller" au passé composé avec "elle" :',choices:['est allée','a allé','allait','alla'],correct:0}
+  }
+];
+
+LESSONS.orthographe.difficile = [
+  { title:'L\'accord du participe passé', icon:'📏',
+    content:`<p>L'accord du participe passé dépend de l'auxiliaire utilisé :</p>
+    <div class="lesson-formula">Avec <strong>être</strong> → accord avec le sujet<br>Avec <strong>avoir</strong> → accord avec le COD si placé AVANT</div>
+    <div class="lesson-example"><div class="ex-label">🌸 Exemples</div>
+    <div class="ex-content">Elle est <strong>partie</strong> (être → accord avec "elle" → fém.)<br>
+    Ils sont <strong>arrivés</strong> (être → accord avec "ils" → masc. plur.)<br><br>
+    Elle a <strong>mangé</strong> une pomme (avoir + COD après → pas d'accord)<br>
+    La pomme qu'elle a <strong>mangée</strong> (avoir + COD "qu'" avant → accord !)</div></div>`,
+    exercise:{question:'Complète : "Les fleurs que j\'ai ..."',choices:['cueillies','cueilli','cueillis','cueille'],correct:0}
+  },
+  { title:'Les pluriels irréguliers', icon:'📚',
+    content:`<p>La plupart des noms prennent un <strong>-s</strong> au pluriel, mais il y a des exceptions !</p>
+    <div class="lesson-formula">-al → -aux : cheval → chevaux<br>-eau → -eaux : bateau → bateaux<br>-eu → -eux : jeu → jeux<br>7 mots en -ou → -oux : bijou, caillou, chou, genou, hibou, joujou, pou</div>
+    <div class="lesson-example"><div class="ex-label">🌸 Exceptions aux exceptions !</div>
+    <div class="ex-content">Certains -al font -als : bal, carnaval, festival, récital, régal<br>
+    <span class="step">Des bals, des festivals (pas festivaux !)</span></div></div>`,
+    exercise:{question:'Le pluriel de "festival" est...',choices:['festivals','festivaux','festival','festivalles'],correct:0}
+  }
+];
+
+LESSONS.vocabulaire.difficile = [
+  { title:'Sens propre et sens figuré', icon:'🎭',
+    content:`<p>Un mot peut avoir un <strong>sens propre</strong> (concret, réel) et un <strong>sens figuré</strong> (image, expression).</p>
+    <div class="lesson-formula">Sens propre : le sens de base, concret<br>Sens figuré : le sens imagé, métaphorique</div>
+    <div class="lesson-example"><div class="ex-label">🌸 Exemples</div>
+    <div class="ex-content">"Tomber" :<br>
+    <span class="step">Sens propre : tomber par terre 🤕</span><br>
+    <span class="step">Sens figuré : tomber amoureux 💕</span><br><br>
+    "Il pleut des cordes" → sens figuré (il pleut beaucoup)</div></div>`,
+    exercise:{question:'"Dévorer un livre" est du sens...',choices:['figuré','propre'],correct:0}
+  },
+  { title:'Les niveaux de langue', icon:'🎩',
+    content:`<p>On ne parle pas pareil avec ses amis et son professeur ! Il y a 3 <strong>niveaux de langue</strong>.</p>
+    <div class="lesson-formula">Familier : bagnole, bouquin, boulot<br>Courant : voiture, livre, travail<br>Soutenu : automobile, ouvrage, labeur</div>
+    <div class="lesson-example"><div class="ex-label">🌸 Quand utiliser quel niveau ?</div>
+    <div class="ex-content">Familier : entre amis, SMS<br>
+    Courant : en classe, dans la vie quotidienne<br>
+    Soutenu : à l'écrit soigné, dans les livres</div></div>
+    <div class="lesson-tip"><div class="tip-label">📌 Au collège</div>Dans les rédactions, utilise le registre <strong>courant</strong> ou <strong>soutenu</strong>, jamais le familier !</div>`,
+    exercise:{question:'"Bouquin" est du registre...',choices:['familier','courant','soutenu'],correct:0}
+  }
+];
+
+LESSONS.prehistoire.difficile = [
+  { title:'Du Paléolithique au Néolithique', icon:'🗿',
+    content:`<p>La Préhistoire se divise en deux grandes périodes :</p>
+    <div class="lesson-formula">Paléolithique = pierre taillée (−3 millions → −10 000)<br>Néolithique = pierre polie (−10 000 → −3 300)</div>
+    <div class="lesson-example"><div class="ex-label">🌸 Ce qui change au Néolithique</div>
+    <div class="ex-content">
+    <span class="step">Agriculture → les hommes cultivent (blé, orge)</span><br>
+    <span class="step">Élevage → ils domestiquent les animaux</span><br>
+    <span class="step">Sédentarisation → premiers villages</span><br>
+    <span class="step">Poterie, tissage → nouvelles techniques</span></div></div>
+    <div class="lesson-tip"><div class="tip-label">📌 L'écriture met fin à la Préhistoire</div>Vers −3 300 en Mésopotamie, l'invention de l'écriture marque le début de l'Histoire.</div>`,
+    exercise:{question:'Le Néolithique commence avec...',choices:['l\'agriculture','l\'écriture','le feu','la chasse'],correct:0}
+  }
+];
+
+LESSONS.antiquite.difficile = [
+  { title:'La chute de Rome et la fin de l\'Antiquité', icon:'🏛️',
+    content:`<p>L'Empire romain a dominé le monde méditerranéen pendant des siècles, mais finit par s'effondrer.</p>
+    <div class="lesson-formula">27 av. J.-C. : début de l'Empire (Auguste)<br>395 : division en Empire d'Occident et d'Orient<br>476 : chute de l'Empire d'Occident = FIN de l'Antiquité</div>
+    <div class="lesson-example"><div class="ex-label">🌸 Causes de la chute</div>
+    <div class="ex-content">
+    <span class="step">Invasions barbares (Wisigoths, Vandales, Huns...)</span><br>
+    <span class="step">L'Empire était trop grand à défendre</span><br>
+    <span class="step">Problèmes économiques et politiques internes</span></div></div>
+    <div class="lesson-tip"><div class="tip-label">📌 Attention</div>L'Empire romain d'Orient (Byzance) continue jusqu'en 1453 !</div>`,
+    exercise:{question:'L\'Empire romain d\'Occident tombe en...',choices:['476','753 av. J.-C.','1453','800'],correct:0}
+  }
+];
+
+LESSONS.geo_habiter.difficile = [
+  { title:'Habiter les littoraux et leurs enjeux', icon:'🏖️',
+    content:`<p>Les <strong>littoraux</strong> (bords de mer) attirent de plus en plus de population et d'activités.</p>
+    <div class="lesson-formula">Littoralisation = concentration des hommes et activités sur les côtes<br>60% de la population mondiale vit à moins de 100 km de la mer</div>
+    <div class="lesson-example"><div class="ex-label">🌸 Activités littorales</div>
+    <div class="ex-content">
+    <span class="step">Tourisme balnéaire (plages, hôtels)</span><br>
+    <span class="step">Ports commerciaux et pêche</span><br>
+    <span class="step">Industries (zones portuaires)</span></div></div>
+    <div class="lesson-tip"><div class="tip-label">⚠️ Risques</div>Pollution, érosion côtière, montée des eaux due au réchauffement climatique, bétonnage des côtes.</div>`,
+    exercise:{question:'La littoralisation c\'est...',choices:['la concentration sur les côtes','la montée des eaux','la pêche','le tourisme'],correct:0}
+  }
+];
+
+LESSONS.eng_vocab.difficile = [
+  { title:'Describing people and feelings', icon:'😊',
+    content:`<p>Pour décrire quelqu'un en anglais, on utilise des <strong>adjectifs</strong> :</p>
+    <div class="lesson-formula">Apparence : tall, short, thin, fat, young, old<br>Personnalité : kind, shy, funny, clever, brave<br>Sentiments : happy, sad, angry, tired, scared, excited</div>
+    <div class="lesson-example"><div class="ex-label">🌸 Describe Tom Nook!</div>
+    <div class="ex-content">Tom Nook is <strong>short</strong> and <strong>fat</strong>.<br>
+    He is very <strong>clever</strong> and sometimes <strong>greedy</strong> (avide).<br>
+    He is always <strong>busy</strong> (occupé).</div></div>
+    <div class="lesson-tip"><div class="tip-label">📌 Ordre des adjectifs</div>En anglais l'adjectif se place AVANT le nom : a <strong>big</strong> house (une grande maison)</div>`,
+    exercise:{question:'"Scared" signifie...',choices:['effrayé','en colère','fatigué','content'],correct:0}
+  },
+  { title:'Daily routine vocabulary', icon:'🕐',
+    content:`<p>Le vocabulaire de la routine quotidienne :</p>
+    <div class="lesson-formula">wake up = se réveiller | get up = se lever<br>have breakfast = prendre le petit-déjeuner<br>go to school = aller à l'école | have lunch = déjeuner<br>do homework = faire ses devoirs | go to bed = se coucher</div>
+    <div class="lesson-example"><div class="ex-label">🌸 Example</div>
+    <div class="ex-content">I <strong>wake up</strong> at 7 o'clock.<br>
+    I <strong>have breakfast</strong> and <strong>go to school</strong>.<br>
+    After school, I <strong>do my homework</strong>.</div></div>`,
+    exercise:{question:'"Have breakfast" signifie...',choices:['prendre le petit-déjeuner','avoir faim','faire le ménage','cuisiner'],correct:0}
+  }
+];
+
+LESSONS.eng_grammar.difficile = [
+  { title:'Questions and negatives', icon:'❓',
+    content:`<p>Au <strong>present simple</strong>, on utilise <strong>do/does</strong> pour les questions et négations.</p>
+    <div class="lesson-formula">Question : Do/Does + sujet + verbe ?<br>Négation : sujet + do/does + not + verbe</div>
+    <div class="lesson-example"><div class="ex-label">🌸 Exemples</div>
+    <div class="ex-content"><strong>Affirmatif :</strong> She plays tennis.<br>
+    <strong>Négatif :</strong> She <strong>doesn't</strong> play tennis.<br>
+    <strong>Question :</strong> <strong>Does</strong> she play tennis?<br><br>
+    ⚠️ Le verbe perd son -s après does !<br>
+    <span class="step">She play<strong>s</strong> → Does she play (sans s)</span></div></div>
+    <div class="lesson-tip"><div class="tip-label">📌 Do vs Does</div>Do → I, you, we, they<br>Does → he, she, it</div>`,
+    exercise:{question:'Forme la question : "She likes cats" →',choices:['Does she like cats?','Do she likes cats?','Does she likes cats?','Is she like cats?'],correct:0}
+  },
+  { title:'Pronouns and possessives', icon:'👤',
+    content:`<p>Les <strong>pronoms</strong> remplacent les noms. Les <strong>possessifs</strong> indiquent à qui appartient quelque chose.</p>
+    <div class="lesson-formula">Subject: I, you, he, she, it, we, they<br>Object: me, you, him, her, it, us, them<br>Possessive adj: my, your, his, her, its, our, their</div>
+    <div class="lesson-example"><div class="ex-label">🌸 Exemples</div>
+    <div class="ex-content"><strong>I</strong> like <strong>her</strong>. = Je l'aime bien (elle).<br>
+    <strong>She</strong> gives <strong>me</strong> a present. = Elle me donne un cadeau.<br>
+    This is <strong>my</strong> island. = C'est <strong>mon</strong> île.</div></div>`,
+    exercise:{question:'Complète : "Give it to ..." (elle)',choices:['her','she','hers','his'],correct:0}
+  }
+];
+
+LESSONS.eng_irregular.difficile = [
+  { title:'Les verbes irréguliers avancés', icon:'📋',
+    content:`<p>Voici des verbes irréguliers supplémentaires à mémoriser :</p>
+    <div class="lesson-formula">drink → drank → drunk (boire)<br>speak → spoke → spoken (parler)<br>think → thought → thought (penser)<br>swim → swam → swum (nager)<br>win → won → won (gagner)<br>lose → lost → lost (perdre)</div>
+    <div class="lesson-example"><div class="ex-label">🌸 Astuces de mémorisation</div>
+    <div class="ex-content">Les verbes qui se ressemblent :<br>
+    <span class="step"><strong>i → a → u</strong> : drink-drank-drunk, swim-swam-swum, sing-sang-sung</span><br>
+    <span class="step"><strong>-ought/-aught</strong> : think-thought, buy-bought</span><br>
+    <span class="step"><strong>Même forme</strong> : put-put-put, cut-cut-cut, read-read-read</span></div></div>
+    <div class="lesson-tip"><div class="tip-label">💡 Méthode</div>Apprends-les par groupes de sons similaires, pas par ordre alphabétique !</div>`,
+    exercise:{question:'Quel est le prétérit de "swim" ?',choices:['swam','swimmed','swum','swimed'],correct:0}
+  }
+];
 
 // ══════════════════════════════════════
 // LESSON ENGINE
