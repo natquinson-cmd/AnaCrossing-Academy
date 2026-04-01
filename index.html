@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AnaCrossing Academy - L'île du Savoir 🌴</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏝️</text></svg>">
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <style>
@@ -1858,85 +1857,188 @@ function updateCoursUI() {
 // ══════════════════════════════════════
 const LESSONS = {
 
-// ─── MATHS ───
+// ═══════════════════════════════════════
+// MATHS — Cours approfondis programme 6ème
+// ═══════════════════════════════════════
 decimaux: {
-  moyen: [
-    { title:'Encadrer un décimal', icon:'📦',
-      content:`<p><strong>Encadrer</strong> un nombre, c'est trouver les deux nombres entiers ou décimaux entre lesquels il se situe.</p>
-      <div class="lesson-formula">Encadrer 3,7 à l'unité : 3 < 3,7 < 4<br>Encadrer 3,74 au dixième : 3,7 < 3,74 < 3,8</div>
-      <div class="lesson-example"><div class="ex-label">🌸 Exemple</div>
-      <div class="ex-content">Encadre 12,356 au centième :<br>
-      <span class="step">On regarde les centièmes : 12,35...</span><br>
-      <span class="step">Le centième suivant : 12,36</span><br>
-      <span class="step">Donc : <strong>12,35 < 12,356 < 12,36</strong></span></div></div>
-      <div class="lesson-tip"><div class="tip-label">💡 Astuce</div>
-      Pour encadrer au dixième, garde 1 chiffre après la virgule. Au centième, garde 2 chiffres.</div>`,
-      exercise:{question:'Encadre 5,83 à l\'unité. Quel est le nombre en dessous ?',choices:['5','6','5,8','5,9'],correct:0}
-    },
-    { title:'Diviser par 10, 100, 1000', icon:'➗',
-      content:`<p>Diviser par 10, 100 ou 1000 déplace la virgule vers la <strong>gauche</strong>.</p>
-      <div class="lesson-formula">÷ 10 → virgule 1 rang à gauche<br>÷ 100 → virgule 2 rangs à gauche<br>÷ 1000 → virgule 3 rangs à gauche</div>
-      <div class="lesson-example"><div class="ex-label">🌸 Exemples</div>
-      <div class="ex-content">345 ÷ 10 = <strong>34,5</strong><br>
-      345 ÷ 100 = <strong>3,45</strong><br>
-      345 ÷ 1000 = <strong>0,345</strong><br><br>
-      7,2 ÷ 10 = <strong>0,72</strong></div></div>
-      <div class="lesson-tip"><div class="tip-label">📌 Retiens la règle inverse</div>
-      Multiplier = virgule à <strong>droite</strong><br>
-      Diviser = virgule à <strong>gauche</strong></div>`,
-      exercise:{question:'Calcule : 56 ÷ 100 =',choices:['0,56','5,6','0,056','560'],correct:0}
-    }
-  ],
   facile: [
     { title:'Les nombres décimaux', icon:'🔢',
       content:`<p>Un <strong>nombre décimal</strong> a une partie entière et une partie décimale, séparées par une virgule.</p>
-      <div class="lesson-formula">12,45 → 12 = partie entière | 45 = partie décimale</div>
-      <div class="lesson-example"><div class="ex-label">🌸 Exemple Animal Crossing</div>
-      <div class="ex-content">Tu achètes un meuble à <strong>1 250,75</strong> clochettes 🔔<br>
-      <span class="step">1 250 = partie entière (les clochettes complètes)</span><br>
-      <span class="step">75 = partie décimale (les centièmes de clochette)</span></div></div>
-      <div class="lesson-tip"><div class="tip-label">📌 Les rangs décimaux</div>
-      Après la virgule : <strong>dixièmes</strong> (1er rang), <strong>centièmes</strong> (2e rang), <strong>millièmes</strong> (3e rang)<br>
-      Dans 3,<strong>4</strong><strong>5</strong><strong>6</strong> → 4 dixièmes, 5 centièmes, 6 millièmes</div>`,
-      exercise:{question:'Dans 7,38, combien y a-t-il de dixièmes ?',choices:['3','8','7','38'],correct:0}
+      <div class="lesson-formula">12,456 → 12 = partie entière | 456 = partie décimale<br><br>Chaque rang a un nom :<br>12,<strong>4</strong> dixièmes <strong>5</strong> centièmes <strong>6</strong> millièmes</div>
+      <div class="lesson-example"><div class="ex-label">🌸 Tableau de numération</div>
+      <div class="ex-content">
+      <table style="width:100%;text-align:center;border-collapse:collapse;font-size:13px;">
+      <tr style="background:#e8f5e9;"><td>Milliers</td><td>Centaines</td><td>Dizaines</td><td>Unités</td><td style="color:var(--red);">,</td><td>Dixièmes</td><td>Centièmes</td><td>Millièmes</td></tr>
+      <tr><td></td><td>1</td><td>2</td><td>3</td><td style="color:var(--red);">,</td><td>4</td><td>5</td><td>6</td></tr>
+      </table><br>
+      <span class="step">Dans 123,456 : le chiffre des centièmes est <strong>5</strong></span><br>
+      <span class="step">Le chiffre des dizaines est <strong>2</strong></span></div></div>
+      <div class="lesson-tip"><div class="tip-label">📌 Attention à la différence !</div>
+      Le chiffre des dixièmes ≠ le nombre de dixièmes !<br>
+      Dans 3,47 : le <strong>chiffre</strong> des dixièmes = 4, mais le <strong>nombre</strong> de dixièmes = 34,7</div>`,
+      exercise:{question:'Dans 56,078, quel est le chiffre des centièmes ?',choices:['7','0','8','78'],correct:0}
     },
-    { title:'Comparer des décimaux', icon:'⚖️',
-      content:`<p>Pour comparer deux décimaux, on compare d'abord la <strong>partie entière</strong>, puis les chiffres après la virgule un par un.</p>
-      <div class="lesson-formula">1. Comparer les parties entières<br>2. Si égales, comparer les dixièmes<br>3. Si égaux, comparer les centièmes...</div>
+    { title:'Comparer et ranger des décimaux', icon:'⚖️',
+      content:`<p>Pour comparer deux décimaux :</p>
+      <div class="lesson-formula">1. Compare les parties entières<br>2. Si égales → compare les dixièmes<br>3. Si égaux → compare les centièmes, etc.</div>
       <div class="lesson-example"><div class="ex-label">🌸 Exemples</div>
-      <div class="ex-content">3,7 et 3,52 → même partie entière (3), mais 7 dixièmes > 5 dixièmes<br>
-      <span class="step">Donc <strong>3,7 > 3,52</strong></span><br><br>
-      <span class="step">⚠️ Piège : 3,7 = 3,70 → on peut ajouter des zéros à droite !</span></div></div>
-      <div class="lesson-tip"><div class="tip-label">💡 Astuce</div>
-      Pour comparer, mets le même nombre de chiffres après la virgule en ajoutant des zéros : 3,7 → 3,70 et 3,52 → 3,52. Maintenant compare : 70 > 52 !</div>`,
-      exercise:{question:'Quel nombre est le plus grand : 4,8 ou 4,12 ?',choices:['4,8','4,12'],correct:0}
+      <div class="ex-content">3,7 et 3,52 :<br>
+      <span class="step">Parties entières = 3 = 3 (égales)</span><br>
+      <span class="step">Dixièmes : 7 > 5 donc <strong>3,7 > 3,52</strong></span><br><br>
+      ⚠️ <strong>Piège classique</strong> : 3,7 > 3,52 car 3,70 > 3,52 (70 centièmes > 52 centièmes)<br>
+      <span class="step">Beaucoup d'élèves pensent que 3,52 > 3,7 car "52 > 7". C'est FAUX !</span><br>
+      <span class="step">Astuce : ajoute des zéros pour avoir le même nombre de décimales.</span></div></div>
+      <div class="lesson-tip"><div class="tip-label">💡 Pour ranger plusieurs nombres</div>
+      Écris-les dans un tableau, aligne les virgules, complète avec des zéros, puis lis de gauche à droite.<br>
+      Range 2,3 ; 2,15 ; 2,305 → 2,150 < 2,300 < 2,305 → <strong>2,15 < 2,3 < 2,305</strong></div>`,
+      exercise:{question:'Range dans l\'ordre croissant : 1,5 ; 1,35 ; 1,305',choices:['1,305 < 1,35 < 1,5','1,5 < 1,35 < 1,305','1,35 < 1,305 < 1,5','1,305 < 1,5 < 1,35'],correct:0}
     },
-    { title:'Arrondir un décimal', icon:'🎯',
-      content:`<p><strong>Arrondir</strong>, c'est simplifier un nombre en gardant moins de chiffres après la virgule.</p>
-      <div class="lesson-formula">Si le chiffre suivant est ≥ 5 → on arrondit au-dessus<br>Si le chiffre suivant est < 5 → on garde</div>
-      <div class="lesson-example"><div class="ex-label">🌸 Exemples</div>
-      <div class="ex-content">Arrondir 3,<strong>7</strong> à l'unité : le chiffre des dixièmes est 7 ≥ 5 → <strong>4</strong><br>
-      Arrondir 6,<strong>3</strong> à l'unité : le chiffre des dixièmes est 3 < 5 → <strong>6</strong><br>
-      Arrondir 2,4<strong>5</strong> au dixième : centièmes = 5 ≥ 5 → <strong>2,5</strong></div></div>
-      <div class="lesson-tip"><div class="tip-label">📌 Retiens</div>À partir de 5, on monte. En dessous de 5, on reste.</div>`,
-      exercise:{question:'Arrondis 8,47 à l\'unité :',choices:['8','9','8,5','8,4'],correct:0}
+    { title:'Arrondir et encadrer', icon:'🎯',
+      content:`<p><strong>Arrondir</strong> = simplifier un nombre. <strong>Encadrer</strong> = trouver les deux bornes.</p>
+      <div class="lesson-formula">Règle d'arrondi : si le chiffre suivant est ≥ 5 → on monte. Sinon → on garde.<br><br>Encadrer 3,74 à l'unité : 3 < 3,74 < 4<br>Encadrer 3,74 au dixième : 3,7 < 3,74 < 3,8</div>
+      <div class="lesson-example"><div class="ex-label">🌸 Exemples détaillés</div>
+      <div class="ex-content">Arrondir 12,<strong>3</strong>56 au dixième :<br>
+      <span class="step">On regarde le chiffre APRÈS les dixièmes : c'est 5</span><br>
+      <span class="step">5 ≥ 5 → on arrondit au-dessus : <strong>12,4</strong></span><br><br>
+      Arrondir 7,8<strong>4</strong>2 au centième :<br>
+      <span class="step">Chiffre après les centièmes : 2 < 5 → on garde : <strong>7,84</strong></span></div></div>
+      <div class="lesson-tip"><div class="tip-label">📌 Troncature ≠ Arrondi</div>
+      Tronquer = couper sans arrondir. Tronquer 3,78 à l'unité = 3 (pas 4 !)</div>`,
+      exercise:{question:'Arrondis 6,452 au dixième :',choices:['6,5','6,4','6,45','7'],correct:0}
     },
-    { title:'Multiplier par 10, 100, 1000', icon:'✖️',
-      content:`<p>Multiplier par 10, 100 ou 1000 déplace la virgule vers la <strong>droite</strong>.</p>
-      <div class="lesson-formula">× 10 → virgule 1 rang à droite<br>× 100 → virgule 2 rangs à droite<br>× 1000 → virgule 3 rangs à droite</div>
-      <div class="lesson-example"><div class="ex-label">🌸 Exemples</div>
-      <div class="ex-content">3,45 × 10 = <strong>34,5</strong><br>
+    { title:'Multiplier et diviser par 10, 100, 1000', icon:'✖️',
+      content:`<p>Ces opérations <strong>déplacent la virgule</strong> sans calcul !</p>
+      <div class="lesson-formula">Multiplier → virgule à <strong>droite</strong><br>× 10 = 1 rang | × 100 = 2 rangs | × 1000 = 3 rangs<br><br>Diviser → virgule à <strong>gauche</strong><br>÷ 10 = 1 rang | ÷ 100 = 2 rangs | ÷ 1000 = 3 rangs</div>
+      <div class="lesson-example"><div class="ex-label">🌸 Exemples dans les deux sens</div>
+      <div class="ex-content">3,45 × 10 = <strong>34,5</strong> (virgule → droite 1 rang)<br>
       3,45 × 100 = <strong>345</strong><br>
-      3,45 × 1000 = <strong>3 450</strong></div></div>
-      <div class="lesson-tip"><div class="tip-label">💡 Et diviser ?</div>
-      Diviser par 10, 100, 1000 fait l'inverse : virgule vers la <strong>gauche</strong> !<br>
-      345 ÷ 100 = 3,45</div>`,
-      exercise:{question:'Calcule : 2,7 × 100 =',choices:['270','27','2700','0,027'],correct:0}
+      3,45 × 1000 = <strong>3 450</strong> (on ajoute un zéro !)<br><br>
+      56 ÷ 10 = <strong>5,6</strong> (virgule → gauche 1 rang)<br>
+      56 ÷ 100 = <strong>0,56</strong><br>
+      7,2 ÷ 1000 = <strong>0,0072</strong> (on ajoute des zéros !)</div></div>
+      <div class="lesson-tip"><div class="tip-label">💡 Moyen mnémotechnique</div>
+      <strong>M</strong>ultiplier = virgule à <strong>D</strong>roite (M comme Monter, D comme Droite)<br>
+      <strong>D</strong>iviser = virgule à <strong>G</strong>auche (D comme Descendre, G comme Gauche)</div>`,
+      exercise:{question:'Calcule : 0,45 × 1000 =',choices:['450','4,5','4500','0,00045'],correct:0}
+    }
+  ],
+  moyen: [
+    { title:'Encadrer à différentes précisions', icon:'📦',
+      content:`<p>On peut encadrer un nombre à différentes <strong>précisions</strong> : à l'unité, au dixième, au centième...</p>
+      <div class="lesson-formula">Encadrer à l'unité : trouver l'entier en dessous et au-dessus<br>Au dixième : garder 1 décimale et trouver les bornes<br>Au centième : garder 2 décimales et trouver les bornes</div>
+      <div class="lesson-example"><div class="ex-label">🌸 Exemple complet</div>
+      <div class="ex-content">Encadrer 7,364 :<br>
+      <span class="step">À l'unité : <strong>7 < 7,364 < 8</strong></span><br>
+      <span class="step">Au dixième : <strong>7,3 < 7,364 < 7,4</strong></span><br>
+      <span class="step">Au centième : <strong>7,36 < 7,364 < 7,37</strong></span><br><br>
+      L'<strong>amplitude</strong> de l'encadrement diminue : 1 → 0,1 → 0,01. Plus c'est précis, plus c'est serré !</div></div>
+      <div class="lesson-tip"><div class="tip-label">⚠️ Piège fréquent</div>
+      Pour encadrer 3,<strong>9</strong>7 à l'unité : c'est 3 < 3,97 < <strong>4</strong> (pas 3 < 3,97 < 3,10 !)</div>`,
+      exercise:{question:'Encadre 4,95 à l\'unité. Quelle est la borne supérieure ?',choices:['5','4','4,9','4,10'],correct:0}
+    },
+    { title:'Addition et soustraction de décimaux', icon:'➕',
+      content:`<p>La règle d'or : <strong>aligner les virgules</strong> les unes sous les autres !</p>
+      <div class="lesson-formula">Méthode :<br>1. Aligner les virgules<br>2. Compléter avec des zéros si besoin<br>3. Calculer colonne par colonne (de droite à gauche)<br>4. Bien placer la virgule au résultat</div>
+      <div class="lesson-example"><div class="ex-label">🌸 Exemple posé</div>
+      <div class="ex-content">12,5 + 3,78 :<br>
+      <span class="step">&nbsp;12,<strong>50</strong> ← on ajoute un 0</span><br>
+      <span class="step">+ 3,78</span><br>
+      <span class="step">──────</span><br>
+      <span class="step">&nbsp;16,28</span><br><br>
+      23,4 − 7,85 :<br>
+      <span class="step">&nbsp;23,<strong>40</strong></span><br>
+      <span class="step">− 7,85 ← attention aux retenues !</span><br>
+      <span class="step">──────</span><br>
+      <span class="step">&nbsp;15,55</span></div></div>`,
+      exercise:{question:'Calcule : 15,3 + 2,75 =',choices:['18,05','17,75','18,5','17,05'],correct:0}
+    },
+    { title:'Multiplication de décimaux', icon:'✖️',
+      content:`<p>Pour multiplier des décimaux : <strong>ignore les virgules</strong>, multiplie les entiers, puis replace la virgule.</p>
+      <div class="lesson-formula">Nombre total de chiffres après la virgule dans les deux facteurs = nombre de chiffres après la virgule dans le résultat</div>
+      <div class="lesson-example"><div class="ex-label">🌸 Exemple pas à pas</div>
+      <div class="ex-content">2,5 × 0,3 :<br>
+      <span class="step">1. Sans virgule : 25 × 3 = 75</span><br>
+      <span class="step">2. Chiffres après virgule : 1 (2,5) + 1 (0,3) = 2</span><br>
+      <span class="step">3. Résultat avec 2 chiffres après : <strong>0,75</strong></span><br><br>
+      1,2 × 3,45 :<br>
+      <span class="step">12 × 345 = 4 140</span><br>
+      <span class="step">1 + 2 = 3 chiffres après → <strong>4,140 = 4,14</strong></span></div></div>
+      <div class="lesson-tip"><div class="tip-label">💡 Vérification rapide</div>
+      2,5 × 0,3 ≈ 2 × 0,5 = 1. Notre résultat 0,75 est cohérent (pas 7,5 ni 75 !)</div>`,
+      exercise:{question:'Calcule : 0,6 × 0,4 =',choices:['0,24','2,4','0,024','24'],correct:0}
+    }
+  ],
+  difficile: [
+    { title:'Ordres de grandeur et vérification', icon:'🧮',
+      content:`<p>L'<strong>ordre de grandeur</strong> permet de vérifier qu'un résultat est réaliste.</p>
+      <div class="lesson-formula">Pour trouver l'ordre de grandeur, arrondis chaque nombre à 1 chiffre significatif :<br>38,7 ≈ 40 | 0,52 ≈ 0,5 | 812 ≈ 800</div>
+      <div class="lesson-example"><div class="ex-label">🌸 Application à un calcul</div>
+      <div class="ex-content">Calcul exact : 39,4 × 5,12 =<br>
+      <span class="step">Estimation : 40 × 5 = <strong>200</strong> (ordre de grandeur)</span><br>
+      <span class="step">Calcul exact : 201,728</span><br>
+      <span class="step">201,728 ≈ 200 ✅ Résultat cohérent !</span><br><br>
+      Si tu trouves 2017,28 ou 20,17 → c'est une erreur de virgule !</div></div>
+      <div class="lesson-tip"><div class="tip-label">📌 Quand l'utiliser ?</div>
+      <strong>Toujours</strong> en contrôle ! Vérifie tes résultats par un calcul mental approché. Si l'ordre de grandeur ne colle pas, tu as fait une erreur.</div>`,
+      exercise:{question:'Ordre de grandeur de 48,7 × 2,1 ≈',choices:['100','10','1000','50'],correct:0}
+    },
+    { title:'Problèmes avec décimaux', icon:'🧠',
+      content:`<p>En 6ème, les problèmes mélangent souvent <strong>plusieurs opérations</strong> avec des décimaux.</p>
+      <div class="lesson-example"><div class="ex-label">🌸 Problème type</div>
+      <div class="ex-content">Marie achète 3 livres à 8,50€ chacun et 2 cahiers à 2,75€. Elle paye avec un billet de 50€. Combien lui rend-on ?<br><br>
+      <span class="step">1. Prix des livres : 3 × 8,50 = <strong>25,50€</strong></span><br>
+      <span class="step">2. Prix des cahiers : 2 × 2,75 = <strong>5,50€</strong></span><br>
+      <span class="step">3. Total : 25,50 + 5,50 = <strong>31,00€</strong></span><br>
+      <span class="step">4. Rendu : 50 − 31 = <strong>19€</strong></span><br>
+      <span class="step">Vérif : 19 + 31 = 50 ✅</span></div></div>
+      <div class="lesson-tip"><div class="tip-label">💡 Méthode</div>
+      1. Lis l'énoncé 2 fois<br>2. Repère les données et la question<br>3. Fais les calculs étape par étape<br>4. Vérifie que ta réponse a du sens<br>5. Rédige une phrase de réponse</div>`,
+      exercise:{question:'4 croissants à 1,20€ + 2 pains au chocolat à 1,50€. Total ?',choices:['7,80€','6,60€','8,40€','5,40€'],correct:0}
     }
   ]
 },
 
 operations: {
+  facile: [
+    { title:'Tables de multiplication', icon:'✖️',
+      content:`<p>Les tables de multiplication sont la <strong>base</strong> de tous les calculs. Il faut les connaître par cœur !</p>
+      <div class="lesson-formula">Astuce pour la table de 9 :<br>9×1=9, 9×2=18, 9×3=27...<br>Le chiffre des dizaines augmente de 1, celui des unités diminue de 1 !<br>Et la somme des chiffres fait toujours 9 : 1+8=9, 2+7=9, 3+6=9...</div>
+      <div class="lesson-example"><div class="ex-label">🌸 Tables difficiles à retenir</div>
+      <div class="ex-content">7 × 8 = <strong>56</strong> (pense : 5, 6, 7, 8 → 56=7×8)<br>
+      6 × 7 = <strong>42</strong><br>
+      6 × 8 = <strong>48</strong><br>
+      7 × 9 = <strong>63</strong><br>
+      8 × 9 = <strong>72</strong></div></div>
+      <div class="lesson-tip"><div class="tip-label">💡 Avec les doigts (table de 9)</div>
+      Lève tes 10 doigts. Pour 9×3, baisse le 3e doigt. À gauche : 2 doigts (dizaines). À droite : 7 doigts (unités). Réponse : <strong>27</strong> !</div>`,
+      exercise:{question:'7 × 8 =',choices:['56','54','48','63'],correct:0}
+    },
+    { title:'La division euclidienne', icon:'➗',
+      content:`<p>La <strong>division euclidienne</strong> donne un <strong>quotient</strong> (résultat) et un <strong>reste</strong>.</p>
+      <div class="lesson-formula">Dividende = Diviseur × Quotient + Reste<br>Le reste est TOUJOURS inférieur au diviseur</div>
+      <div class="lesson-example"><div class="ex-label">🌸 Exemple détaillé</div>
+      <div class="ex-content">47 ÷ 6 = ?<br>
+      <span class="step">Dans 47, combien de fois 6 ? → 6×7=42 (ça passe) et 6×8=48 (trop grand)</span><br>
+      <span class="step">Quotient = <strong>7</strong></span><br>
+      <span class="step">Reste = 47 − 42 = <strong>5</strong></span><br>
+      <span class="step">Vérif : 6 × 7 + 5 = 42 + 5 = 47 ✅</span><br>
+      <span class="step">Le reste 5 < 6 (diviseur) ✅</span></div></div>
+      <div class="lesson-tip"><div class="tip-label">📌 Application concrète</div>
+      47 bonbons à partager entre 6 enfants : chacun en a 7 et il en reste 5.</div>`,
+      exercise:{question:'Dans 53 ÷ 7, quel est le quotient ?',choices:['7','8','6','53'],correct:0}
+    },
+    { title:'Critères de divisibilité', icon:'🔍',
+      content:`<p>Comment savoir <strong>rapidement</strong> si un nombre est divisible par 2, 3, 5, 9 ou 10 ?</p>
+      <div class="lesson-formula">Par 2 : le dernier chiffre est pair (0, 2, 4, 6, 8)<br>Par 5 : le dernier chiffre est 0 ou 5<br>Par 10 : le dernier chiffre est 0<br>Par 3 : la somme des chiffres est divisible par 3<br>Par 9 : la somme des chiffres est divisible par 9</div>
+      <div class="lesson-example"><div class="ex-label">🌸 Exemples</div>
+      <div class="ex-content">234 est-il divisible par 3 ?<br>
+      <span class="step">Somme : 2 + 3 + 4 = 9. Oui, 9 est divisible par 3 ! ✅</span><br><br>
+      456 est-il divisible par 9 ?<br>
+      <span class="step">Somme : 4 + 5 + 6 = 15. Non, 15 n'est pas divisible par 9 ❌</span><br>
+      <span class="step">(Mais 15 est divisible par 3, donc 456 est divisible par 3)</span></div></div>`,
+      exercise:{question:'372 est divisible par 3 ? (somme des chiffres : 3+7+2=12)',choices:['Oui','Non'],correct:0}
+    }
+  ],
   moyen: [
     { title:'Opérations avec des décimaux', icon:'🔢',
       content:`<p>On peut additionner et soustraire des décimaux comme des entiers, mais il faut <strong>aligner les virgules</strong> !</p>
@@ -3133,10 +3235,442 @@ LESSONS.eng_irregular.difficile = [
   }
 ];
 
-// ══════════════════════════════════════
-// LESSON ENGINE
-// ══════════════════════════════════════
-let lesson = { topicId: null, steps: [], current: 0 };
+// ═══════════════════════════════════════
+// ENRICHISSEMENT : leçons supplémentaires
+// ═══════════════════════════════════════
+
+// ─── MATHS : fractions6 enrichi ───
+LESSONS.fractions6.facile.push(
+  { title:'Fractions et droite graduée', icon:'📏',
+    content:`<p>On peut placer une fraction sur une <strong>droite graduée</strong> !</p>
+    <div class="lesson-formula">Pour placer a/b : divise l'intervalle [0;1] en b parts égales, puis avance de a parts.</div>
+    <div class="lesson-example"><div class="ex-label">🌸 Placer 3/4</div>
+    <div class="ex-content">On divise [0;1] en 4 parts égales.<br>
+    <span class="step">0 — 1/4 — 2/4 — <strong>3/4</strong> — 1</span><br>
+    <span class="step">3/4 est situé entre 0 et 1, plus proche de 1.</span></div></div>
+    <div class="lesson-tip"><div class="tip-label">📌 Fractions > 1</div>Si le numérateur > dénominateur, la fraction est > 1 !<br>5/3 : on dépasse 1. En fait 5/3 = 1 + 2/3</div>`,
+    exercise:{question:'Où se situe 2/5 sur la droite graduée ?',choices:['Entre 0 et 1, plus près de 0','Entre 0 et 1, plus près de 1','Supérieur à 1','Égal à 1'],correct:0}
+  },
+  { title:'Fractions égales et simplification', icon:'✂️',
+    content:`<p>Deux fractions sont <strong>égales</strong> si on peut passer de l'une à l'autre en multipliant ou divisant haut ET bas par le même nombre.</p>
+    <div class="lesson-formula">a/b = (a×k)/(b×k) pour tout k ≠ 0<br><br>Simplifier = diviser haut et bas par le même nombre</div>
+    <div class="lesson-example"><div class="ex-label">🌸 Exemples</div>
+    <div class="ex-content">2/3 = 4/6 = 6/9 = 8/12 (on multiplie par 2, 3, 4...)<br><br>
+    Simplifier 12/18 :<br>
+    <span class="step">12 et 18 sont divisibles par 6</span><br>
+    <span class="step">12÷6 / 18÷6 = <strong>2/3</strong></span></div></div>
+    <div class="lesson-tip"><div class="tip-label">💡 Comment trouver le diviseur commun ?</div>
+    Commence par 2 (si les deux sont pairs), puis 3 (somme des chiffres divisible par 3), puis 5...</div>`,
+    exercise:{question:'Simplifie 8/12 :',choices:['2/3','4/6','3/4','8/12'],correct:0}
+  }
+);
+
+LESSONS.fractions6.moyen.push(
+  { title:'Comparer des fractions', icon:'⚖️',
+    content:`<p>Pour comparer des fractions avec des <strong>dénominateurs différents</strong>, il faut les mettre au même dénominateur.</p>
+    <div class="lesson-formula">Pour comparer a/b et c/d :<br>1. Trouve un dénominateur commun (b×d marche toujours)<br>2. Transforme les deux fractions<br>3. Compare les numérateurs</div>
+    <div class="lesson-example"><div class="ex-label">🌸 Exemple</div>
+    <div class="ex-content">Comparer 3/4 et 5/6 :<br>
+    <span class="step">Dénominateur commun : 4 × 6 = 24 (ou 12, le PPCM)</span><br>
+    <span class="step">3/4 = 9/12 et 5/6 = 10/12</span><br>
+    <span class="step">9 < 10 donc <strong>3/4 < 5/6</strong></span></div></div>
+    <div class="lesson-tip"><div class="tip-label">💡 Raccourci : les produits en croix</div>
+    Compare a/b et c/d : calcule a×d et b×c. Si a×d < b×c alors a/b < c/d.<br>
+    3/4 et 5/6 : 3×6=18 et 4×5=20. 18 < 20 donc 3/4 < 5/6 ✅</div>`,
+    exercise:{question:'Quelle fraction est la plus grande : 2/3 ou 3/5 ?',choices:['2/3','3/5','Elles sont égales'],correct:0}
+  }
+);
+
+// ─── MATHS : geometrie enrichi ───
+LESSONS.geometrie.facile.push(
+  { title:'Les figures géométriques de base', icon:'📐',
+    content:`<p>En 6ème, tu dois connaître les propriétés des <strong>quadrilatères</strong> particuliers.</p>
+    <div class="lesson-formula">Carré : 4 côtés égaux + 4 angles droits<br>Rectangle : côtés opposés égaux + 4 angles droits<br>Losange : 4 côtés égaux (pas forcément d'angle droit)<br>Parallélogramme : côtés opposés parallèles et égaux</div>
+    <div class="lesson-example"><div class="ex-label">🌸 Hiérarchie</div>
+    <div class="ex-content">Le carré est un cas particulier du rectangle ET du losange.<br>
+    <span class="step">Carré → Rectangle (si on relâche "4 côtés égaux")</span><br>
+    <span class="step">Carré → Losange (si on relâche "angles droits")</span><br>
+    <span class="step">Rectangle ET Losange → Parallélogramme</span></div></div>`,
+    exercise:{question:'Un carré est toujours un...',choices:['rectangle','losange','les deux','aucun des deux'],correct:2}
+  },
+  { title:'Symétrie axiale', icon:'🪞',
+    content:`<p>Deux figures sont <strong>symétriques par rapport à un axe</strong> si, quand on plie le long de l'axe, elles se superposent exactement.</p>
+    <div class="lesson-formula">Le symétrique d'un point A par rapport à un axe (d) est le point A' tel que :<br>• (d) est la médiatrice de [AA']<br>• AA' est perpendiculaire à (d)<br>• La distance de A à (d) = distance de A' à (d)</div>
+    <div class="lesson-example"><div class="ex-label">🌸 Construction au compas</div>
+    <div class="ex-content">Pour construire le symétrique de A par rapport à (d) :<br>
+    <span class="step">1. Trace la perpendiculaire à (d) passant par A</span><br>
+    <span class="step">2. Mesure la distance de A à (d) : soit r cm</span><br>
+    <span class="step">3. Reporte r cm de l'autre côté de (d) → c'est A'</span></div></div>
+    <div class="lesson-tip"><div class="tip-label">📌 Propriétés conservées</div>
+    La symétrie conserve : les longueurs, les angles, les aires, l'alignement. Elle <strong>inverse</strong> le sens de parcours.</div>`,
+    exercise:{question:'La symétrie axiale conserve...',choices:['les longueurs et les angles','seulement les longueurs','seulement les angles','rien'],correct:0}
+  }
+);
+
+LESSONS.geometrie.moyen.push(
+  { title:'Aire du triangle et du disque', icon:'📐',
+    content:`<p>Deux formules essentielles en 6ème :</p>
+    <div class="lesson-formula">Aire triangle = (base × hauteur) ÷ 2<br><br>Aire disque = π × rayon² (π ≈ 3,14)</div>
+    <div class="lesson-example"><div class="ex-label">🌸 Exemples</div>
+    <div class="ex-content">Triangle : base = 8 cm, hauteur = 5 cm :<br>
+    <span class="step">A = (8 × 5) ÷ 2 = <strong>20 cm²</strong></span><br><br>
+    Disque de rayon 3 cm :<br>
+    <span class="step">A = 3,14 × 3² = 3,14 × 9 = <strong>28,26 cm²</strong></span></div></div>
+    <div class="lesson-tip"><div class="tip-label">⚠️ Attention à la hauteur !</div>
+    La hauteur du triangle est PERPENDICULAIRE à la base. Ce n'est pas forcément un côté du triangle ! Dans un triangle obtus, la hauteur peut être à l'extérieur.</div>`,
+    exercise:{question:'Aire d\'un disque de rayon 5 cm ? (π ≈ 3,14)',choices:['78,5 cm²','31,4 cm²','15,7 cm²','25 cm²'],correct:0}
+  }
+);
+
+// ─── MATHS : proportionnalite6 enrichi ───
+LESSONS.proportionnalite6.facile.push(
+  { title:'Reconnaître la proportionnalité', icon:'🔍',
+    content:`<p>Un tableau est de <strong>proportionnalité</strong> si on peut passer d'une ligne à l'autre en multipliant TOUJOURS par le même nombre (le <strong>coefficient</strong>).</p>
+    <div class="lesson-formula">Si pour chaque colonne : ligne 2 ÷ ligne 1 = même nombre → proportionnel !</div>
+    <div class="lesson-example"><div class="ex-label">🌸 Exemple</div>
+    <div class="ex-content">Nombre de pommes : 2 | 5 | 8<br>
+    Prix (€) : 3 | 7,5 | 12<br>
+    <span class="step">3÷2 = 1,5 | 7,5÷5 = 1,5 | 12÷8 = 1,5</span><br>
+    <span class="step">Même coefficient (1,5) → <strong>proportionnel !</strong> Le prix d'une pomme = 1,50€</span><br><br>
+    Contre-exemple : Âge : 5 | 10 | 15 → Taille : 110 | 140 | 170<br>
+    <span class="step">110÷5 = 22 | 140÷10 = 14 | 170÷15 ≈ 11,3</span><br>
+    <span class="step">Différent → <strong>pas proportionnel !</strong></span></div></div>`,
+    exercise:{question:'Tableau : 3→9, 5→15, 7→21. Proportionnel ?',choices:['Oui (coefficient 3)','Non','On ne peut pas savoir'],correct:0}
+  }
+);
+
+LESSONS.proportionnalite6.moyen.push(
+  { title:'Échelles et plans', icon:'🗺️',
+    content:`<p>L'<strong>échelle</strong> d'un plan est le coefficient de proportionnalité entre les distances sur le plan et les distances réelles.</p>
+    <div class="lesson-formula">Échelle = distance sur le plan ÷ distance réelle<br><br>Échelle 1/500 signifie : 1 cm sur le plan = 500 cm (5 m) en réalité</div>
+    <div class="lesson-example"><div class="ex-label">🌸 Exemple</div>
+    <div class="ex-content">Sur un plan à l'échelle 1/200, une pièce mesure 4 cm.<br>
+    <span class="step">Taille réelle = 4 × 200 = 800 cm = <strong>8 m</strong></span><br><br>
+    Un jardin fait 15 m de long. Sur un plan au 1/500 :<br>
+    <span class="step">Sur le plan = 1500 ÷ 500 = <strong>3 cm</strong></span></div></div>
+    <div class="lesson-tip"><div class="tip-label">📌 Conversion importante</div>
+    Pense toujours à convertir dans la même unité ! 1 m = 100 cm.</div>`,
+    exercise:{question:'Plan au 1/100. Une pièce fait 6 cm sur le plan. Taille réelle ?',choices:['6 m','60 m','0,6 m','600 m'],correct:0}
+  }
+);
+
+// ═══════════════════════════════════════
+// FRANÇAIS — Leçons supplémentaires approfondies
+// ═══════════════════════════════════════
+
+// ─── Grammaire enrichi ───
+LESSONS.grammaire.facile.push(
+  { title:'Les déterminants', icon:'📝',
+    content:`<p>Le <strong>déterminant</strong> accompagne le nom et indique son genre et son nombre.</p>
+    <div class="lesson-formula">Articles définis : le, la, l', les<br>Articles indéfinis : un, une, des<br>Déterminants possessifs : mon, ton, son, ma, ta, sa, mes, tes, ses, notre, votre, leur...<br>Déterminants démonstratifs : ce, cet, cette, ces</div>
+    <div class="lesson-example"><div class="ex-label">🌸 Exemples en contexte</div>
+    <div class="ex-content"><strong>Le</strong> chat de <strong>ma</strong> voisine regarde <strong>ces</strong> oiseaux.<br>
+    <span class="step">le → article défini (on sait de quel chat on parle)</span><br>
+    <span class="step">ma → possessif (la voisine est à moi, c'est la mienne)</span><br>
+    <span class="step">ces → démonstratif (ces oiseaux-là précisément)</span></div></div>
+    <div class="lesson-tip"><div class="tip-label">⚠️ Piège</div>
+    "leur" peut être déterminant OU pronom !<br>
+    <strong>Leur</strong> maison (déterminant, = la maison d'eux) ≠ Je <strong>leur</strong> parle (pronom, = à eux)</div>`,
+    exercise:{question:'Dans "Cette île est magnifique", "cette" est un...',choices:['déterminant démonstratif','déterminant possessif','article défini','pronom'],correct:0}
+  },
+  { title:'Le verbe et ses groupes', icon:'⚡',
+    content:`<p>Le <strong>verbe</strong> exprime une action ou un état. En français, il y a 3 groupes :</p>
+    <div class="lesson-formula">1er groupe : infinitif en <strong>-er</strong> (sauf aller) → manger, chanter, jouer<br>2e groupe : infinitif en <strong>-ir</strong> + participe présent en -issant → finir (finissant), grandir<br>3e groupe : tous les autres → aller, prendre, voir, être, avoir, faire...</div>
+    <div class="lesson-example"><div class="ex-label">🌸 Comment reconnaître le 2e groupe ?</div>
+    <div class="ex-content">Un verbe en -ir est du 2e groupe SI son participe présent fait -issant :<br>
+    <span class="step">Finir → finiss<strong>ant</strong> ✅ (2e groupe)</span><br>
+    <span class="step">Partir → part<strong>ant</strong> ❌ (3e groupe, pas "partissant")</span><br>
+    <span class="step">Venir → ven<strong>ant</strong> ❌ (3e groupe)</span></div></div>
+    <div class="lesson-tip"><div class="tip-label">📌 Pourquoi c'est important ?</div>
+    Le groupe détermine la conjugaison ! Les verbes du 1er et 2e groupe sont <strong>réguliers</strong>, le 3e est <strong>irrégulier</strong>.</div>`,
+    exercise:{question:'À quel groupe appartient "courir" ?',choices:['3e groupe','2e groupe','1er groupe'],correct:0}
+  }
+);
+
+LESSONS.grammaire.moyen.push(
+  { title:'La phrase complexe', icon:'🔗',
+    content:`<p>Une phrase <strong>simple</strong> a un seul verbe conjugué. Une phrase <strong>complexe</strong> en a plusieurs.</p>
+    <div class="lesson-formula">Phrase simple : une proposition (un verbe conjugué)<br>Phrase complexe : plusieurs propositions<br><br>Juxtaposition : séparées par , ; :<br>Coordination : reliées par mais, ou, et, donc, or, ni, car<br>Subordination : reliées par que, qui, quand, parce que, si...</div>
+    <div class="lesson-example"><div class="ex-label">🌸 Exemples</div>
+    <div class="ex-content"><strong>Simple :</strong> Tom Nook <strong>vend</strong> des meubles.<br><br>
+    <strong>Juxtaposition :</strong> Il <strong>pleut</strong>, je <strong>reste</strong> chez moi.<br>
+    <strong>Coordination :</strong> Il <strong>pleut</strong> donc je <strong>reste</strong> chez moi.<br>
+    <strong>Subordination :</strong> Je <strong>reste</strong> chez moi parce qu'il <strong>pleut</strong>.</div></div>
+    <div class="lesson-tip"><div class="tip-label">💡 Moyen mnémotechnique MAIS OU ET DONC OR NI CAR</div>Conjonctions de coordination : retiens la phrase "Mais où est donc Ornicar ?"</div>`,
+    exercise:{question:'"Je mange parce que j\'ai faim" est une phrase...',choices:['complexe (subordination)','simple','complexe (coordination)','complexe (juxtaposition)'],correct:0}
+  },
+  { title:'Les pronoms', icon:'👤',
+    content:`<p>Le <strong>pronom</strong> remplace un nom pour éviter les répétitions.</p>
+    <div class="lesson-formula">Pronoms personnels sujets : je, tu, il, elle, on, nous, vous, ils, elles<br>Pronoms personnels COD : me, te, le, la, nous, vous, les<br>Pronoms personnels COI : me, te, lui, nous, vous, leur<br>Pronoms relatifs : qui, que, dont, où<br>Pronoms démonstratifs : celui, celle, ceux, celles, ce, ceci, cela</div>
+    <div class="lesson-example"><div class="ex-label">🌸 Les pronoms relatifs</div>
+    <div class="ex-content">Le livre <strong>que</strong> je lis est passionnant. (que = COD du verbe "lis")<br>
+    L'ami <strong>qui</strong> m'a aidé est gentil. (qui = sujet du verbe "a aidé")<br>
+    La ville <strong>où</strong> j'habite est belle. (où = CC de lieu)<br>
+    Le film <strong>dont</strong> je parle est drôle. (dont = COI, "parler de")</div></div>`,
+    exercise:{question:'Dans "Le chat qui dort", "qui" est un pronom...',choices:['relatif (sujet)','personnel','démonstratif','possessif'],correct:0}
+  }
+);
+
+// ─── Conjugaison enrichi ───
+LESSONS.conjugaison.facile.push(
+  { title:'Le présent de l\'indicatif', icon:'⏰',
+    content:`<p>Le <strong>présent</strong> exprime une action qui se passe maintenant, une habitude, ou une vérité générale.</p>
+    <div class="lesson-formula">1er groupe (-er) : -e, -es, -e, -ons, -ez, -ent<br>2e groupe (-ir) : -is, -is, -it, -issons, -issez, -issent<br>3e groupe : terminaisons variables ! (-s, -s, -t/-d, -ons, -ez, -ent)</div>
+    <div class="lesson-example"><div class="ex-label">🌸 Les verbes piégeux au présent</div>
+    <div class="ex-content">Aller : je <strong>vais</strong>, tu vas, il va, nous <strong>allons</strong>, vous <strong>allez</strong>, ils <strong>vont</strong><br>
+    Faire : je <strong>fais</strong>, tu fais, il fait, nous <strong>faisons</strong>, vous <strong>faites</strong>, ils <strong>font</strong><br>
+    Pouvoir : je <strong>peux</strong>, tu peux, il peut, nous <strong>pouvons</strong><br><br>
+    ⚠️ Verbes en -yer : payer → je <strong>paie</strong> (y→i devant e muet)</div></div>
+    <div class="lesson-tip"><div class="tip-label">📌 Les 3 verbes les plus irréguliers</div>
+    <strong>Être</strong> (suis, es, est, sommes, êtes, sont), <strong>avoir</strong> (ai, as, a, avons, avez, ont), <strong>aller</strong> (vais, vas, va, allons, allez, vont). Apprends-les par cœur !</div>`,
+    exercise:{question:'Conjugue "faire" au présent avec "vous" :',choices:['faites','faisez','faitent','faîtes'],correct:0}
+  },
+  { title:'L\'imparfait de l\'indicatif', icon:'📖',
+    content:`<p>L'<strong>imparfait</strong> exprime une action passée qui dure, une habitude passée, ou une description.</p>
+    <div class="lesson-formula">Terminaisons (TOUJOURS les mêmes) : -ais, -ais, -ait, -ions, -iez, -aient<br><br>Radical = 1ère personne du pluriel au présent (nous)<br>nous mang<strong>eons</strong> → je mang<strong>eais</strong><br>nous finiss<strong>ons</strong> → je finiss<strong>ais</strong></div>
+    <div class="lesson-example"><div class="ex-label">🌸 Pièges classiques</div>
+    <div class="ex-content">Manger : je mang<strong>e</strong>ais (garder le e pour le son "j")<br>
+    Lancer : je lanç<strong>ais</strong> (cédille pour le son "s")<br>
+    Crier : nous cri<strong>i</strong>ons (deux i ! un du radical, un de la terminaison)<br><br>
+    <strong>Être</strong> est le SEUL verbe irrégulier à l'imparfait : j'étais (radical "ét-")</div></div>`,
+    exercise:{question:'Conjugue "manger" à l\'imparfait avec "nous" :',choices:['mangions','mangeons','mangerions','mangeions'],correct:0}
+  }
+);
+
+LESSONS.conjugaison.moyen.push(
+  { title:'Le futur simple', icon:'🔮',
+    content:`<p>Le <strong>futur simple</strong> exprime une action qui se passera dans l'avenir.</p>
+    <div class="lesson-formula">Formation : infinitif + terminaisons de "avoir" au présent<br>-ai, -as, -a, -ons, -ez, -ont<br><br>Manger → je manger<strong>ai</strong>, tu mangeras, il mangera...</div>
+    <div class="lesson-example"><div class="ex-label">🌸 Futurs irréguliers (radical modifié)</div>
+    <div class="ex-content">Être → je <strong>ser</strong>ai | Avoir → j'<strong>aur</strong>ai<br>
+    Aller → j'<strong>ir</strong>ai | Faire → je <strong>fer</strong>ai<br>
+    Voir → je <strong>verr</strong>ai | Pouvoir → je <strong>pourr</strong>ai<br>
+    Venir → je <strong>viendr</strong>ai | Vouloir → je <strong>voudr</strong>ai<br><br>
+    ⚠️ Les terminaisons sont TOUJOURS les mêmes, même pour les irréguliers !</div></div>
+    <div class="lesson-tip"><div class="tip-label">💡 Futur vs conditionnel</div>
+    Futur : je manger<strong>ai</strong> (terminaison en -ai)<br>
+    Conditionnel : je manger<strong>ais</strong> (terminaison en -ais)<br>
+    Astuce : remplace par "nous" → nous mangerons (futur) / nous mangerions (conditionnel)</div>`,
+    exercise:{question:'Conjugue "voir" au futur avec "je" :',choices:['verrai','voirai','voyerai','verai'],correct:0}
+  }
+);
+
+// ─── Orthographe enrichi ───
+LESSONS.orthographe.facile.push(
+  { title:'Les homophones grammaticaux (1)', icon:'🔤',
+    content:`<p>Les <strong>homophones</strong> se prononcent pareil mais s'écrivent différemment. Voici les plus fréquents :</p>
+    <div class="lesson-formula"><strong>a / à</strong><br>a = verbe avoir (remplace par "avait") → Il <strong>a</strong> faim (il avait faim ✅)<br>à = préposition → Il va <strong>à</strong> l'école (il va avait l'école ❌)<br><br>
+    <strong>est / et</strong><br>est = verbe être (remplace par "était") → Il <strong>est</strong> grand (il était grand ✅)<br>et = conjonction (remplace par "et aussi") → Toi <strong>et</strong> moi (toi et aussi moi ✅)</div>
+    <div class="lesson-example"><div class="ex-label">🌸 Exercice mental</div>
+    <div class="ex-content">"Marie _ contente _ elle _ un cadeau."<br>
+    <span class="step">Marie <strong>est</strong> contente (était → ✅)</span><br>
+    <span class="step"><strong>et</strong> elle (et aussi → ✅)</span><br>
+    <span class="step"><strong>a</strong> un cadeau (avait → ✅)</span></div></div>`,
+    exercise:{question:'"Il ... mangé ... il ... content" :',choices:['a / et / est','est / et / a','a / est / et','et / a / est'],correct:0}
+  },
+  { title:'Les homophones grammaticaux (2)', icon:'🔤',
+    content:`<p>Suite des homophones les plus courants :</p>
+    <div class="lesson-formula"><strong>son / sont</strong><br>son = déterminant possessif (remplace par "mon") → <strong>Son</strong> chat (mon chat ✅)<br>sont = verbe être (remplace par "étaient") → Ils <strong>sont</strong> là (ils étaient là ✅)<br><br>
+    <strong>on / ont</strong><br>on = pronom (remplace par "il") → <strong>On</strong> mange (il mange ✅)<br>ont = verbe avoir (remplace par "avaient") → Ils <strong>ont</strong> faim (ils avaient faim ✅)<br><br>
+    <strong>ou / où</strong><br>ou = choix (remplace par "ou bien") → Thé <strong>ou</strong> café ? (ou bien ✅)<br>où = lieu/moment → <strong>Où</strong> vas-tu ? (ou bien vas-tu ? ❌)</div>`,
+    exercise:{question:'"Ils ... faim ... ils veulent manger ... du pain" :',choices:['ont / et / ou','on / est / où','on / et / ou','ont / est / où'],correct:0}
+  }
+);
+
+LESSONS.orthographe.moyen.push(
+  { title:'L\'accord sujet-verbe', icon:'🤝',
+    content:`<p>Le verbe s'accorde <strong>toujours</strong> avec son sujet en personne et en nombre.</p>
+    <div class="lesson-formula">Sujet singulier → verbe au singulier<br>Sujet pluriel → verbe au pluriel<br><br>⚠️ Pièges : le sujet n'est pas toujours JUSTE avant le verbe !</div>
+    <div class="lesson-example"><div class="ex-label">🌸 Cas piégeux</div>
+    <div class="ex-content">Les fleurs du jardin <strong>poussent</strong>. (sujet = "les fleurs", pas "jardin")<br>
+    C'est moi qui <strong>ai</strong> raison. (qui = moi = 1ère personne)<br>
+    C'est toi qui <strong>as</strong> raison. (qui = toi = 2ème personne)<br><br>
+    Sujet inversé : Dans la forêt <strong>vivent</strong> de nombreux animaux. (sujet = "animaux")</div></div>
+    <div class="lesson-tip"><div class="tip-label">💡 Méthode</div>Pose toujours la question "Qui est-ce qui + verbe ?" pour trouver le vrai sujet.</div>`,
+    exercise:{question:'"Les élèves de la classe ... contents" :',choices:['sont','est','son','a'],correct:0}
+  }
+);
+
+// ─── Vocabulaire enrichi ───
+LESSONS.vocabulaire.facile.push(
+  { title:'Les familles de mots', icon:'🌳',
+    content:`<p>Une <strong>famille de mots</strong> regroupe tous les mots formés à partir du même <strong>radical</strong> (racine).</p>
+    <div class="lesson-formula">Radical = partie commune qui porte le sens<br><br>terre → terrain, terrasse, enterrer, terrestre, atterrir, souterrain<br>fleur → fleurir, fleuriste, floral, défleurir, effleurer</div>
+    <div class="lesson-example"><div class="ex-label">🌸 Comment reconnaître une famille ?</div>
+    <div class="ex-content">Les mots doivent :<br>
+    <span class="step">1. Avoir un radical commun (terre, terr-)</span><br>
+    <span class="step">2. Avoir un lien de sens (tous en rapport avec la terre)</span><br><br>
+    ⚠️ <strong>Piège</strong> : "terrible" contient "terr-" mais vient de "terreur", pas de "terre" !<br>
+    <span class="step">Même apparence ≠ même famille. Il faut un lien de SENS.</span></div></div>
+    <div class="lesson-tip"><div class="tip-label">💡 Utilité en rédaction</div>
+    Connaître les familles aide à enrichir ton vocabulaire et à éviter les répétitions.</div>`,
+    exercise:{question:'Quel mot n\'est PAS de la famille de "mer" ?',choices:['merci','marin','maritime','amerrir'],correct:0}
+  },
+  { title:'Préfixes et suffixes', icon:'🧩',
+    content:`<p>On forme de nouveaux mots en ajoutant un <strong>préfixe</strong> (avant) ou un <strong>suffixe</strong> (après) au radical.</p>
+    <div class="lesson-formula">Préfixe + radical + suffixe = mot dérivé<br><br>Préfixes courants :<br>re- (à nouveau) : refaire | in-/im- (contraire) : impossible<br>dé-/dés- (contraire) : défaire | pré- (avant) : prévoir<br>sur- (au-dessus) : survoler | sous- (en dessous) : sous-marin<br><br>Suffixes courants :<br>-eur/-euse (qui fait) : joueur | -tion/-sion (action) : création<br>-able/-ible (possible) : mangeable | -ment (manière) : doucement</div>
+    <div class="lesson-example"><div class="ex-label">🌸 Décomposition</div>
+    <div class="ex-content"><strong>in</strong>-croy-<strong>able</strong> = pas + croire + possible = qu'on ne peut pas croire<br>
+    <strong>dé</strong>-courag-<strong>ement</strong> = contraire + courage + manière = perte de courage</div></div>`,
+    exercise:{question:'Dans "irresponsable", le préfixe "ir-" signifie...',choices:['pas / contraire','encore','avant','au-dessus'],correct:0}
+  }
+);
+
+LESSONS.vocabulaire.moyen.push(
+  { title:'Champ lexical et champ sémantique', icon:'🌐',
+    content:`<p>Le <strong>champ lexical</strong> = ensemble de mots qui se rapportent à un même thème.</p>
+    <div class="lesson-formula">Champ lexical de la mer : vague, plage, sable, marée, phare, naviguer, marin, océan, côte...<br><br>
+    Champ sémantique = tous les sens différents d'un même mot.</div>
+    <div class="lesson-example"><div class="ex-label">🌸 Champ sémantique de "pièce"</div>
+    <div class="ex-content">- Une <strong>pièce</strong> de monnaie (argent)<br>
+    - Une <strong>pièce</strong> de la maison (chambre, salon)<br>
+    - Une <strong>pièce</strong> de théâtre (spectacle)<br>
+    - Une <strong>pièce</strong> de rechange (composant)<br>
+    <span class="step">→ Un même mot, 4 sens différents selon le contexte !</span></div></div>
+    <div class="lesson-tip"><div class="tip-label">💡 En rédaction</div>Utiliser des mots du même champ lexical rend ton texte plus cohérent et plus riche. Au lieu de répéter "la mer", utilise : l'océan, les flots, les vagues...</div>`,
+    exercise:{question:'Quel mot n\'appartient PAS au champ lexical de l\'école ?',choices:['récolte','cahier','professeur','récréation'],correct:0}
+  }
+);
+
+// ═══════════════════════════════════════
+// HISTOIRE-GÉO — Leçons supplémentaires approfondies
+// ═══════════════════════════════════════
+
+LESSONS.prehistoire.facile.push(
+  { title:'Les espèces humaines', icon:'🧬',
+    content:`<p>Plusieurs espèces d'hommes ont existé au cours de la Préhistoire :</p>
+    <div class="lesson-formula">Australopithèque (−4 M d'années) → bipède, petit cerveau<br>Homo habilis (−2,5 M) → premiers outils<br>Homo erectus (−1,8 M) → maîtrise du feu, sort d'Afrique<br>Homo neanderthalensis (−400 000) → enterre ses morts<br>Homo sapiens (−300 000) → nous ! Art, langage complexe</div>
+    <div class="lesson-example"><div class="ex-label">🌸 Ce qui nous distingue</div>
+    <div class="ex-content">L'Homo sapiens se distingue par :<br>
+    <span class="step">• Un cerveau plus gros et plus complexe</span><br>
+    <span class="step">• Le langage articulé</span><br>
+    <span class="step">• L'art (peintures, sculptures, musique)</span><br>
+    <span class="step">• La capacité d'adaptation à tous les milieux</span></div></div>
+    <div class="lesson-tip"><div class="tip-label">📌 Attention</div>Homo sapiens et Néandertal ont <strong>cohabité</strong> pendant des milliers d'années ! Néandertal n'est pas notre ancêtre mais notre cousin.</div>`,
+    exercise:{question:'Quelle espèce a maîtrisé le feu en premier ?',choices:['Homo erectus','Homo sapiens','Néandertal','Australopithèque'],correct:0}
+  },
+  { title:'La révolution néolithique', icon:'🌾',
+    content:`<p>Le <strong>Néolithique</strong> (vers −10 000 ans) est un tournant majeur : les humains passent de chasseurs-cueilleurs à agriculteurs-éleveurs.</p>
+    <div class="lesson-formula">Paléolithique : nomades, chasse, cueillette, outils en pierre taillée<br>Néolithique : sédentaires, agriculture, élevage, outils en pierre polie</div>
+    <div class="lesson-example"><div class="ex-label">🌸 Les conséquences de l'agriculture</div>
+    <div class="ex-content">L'agriculture change TOUT :<br>
+    <span class="step">• <strong>Sédentarisation</strong> → premiers villages permanents</span><br>
+    <span class="step">• <strong>Spécialisation</strong> → artisans, potiers, tisserands</span><br>
+    <span class="step">• <strong>Propriété</strong> → notion de territoire, de richesse</span><br>
+    <span class="step">• <strong>Hiérarchie sociale</strong> → chefs, guerriers</span><br>
+    <span class="step">• <strong>Croissance démographique</strong> → plus de nourriture = plus d'enfants</span></div></div>
+    <div class="lesson-tip"><div class="tip-label">📌 Le croissant fertile</div>L'agriculture apparaît d'abord au Proche-Orient (Mésopotamie, Syrie, Palestine) dans une zone appelée le "Croissant fertile".</div>`,
+    exercise:{question:'La sédentarisation est une conséquence de...',choices:['l\'agriculture','la chasse','les peintures rupestres','la maîtrise du feu'],correct:0}
+  }
+);
+
+LESSONS.prehistoire.moyen.push(
+  { title:'Chronologie et grandes dates', icon:'📅',
+    content:`<p>Pour se repérer dans le temps long de la Préhistoire :</p>
+    <div class="lesson-formula">−7 millions d'années : premiers hominidés (Toumaï)<br>−3 millions : Lucy (australopithèque)<br>−400 000 : maîtrise du feu<br>−100 000 : premières sépultures (Néandertal)<br>−35 000 : art pariétal (grottes Chauvet)<br>−17 000 : grotte de Lascaux<br>−10 000 : début du Néolithique<br>−3 300 : invention de l'écriture = FIN de la Préhistoire</div>
+    <div class="lesson-tip"><div class="tip-label">💡 Se repérer</div>La Préhistoire représente 99% de l'histoire humaine ! De −3 millions à −3 300, c'est immense. Toute l'Histoire (avec un grand H) ne représente que les 5 300 dernières années.</div>`,
+    exercise:{question:'L\'invention de l\'écriture (vers −3 300) marque le début de...',choices:['l\'Histoire (Antiquité)','le Néolithique','le Paléolithique','le Moyen Âge'],correct:0}
+  }
+);
+
+// ─── Antiquité enrichi ───
+LESSONS.antiquite.facile.push(
+  { title:'L\'Égypte ancienne', icon:'🏺',
+    content:`<p>L'Égypte ancienne est l'une des plus grandes civilisations de l'Antiquité (de −3 100 à −30 av. J.-C.).</p>
+    <div class="lesson-formula">Le Nil : fleuve vital qui fertilise les terres (crues annuelles)<br>Pharaon : roi considéré comme un dieu vivant<br>Hiéroglyphes : écriture sacrée (déchiffrée par Champollion en 1822)<br>Pyramides : tombeaux des pharaons (Gizeh, vers −2 500)</div>
+    <div class="lesson-example"><div class="ex-label">🌸 La société égyptienne</div>
+    <div class="ex-content">
+    <span class="step">• <strong>Pharaon</strong> : pouvoir absolu, divin</span><br>
+    <span class="step">• <strong>Prêtres</strong> : servent les dieux dans les temples</span><br>
+    <span class="step">• <strong>Scribes</strong> : savent lire et écrire (très respectés)</span><br>
+    <span class="step">• <strong>Artisans et paysans</strong> : la majorité de la population</span><br>
+    <span class="step">• <strong>Esclaves</strong> : prisonniers de guerre</span></div></div>
+    <div class="lesson-tip"><div class="tip-label">📌 Croyances</div>Les Égyptiens sont <strong>polythéistes</strong> (plusieurs dieux) : Rê (soleil), Osiris (mort), Isis, Anubis... Ils croient en la vie après la mort → momification.</div>`,
+    exercise:{question:'Les hiéroglyphes ont été déchiffrés par...',choices:['Champollion','César','Napoléon','Cléopâtre'],correct:0}
+  },
+  { title:'La Grèce antique', icon:'🏛️',
+    content:`<p>La Grèce antique a inventé la <strong>démocratie</strong>, la <strong>philosophie</strong> et les <strong>Jeux olympiques</strong>.</p>
+    <div class="lesson-formula">Cité-état (polis) : ville indépendante avec son gouvernement<br>Athènes : démocratie (Ve siècle av. J.-C.)<br>Sparte : oligarchie militaire<br>Agora : place publique (politique et commerce)</div>
+    <div class="lesson-example"><div class="ex-label">🌸 La démocratie athénienne</div>
+    <div class="ex-content">À Athènes, les <strong>citoyens</strong> votent les lois à l'Ecclésia (assemblée) :<br>
+    <span class="step">✅ Citoyens : hommes adultes nés de père ET mère athéniens</span><br>
+    <span class="step">❌ Exclus : les femmes, les esclaves, les métèques (étrangers)</span><br>
+    <span class="step">→ Environ 40 000 citoyens sur 300 000 habitants !</span><br>
+    <span class="step">→ C'est une démocratie <strong>directe</strong> mais <strong>limitée</strong></span></div></div>
+    <div class="lesson-tip"><div class="tip-label">📌 Héritage grec</div>Philosophie (Socrate, Platon, Aristote), théâtre, architecture (colonnes), mathématiques (Pythagore, Thalès), médecine (Hippocrate), JO...</div>`,
+    exercise:{question:'Qui pouvait voter dans la démocratie athénienne ?',choices:['Les hommes citoyens adultes','Tous les habitants','Les hommes et les femmes','Les propriétaires terriens'],correct:0}
+  }
+);
+
+LESSONS.antiquite.moyen.push(
+  { title:'Rome : de la République à l\'Empire', icon:'🏟️',
+    content:`<p>Rome passe par 3 régimes politiques :</p>
+    <div class="lesson-formula">Royauté : −753 à −509 (rois étrusques)<br>République : −509 à −27 (Sénat + consuls élus)<br>Empire : −27 à 476 (empereur tout-puissant)</div>
+    <div class="lesson-example"><div class="ex-label">🌸 La République romaine</div>
+    <div class="ex-content">Deux consuls élus pour 1 an dirigent Rome.<br>
+    Le <strong>Sénat</strong> (300 membres) conseille et vote les lois.<br>
+    Les <strong>plébéiens</strong> (peuple) obtiennent peu à peu des droits face aux <strong>patriciens</strong> (nobles).<br><br>
+    Grands personnages : Jules César (conquiert la Gaule en −52), Auguste (1er empereur en −27).</div></div>
+    <div class="lesson-tip"><div class="tip-label">📌 Héritage romain</div>Routes, aqueducs, droit romain, latin (→ français, espagnol, italien...), architecture (arcs, amphithéâtres), calendrier.</div>`,
+    exercise:{question:'La République romaine est remplacée par l\'Empire en...',choices:['-27 (Auguste)','-509','-753','476'],correct:0}
+  },
+  { title:'Les monothéismes dans l\'Antiquité', icon:'📜',
+    content:`<p>Pendant l'Antiquité, trois grandes religions <strong>monothéistes</strong> (un seul dieu) apparaissent :</p>
+    <div class="lesson-formula">Judaïsme : le plus ancien (vers −1800), peuple hébreu, Torah<br>Christianisme : Ier siècle, Jésus, Bible (Nouveau Testament)<br>Islam : VIIe siècle, Mahomet, Coran (après l'Antiquité)</div>
+    <div class="lesson-example"><div class="ex-label">🌸 Points communs et différences</div>
+    <div class="ex-content">Points communs : un seul Dieu, livres sacrés, prophètes, règles morales.<br><br>
+    Le <strong>christianisme</strong> se répand dans l'Empire romain :<br>
+    <span class="step">D'abord persécuté (martyrs, catacombes)</span><br>
+    <span class="step">313 : édit de Milan → tolérance (empereur Constantin)</span><br>
+    <span class="step">380 : religion officielle de l'Empire (Théodose)</span></div></div>`,
+    exercise:{question:'Le christianisme devient religion officielle de Rome en...',choices:['380','313','0','476'],correct:0}
+  }
+);
+
+// ─── Géographie enrichi ───
+LESSONS.geo_habiter.facile.push(
+  { title:'Les métropoles mondiales', icon:'🏙️',
+    content:`<p>Une <strong>métropole</strong> est une très grande ville qui concentre la population, les activités économiques et le pouvoir.</p>
+    <div class="lesson-formula">Mégapole : + de 10 millions d'habitants<br>Ville mondiale : influence planétaire (New York, Londres, Tokyo, Paris...)</div>
+    <div class="lesson-example"><div class="ex-label">🌸 Les plus grandes villes du monde</div>
+    <div class="ex-content">1. Tokyo-Yokohama : ~38 millions d'habitants<br>
+    2. Delhi : ~32 millions<br>
+    3. Shanghai : ~29 millions<br>
+    4. São Paulo : ~22 millions<br>
+    5. Mexico : ~22 millions<br><br>
+    <span class="step">La plupart des mégapoles sont en <strong>Asie</strong> ! Paris ≈ 12 millions (aire urbaine).</span></div></div>
+    <div class="lesson-tip"><div class="tip-label">📌 Urbanisation</div>En 2024, plus de <strong>56%</strong> de la population mondiale vit en ville. En 1950, c'était seulement 30%. L'urbanisation s'accélère surtout en Afrique et en Asie.</div>`,
+    exercise:{question:'Une mégapole a plus de...',choices:['10 millions d\'habitants','1 million','100 millions','5 millions'],correct:0}
+  },
+  { title:'Les continents et les océans', icon:'🌍',
+    content:`<p>La Terre est composée de <strong>6 continents</strong> et de <strong>5 océans</strong>.</p>
+    <div class="lesson-formula">Continents : Afrique, Amérique, Antarctique, Asie, Europe, Océanie<br><br>Océans (du plus grand au plus petit) :<br>Pacifique (le + grand) > Atlantique > Indien > Austral (Antarctique) > Arctique (le + petit)</div>
+    <div class="lesson-example"><div class="ex-label">🌸 Chiffres clés</div>
+    <div class="ex-content">• L'Asie = continent le + peuplé (4,7 milliards, 60% de l'humanité)<br>
+    • L'Océanie = le - peuplé (hors Antarctique)<br>
+    • L'Afrique = le continent qui croît le + vite<br>
+    • L'Antarctique = aucun habitant permanent</div></div>
+    <div class="lesson-tip"><div class="tip-label">💡 Mémo pour les océans</div>Pense à "PAIAA" : <strong>P</strong>acifique, <strong>A</strong>tlantique, <strong>I</strong>ndien, <strong>A</strong>ustral, <strong>A</strong>rctique</div>`,
+    exercise:{question:'Quel est le plus grand océan ?',choices:['Pacifique','Atlantique','Indien','Arctique'],correct:0}
+  }
+);
+
+LESSONS.geo_habiter.moyen.push(
+  { title:'Habiter les espaces de faible densité', icon:'🏔️',
+    content:`<p>Les <strong>espaces de faible densité</strong> sont des zones peu peuplées : campagnes, montagnes, déserts...</p>
+    <div class="lesson-formula">Densité = nombre d'habitants ÷ superficie (en hab/km²)<br><br>Faible densité : < 30 hab/km² (campagne française)<br>Forte densité : > 500 hab/km² (Paris : 20 000 hab/km² !)</div>
+    <div class="lesson-example"><div class="ex-label">🌸 Contraintes et atouts</div>
+    <div class="ex-content"><strong>Contraintes</strong> des espaces peu peuplés :<br>
+    <span class="step">• Éloignement des services (hôpital, lycée, commerce)</span><br>
+    <span class="step">• Manque de transports en commun</span><br>
+    <span class="step">• Peu d'emplois sur place</span><br><br>
+    <strong>Atouts</strong> :<br>
+    <span class="step">• Qualité de vie, calme, nature</span><br>
+    <span class="step">• Agriculture, tourisme vert</span><br>
+    <span class="step">• Le télétravail permet d'y vivre en travaillant à distance</span></div></div>`,
+    exercise:{question:'La densité de population se calcule en...',choices:['habitants par km²','km² par habitants','habitants par m²','habitants par pays'],correct:0}
+  }
+);
 
 function startLesson(topicId, level) {
   level = level || 'facile';
